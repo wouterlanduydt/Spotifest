@@ -6,6 +6,8 @@ class App extends Component {
     const parsedUrl = queryString.parse(window.location.search);
     const accessToken = parsedUrl.access_token;
 
+    if (!accessToken) return;
+
     fetch("https://api.spotify.com/v1/me/top/artists", {
       headers: {
         Authorization: "Bearer " + accessToken
@@ -21,7 +23,11 @@ class App extends Component {
       <div>
         <h1>Spotify Top</h1>
         <button
-          onClick={() => (window.location = "http://localhost:8888/login")}
+          onClick={() => {
+            window.location = window.location.href.includes("localhost")
+              ? "http://localhost:8888/login"
+              : "https://spotify-top-artists-backend.herokuapp.com/login";
+          }}
         >
           Login
         </button>
