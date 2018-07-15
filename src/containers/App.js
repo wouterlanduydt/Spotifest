@@ -46,7 +46,7 @@ class App extends Component {
         {!accessToken && (
           <Button onButtonClick={() => this.handleLoginClick()} text="Login" />
         )}
-        <ul>{artists.map(artist => <li key={artist}>{artist}</li>)}</ul>
+        <ol>{artists.map(artist => <li key={artist}>{artist}</li>)}</ol>
       </div>
     );
   }
