@@ -60,7 +60,7 @@ class App extends Component {
         {!accessToken && (
           <Button onButtonClick={() => this.handleLoginClick()} text="Login" />
         )}
-        {artists.length && <ArtistList artists={artists} />}
+        {artists.length !== 0 && <ArtistList artists={artists} />}
       </div>
     );
   }
