@@ -1,6 +1,14 @@
 import React, { Component } from "react";
+import { injectGlobal } from "styled-components";
+import reset from "styled-reset";
 import queryString from "query-string";
+import global from "../styles/global";
 import Button from "../components/Button";
+import ArtistList from "../components/ArtistList";
+
+injectGlobal`
+${reset} 
+${global}`;
 
 class App extends Component {
   constructor(props) {
@@ -18,15 +26,21 @@ class App extends Component {
 
     if (!accessToken) return;
 
-    fetch("https://api.spotify.com/v1/me/top/artists", {
-      headers: {
-        Authorization: "Bearer " + accessToken
+    fetch(
+      "https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50",
+      {
+        headers: {
+          Authorization: "Bearer " + accessToken
+        }
       }
-    })
+    )
       .then(response => response.json())
       .then(artists =>
         this.setState({
-          artists: artists.items.map(artist => artist.name)
+          artists: artists.items.map(artist => ({
+            name: artist.name,
+            link: artist.external_urls.spotify
+          }))
         })
       )
       .catch(e => console.log(e));
@@ -46,7 +60,7 @@ class App extends Component {
         {!accessToken && (
           <Button onButtonClick={() => this.handleLoginClick()} text="Login" />
         )}
-        <ol>{artists.map(artist => <li key={artist}>{artist}</li>)}</ol>
+        {artists && <ArtistList artists={artists} />}
       </div>
     );
   }
