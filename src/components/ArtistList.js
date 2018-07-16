@@ -3,6 +3,16 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import ArtistItem from "./ArtistItem";
 
+const calculateImportance = position => {
+  if (position <= 1) {
+    return 1;
+  } else if (position > 1 && position <= 20) {
+    return 2;
+  } else if (position > 20) {
+    return 3;
+  }
+};
+
 const List = styled.ol`
   max-width: 600px;
   margin: auto;
@@ -21,7 +31,7 @@ const ArtistList = ({ artists }) => (
         key={artist.name}
         link={artist.link}
         name={artist.name}
-        position={i}
+        importance={calculateImportance(i)}
       />
     ))}
   </List>
