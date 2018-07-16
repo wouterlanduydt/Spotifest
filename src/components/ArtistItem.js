@@ -5,9 +5,9 @@ import styled from "styled-components";
 const calculateFontSize = importance => {
   switch (importance) {
     case 1:
-      return "6.0em";
+      return "5.0em";
     case 2:
-      return "3.0em";
+      return "2.6em";
     case 3:
       return "2.0em";
     default:

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { injectGlobal } from "styled-components";
 import reset from "styled-reset";
 import queryString from "query-string";
+import getArtistImportance from "../lib/getArtistImportance";
 import global from "../styles/global";
 import Button from "../components/Button";
 import ArtistList from "../components/ArtistList";
@@ -37,9 +38,10 @@ class App extends Component {
       .then(response => response.json())
       .then(artists =>
         this.setState({
-          artists: artists.items.map(artist => ({
+          artists: artists.items.map((artist, i) => ({
             name: artist.name,
-            link: artist.external_urls.spotify
+            link: artist.external_urls.spotify,
+            importance: getArtistImportance(i)
           }))
         })
       )
