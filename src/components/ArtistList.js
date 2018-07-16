@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import ArtistItem from "./ArtistItem";
 
@@ -25,5 +26,14 @@ const ArtistList = ({ artists }) => (
     ))}
   </List>
 );
+
+ArtistList.propTypes = {
+  artists: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      link: PropTypes.string.isRequired
+    })
+  )
+};
 
 export default ArtistList;
