@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 const Poster = styled.div`
   height: 0;
   margin-top: 16px;
-  padding-top: calc(900 / 600 * 100%);
+  padding-top: calc(1300 / 1000 * 100%);
   position: relative;
 `;
 
@@ -28,12 +28,13 @@ const List = styled.ol`
   width: 100%;
   height: 100%;
   padding: 16px;
+  margin-top: 80px;
 `;
 
 const ArtistList = ({ artists }) => {
   const sections = [];
 
-  for (let i = 0; i <= 3; i++) {
+  for (let i = 1; i <= 3; i++) {
     sections.push(
       <ArtistSection
         key={i}

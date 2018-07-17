@@ -3,13 +3,23 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import ArtistItem from "./ArtistItem";
 
+const Wrapper = styled.div`
+  &:nth-child(1) {
+    margin-bottom: 24px;
+  }
+
+  &:nth-child(2) {
+    margin-bottom: 16px;
+  }
+`;
+
 const ArtistList = styled.ol`
   display: flex;
   flex-wrap: wrap;
 `;
 
 const ArtistSection = ({ artists }) => (
-  <li>
+  <Wrapper>
     <ArtistList>
       {artists.map((artist, i) => (
         <ArtistItem
@@ -20,7 +30,7 @@ const ArtistSection = ({ artists }) => (
         />
       ))}
     </ArtistList>
-  </li>
+  </Wrapper>
 );
 
 ArtistSection.propTypes = {

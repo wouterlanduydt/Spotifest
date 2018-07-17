@@ -1,35 +1,76 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-const calculateFontSize = importance => {
+const getWrapperCss = importance => {
   switch (importance) {
     case 1:
-      return "5.0em";
+      return css`
+        :not(:last-child) {
+          margin-right: 16px;
+        }
+      `;
     case 2:
-      return "2.6em";
+      return css`
+        margin: 2px 0;
+        :not(:last-child) {
+          margin-right: 8px;
+        }
+      `;
     case 3:
-      return "2.0em";
+      return css`
+        margin: 2px 0;
+        :not(:last-child) {
+          margin-right: 6px;
+        }
+      `;
     default:
-      return "2.0em";
+      return css`
+        margin: 2px 0;
+        :not(:last-child) {
+          margin-right: 4px;
+        }
+      `;
+  }
+};
+
+const getArtistLinkCss = importance => {
+  switch (importance) {
+    case 1:
+      return css`
+        font-size: 4em;
+        font-weight: 900;
+      `;
+    case 2:
+      return css`
+        font-size: 1.8em;
+        font-weight: 700;
+      `;
+    case 3:
+      return css`
+        font-size: 1.4em;
+        font-weight: 500;
+      `;
+    default:
+      return css`
+        font-size: 1.8em;
+      `;
   }
 };
 
 const Wrapper = styled.li`
-  :not(:last-child) {
-    margin-right: 16px;
-  }
+  ${props => getWrapperCss(props.importance)};
 `;
 
 const ArtistLink = styled.a`
   color: white;
   text-decoration: none;
-  font-size: ${props => calculateFontSize(props.importance)};
+  ${props => getArtistLinkCss(props.importance)};
 `;
 
 const ArtistItem = ({ name, link, importance }) => (
-  <Wrapper>
-    <ArtistLink importance={importance} href={link}>
+  <Wrapper importance={importance}>
+    <ArtistLink importance={importance} href={link} target="_blank">
       {name}
     </ArtistLink>
   </Wrapper>
