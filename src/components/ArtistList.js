@@ -22,6 +22,10 @@ const PosterInner = styled.div`
   width: 100%;
   height: 100%;
   background-color: black;
+  @media (min-width: ${props => props.theme.constants.posterWidth}) {
+    margin-top: 24px;
+    box-shadow: 0px 4px 16px 8px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Image = styled.div`
