@@ -5,12 +5,11 @@ import ArtistSection from "./ArtistSection";
 
 const Wrapper = styled.div`
   margin: 0 auto;
-  max-width: 500px;
+  max-width: ${props => props.theme.constants.posterWidth};
 `;
 
 const Poster = styled.div`
   height: 0;
-  margin-top: 16px;
   padding-top: calc(1300 / 1000 * 100%);
   position: relative;
 `;

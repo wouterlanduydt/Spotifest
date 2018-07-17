@@ -38,22 +38,35 @@ const getArtistLinkCss = importance => {
   switch (importance) {
     case 1:
       return css`
-        font-size: 4em;
+        font-size: 7.6vw;
         font-weight: 900;
+        @media (min-width: ${props => props.theme.constants.posterWidth}) {
+          font-size: 4.2em;
+        }
       `;
     case 2:
       return css`
-        font-size: 1.8em;
+        font-size: 4.6vw;
         font-weight: 700;
+        @media (min-width: ${props => props.theme.constants.posterWidth}) {
+          font-size: 2.4em;
+        }
       `;
     case 3:
       return css`
-        font-size: 1.4em;
+        font-size: 3.2vw;
         font-weight: 500;
+        @media (min-width: ${props => props.theme.constants.posterWidth}) {
+          font-size: 1.6em;
+        }
       `;
     default:
       return css`
-        font-size: 1.8em;
+        font-size: 3.2vw;
+        font-weight: 500;
+        @media (min-width: ${props => props.theme.constants.posterWidth}) {
+          font-size: 1.6em;
+        }
       `;
   }
 };

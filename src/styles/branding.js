@@ -13,6 +13,11 @@ const genreColors = [
   }
 ];
 
+const constants = {
+  posterWidth: "560px"
+};
+
 export default {
-  genreColors
+  genreColors,
+  constants
 };
