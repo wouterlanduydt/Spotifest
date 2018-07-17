@@ -76,19 +76,15 @@ const Wrapper = styled.li`
 `;
 
 const ArtistLink = styled.a`
-  color: ${props => props.theme.genreColors[props.genreGroup].text};
+  color: white;
+  text-shadow: rgba(0, 0, 0, 0.2) 0px 0 24px;
   text-decoration: none;
   ${props => getArtistLinkCss(props.importance)};
 `;
 
-const ArtistItem = ({ name, link, importance, genreGroup }) => (
+const ArtistItem = ({ name, link, importance }) => (
   <Wrapper importance={importance}>
-    <ArtistLink
-      genreGroup={genreGroup}
-      importance={importance}
-      href={link}
-      target="_blank"
-    >
+    <ArtistLink importance={importance} href={link} target="_blank">
       {name}
     </ArtistLink>
   </Wrapper>
@@ -97,8 +93,7 @@ const ArtistItem = ({ name, link, importance, genreGroup }) => (
 ArtistItem.propTypes = {
   name: PropTypes.string.isRequired,
   link: PropTypes.string.isRequired,
-  importance: PropTypes.number.isRequired,
-  genreGroup: PropTypes.number.isRequired
+  importance: PropTypes.number.isRequired
 };
 
 export default ArtistItem;

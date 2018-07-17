@@ -22,7 +22,8 @@ class App extends Component {
       accessToken: "",
       artists: [],
       mostCommonGenre: "",
-      genreGroup: null
+      genreGroup: null,
+      profilePictureUrl: ""
     };
   }
 
@@ -57,6 +58,14 @@ class App extends Component {
         });
       })
       .catch(e => console.log(e));
+
+    fetch("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: "Bearer " + accessToken
+      }
+    })
+      .then(response => response.json())
+      .then(user => this.setState({ profilePictureUrl: user.images[0].url }));
   };
 
   handleLoginClick = () => {
@@ -66,7 +75,7 @@ class App extends Component {
   };
 
   render() {
-    const { accessToken, artists, genreGroup } = this.state;
+    const { accessToken, artists, profilePictureUrl } = this.state;
 
     return (
       <ThemeProvider theme={branding}>
@@ -78,7 +87,10 @@ class App extends Component {
             />
           )}
           {artists.length !== 0 && (
-            <ArtistList genreGroup={genreGroup} artists={artists} />
+            <ArtistList
+              profilePictureUrl={profilePictureUrl}
+              artists={artists}
+            />
           )}
         </div>
       </ThemeProvider>

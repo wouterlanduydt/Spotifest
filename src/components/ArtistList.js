@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import ArtistSection from "./ArtistSection";
+import DuoToneFilter from "../styles/DuoToneFilter";
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -20,23 +21,39 @@ const PosterInner = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: ${props =>
-    props.theme.genreColors[props.genreGroup].background};
+  background-color: black;
+`;
+
+const Image = styled.div`
+  position: absolute;
+  opacity: 0.7;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: ${props => `url(${props.image}) center no-repeat`};
+  background-size: cover;
+  -webkit-filter: url(#peachy);
+  -moz-filter: url(#peachy);
+  -o-filter: url(#peachy);
+  -ms-filter: url(#peachy);
+  filter: url(#peachy);
 `;
 
 const List = styled.ol`
+  position: relative;
+  z-index: 99;
   width: 100%;
   height: 100%;
   padding: 16px;
 `;
 
-const ArtistList = ({ artists, genreGroup }) => {
+const ArtistList = ({ artists, profilePictureUrl }) => {
   const sections = [];
 
   for (let i = 1; i <= 3; i++) {
     sections.push(
       <ArtistSection
-        genreGroup={genreGroup}
         key={i}
         artists={artists.filter(artist => artist.importance === i)}
       />
@@ -46,8 +63,10 @@ const ArtistList = ({ artists, genreGroup }) => {
   return (
     <Wrapper>
       <Poster>
-        <PosterInner genreGroup={genreGroup}>
+        <PosterInner>
           <List>{sections}</List>
+          <Image image={profilePictureUrl} />
+          <DuoToneFilter />
         </PosterInner>
       </Poster>
     </Wrapper>
@@ -62,7 +81,7 @@ ArtistList.propTypes = {
       importance: PropTypes.number.isRequired
     })
   ),
-  genreGroup: PropTypes.number.isRequired
+  profilePictureUrl: PropTypes.string.isRequired
 };
 
 export default ArtistList;

@@ -18,12 +18,11 @@ const ArtistList = styled.ol`
   flex-wrap: wrap;
 `;
 
-const ArtistSection = ({ artists, genreGroup }) => (
+const ArtistSection = ({ artists }) => (
   <Wrapper>
     <ArtistList>
       {artists.map((artist, i) => (
         <ArtistItem
-          genreGroup={genreGroup}
           key={artist.name}
           link={artist.link}
           name={artist.name}
@@ -41,8 +40,7 @@ ArtistSection.propTypes = {
       link: PropTypes.string.isRequired,
       importance: PropTypes.number.isRequired
     })
-  ),
-  genreGroup: PropTypes.number.isRequired
+  )
 };
 
 export default ArtistSection;
