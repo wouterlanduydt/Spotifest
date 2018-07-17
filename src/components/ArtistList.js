@@ -3,12 +3,31 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import ArtistSection from "./ArtistSection";
 
-const List = styled.ol`
-  max-width: 600px;
-  margin: auto;
-  margin-top: 40px;
+const Wrapper = styled.div`
+  margin: 0 auto;
+  max-width: 500px;
+`;
+
+const Poster = styled.div`
+  height: 0;
+  margin-top: 16px;
+  padding-top: calc(900 / 600 * 100%);
+  position: relative;
+`;
+
+const PosterInner = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-color: black;
-  padding: 24px;
+`;
+
+const List = styled.ol`
+  width: 100%;
+  height: 100%;
+  padding: 16px;
 `;
 
 const ArtistList = ({ artists }) => {
@@ -23,7 +42,15 @@ const ArtistList = ({ artists }) => {
     );
   }
 
-  return <List>{sections}</List>;
+  return (
+    <Wrapper>
+      <Poster>
+        <PosterInner>
+          <List>{sections}</List>
+        </PosterInner>
+      </Poster>
+    </Wrapper>
+  );
 };
 
 ArtistList.propTypes = {
