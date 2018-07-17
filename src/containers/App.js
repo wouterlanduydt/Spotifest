@@ -65,7 +65,13 @@ class App extends Component {
       }
     })
       .then(response => response.json())
-      .then(user => this.setState({ profilePictureUrl: user.images[0].url }));
+      .then(user =>
+        this.setState({
+          profilePictureUrl:
+            user.images[0].url ||
+            "https://assets.sk-static.com/assets/nw/components/homepage/hero-3-f594edb.jpg" //default image if user has no profile pic
+        })
+      );
   };
 
   handleLoginClick = () => {
