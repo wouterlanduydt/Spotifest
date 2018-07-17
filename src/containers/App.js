@@ -65,13 +65,13 @@ class App extends Component {
       }
     })
       .then(response => response.json())
-      .then(user =>
+      .then(user => {
         this.setState({
           profilePictureUrl:
-            user.images[0].url ||
-            "https://assets.sk-static.com/assets/nw/components/homepage/hero-3-f594edb.jpg" //default image if user has no profile pic
-        })
-      );
+            (user.images && user.images[0] && user.images[0].url) ||
+            "https://assets.sk-static.com/assets/nw/components/homepage/hero-3-f594edb.jpg" // default background
+        });
+      });
   };
 
   handleLoginClick = () => {
