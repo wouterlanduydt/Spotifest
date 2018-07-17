@@ -1,9 +1,13 @@
 import React, { Component } from "react";
-import { injectGlobal } from "styled-components";
+import { injectGlobal, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
 import queryString from "query-string";
+import { BACKEND_URLS } from "../config/variables";
+import getMostCommonGenre from "../lib/getMostCommonGenre";
 import getArtistImportance from "../lib/getArtistImportance";
+import getGenreGroup from "../lib/getGenreGroup";
 import global from "../styles/global";
+import branding from "../styles/branding";
 import Button from "../components/Button";
 import ArtistList from "../components/ArtistList";
 
@@ -16,7 +20,9 @@ class App extends Component {
     super(props);
     this.state = {
       accessToken: "",
-      artists: []
+      artists: [],
+      mostCommonGenre: "",
+      genreGroup: null
     };
   }
 
@@ -36,34 +42,46 @@ class App extends Component {
       }
     )
       .then(response => response.json())
-      .then(artists =>
+      .then(artists => {
+        const genreArrays = artists.items.map(a => a.genres);
+        this.setState({ mostCommonGenre: getMostCommonGenre(genreArrays) });
+        this.setState({
+          genreGroup: getGenreGroup(this.state.mostCommonGenre)
+        });
         this.setState({
           artists: artists.items.map((artist, i) => ({
             name: artist.name,
             link: artist.external_urls.spotify,
             importance: getArtistImportance(i)
           }))
-        })
-      )
+        });
+      })
       .catch(e => console.log(e));
   };
 
   handleLoginClick = () => {
     window.location = window.location.href.includes("localhost")
-      ? "http://localhost:8888/login"
-      : "https://spotify-top-artists-backend.herokuapp.com/login";
+      ? BACKEND_URLS.LOCAL
+      : BACKEND_URLS.PROD;
   };
 
   render() {
-    const { accessToken, artists } = this.state;
+    const { accessToken, artists, genreGroup } = this.state;
 
     return (
-      <div>
-        {!accessToken && (
-          <Button onButtonClick={() => this.handleLoginClick()} text="Login" />
-        )}
-        {artists.length !== 0 && <ArtistList artists={artists} />}
-      </div>
+      <ThemeProvider theme={branding}>
+        <div>
+          {!accessToken && (
+            <Button
+              onButtonClick={() => this.handleLoginClick()}
+              text="Login"
+            />
+          )}
+          {artists.length !== 0 && (
+            <ArtistList genreGroup={genreGroup} artists={artists} />
+          )}
+        </div>
+      </ThemeProvider>
     );
   }
 }

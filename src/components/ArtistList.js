@@ -21,22 +21,23 @@ const PosterInner = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: black;
+  background-color: ${props =>
+    props.theme.genreColors[props.genreGroup].background};
 `;
 
 const List = styled.ol`
   width: 100%;
   height: 100%;
   padding: 16px;
-  margin-top: 80px;
 `;
 
-const ArtistList = ({ artists }) => {
+const ArtistList = ({ artists, genreGroup }) => {
   const sections = [];
 
   for (let i = 1; i <= 3; i++) {
     sections.push(
       <ArtistSection
+        genreGroup={genreGroup}
         key={i}
         artists={artists.filter(artist => artist.importance === i)}
       />
@@ -46,7 +47,7 @@ const ArtistList = ({ artists }) => {
   return (
     <Wrapper>
       <Poster>
-        <PosterInner>
+        <PosterInner genreGroup={genreGroup}>
           <List>{sections}</List>
         </PosterInner>
       </Poster>
@@ -61,7 +62,8 @@ ArtistList.propTypes = {
       link: PropTypes.string.isRequired,
       importance: PropTypes.number.isRequired
     })
-  )
+  ),
+  genreGroup: PropTypes.number.isRequired
 };
 
 export default ArtistList;
