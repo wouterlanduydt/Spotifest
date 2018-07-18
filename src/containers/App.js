@@ -87,10 +87,20 @@ class App extends Component {
       <ThemeProvider theme={branding}>
         <div>
           {!accessToken && (
-            <Button
-              onButtonClick={() => this.handleLoginClick()}
-              text="Login"
-            />
+            <div
+              style={{
+                width: "100vw",
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Button
+                onButtonClick={() => this.handleLoginClick()}
+                text="Login with Spotify"
+              />
+            </div>
           )}
           {artists.length !== 0 && (
             <Poster profilePictureUrl={profilePictureUrl} artists={artists} />
