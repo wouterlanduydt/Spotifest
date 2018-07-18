@@ -13,15 +13,18 @@ const Wrapper = styled.header`
 `;
 
 const StyledTitle = styled.h1`
-  padding: 4px 8px;
-  font-size: 4.8vw;
-  font-weight: 800;
+  padding: 10px 16px;
+  font-size: 3.6vw;
+  font-weight: 600;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
   display: inline-block;
-  background-color: white;
+  border: 2px solid white;
+  color: white;
+
   @media (min-width: ${props => props.theme.constants.posterWidth}) {
-    padding: 8px 16px;
-    font-size: 2.8em;
+    padding: 12px 24px;
+    font-size: 2em;
   }
 `;
 

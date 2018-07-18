@@ -8,7 +8,10 @@ import SpotifyLogo from "../assets/svg/spotify.svg";
 
 const Wrapper = styled.div`
   margin: 0 auto;
-  max-width: ${props => props.theme.constants.posterWidth};
+  max-width: 97vw;
+  @media (min-width: 570px) {
+    max-width: ${props => props.theme.constants.posterWidth};
+  }
 `;
 
 const PosterWrapper = styled.div`
@@ -24,10 +27,11 @@ const PosterInner = styled.div`
   width: 100%;
   height: 100%;
   background-color: black;
+  box-shadow: 0px 4px 16px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 8px;
 
-  @media (min-width: ${props => props.theme.constants.posterWidth}) {
+  @media (min-width: 570px) {
     margin-top: 24px;
-    box-shadow: 0px 4px 16px 8px rgba(0, 0, 0, 0.1);
   }
 `;
 

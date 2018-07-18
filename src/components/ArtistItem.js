@@ -7,21 +7,30 @@ const getWrapperCss = importance => {
     case 1:
       return css`
         :not(:last-child) {
-          margin-right: 16px;
+          margin-right: 8px;
+          @media (min-width: 460px) {
+            margin-right: 16px;
+          }
         }
       `;
     case 2:
       return css`
         margin: 2px 0;
         :not(:last-child) {
-          margin-right: 8px;
+          margin-right: 6px;
+          @media (min-width: 460px) {
+            margin-right: 8px;
+          }
         }
       `;
     case 3:
       return css`
         margin: 2px 0;
         :not(:last-child) {
-          margin-right: 6px;
+          margin-right: 4px;
+          @media (min-width: 460px) {
+            margin-right: 6px;
+          }
         }
       `;
     default:
@@ -29,6 +38,9 @@ const getWrapperCss = importance => {
         margin: 2px 0;
         :not(:last-child) {
           margin-right: 4px;
+          @media (min-width: 460px) {
+            margin-right: 6px;
+          }
         }
       `;
   }

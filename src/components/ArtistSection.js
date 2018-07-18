@@ -5,11 +5,17 @@ import ArtistItem from "./ArtistItem";
 
 const Wrapper = styled.div`
   &:nth-child(1) {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
+    @media (min-width: 460px) {
+      margin-bottom: 24px;
+    }
   }
 
   &:nth-child(2) {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
+    @media (min-width: 460px) {
+      margin-bottom: 16px;
+    }
   }
 `;
 
