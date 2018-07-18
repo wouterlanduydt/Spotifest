@@ -9,7 +9,7 @@ import getGenreGroup from "../lib/getGenreGroup";
 import global from "../styles/global";
 import branding from "../styles/branding";
 import Button from "../components/Button";
-import ArtistList from "../components/ArtistList";
+import Poster from "../components/Poster";
 
 injectGlobal`
 ${reset} 
@@ -93,10 +93,7 @@ class App extends Component {
             />
           )}
           {artists.length !== 0 && (
-            <ArtistList
-              profilePictureUrl={profilePictureUrl}
-              artists={artists}
-            />
+            <Poster profilePictureUrl={profilePictureUrl} artists={artists} />
           )}
         </div>
       </ThemeProvider>

@@ -88,7 +88,12 @@ const ArtistLink = styled.a`
 
 const ArtistItem = ({ name, link, importance }) => (
   <Wrapper importance={importance}>
-    <ArtistLink importance={importance} href={link} target="_blank">
+    <ArtistLink
+      importance={importance}
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       {name}
     </ArtistLink>
   </Wrapper>

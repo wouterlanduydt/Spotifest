@@ -2,14 +2,16 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import ArtistSection from "./ArtistSection";
+import Title from "./Title";
 import DuoToneFilter from "../styles/DuoToneFilter";
+import SpotifyLogo from "../assets/svg/spotify.svg";
 
 const Wrapper = styled.div`
   margin: 0 auto;
   max-width: ${props => props.theme.constants.posterWidth};
 `;
 
-const Poster = styled.div`
+const PosterWrapper = styled.div`
   height: 0;
   padding-top: calc(1300 / 1000 * 100%);
   position: relative;
@@ -22,6 +24,7 @@ const PosterInner = styled.div`
   width: 100%;
   height: 100%;
   background-color: black;
+
   @media (min-width: ${props => props.theme.constants.posterWidth}) {
     margin-top: 24px;
     box-shadow: 0px 4px 16px 8px rgba(0, 0, 0, 0.1);
@@ -44,15 +47,27 @@ const Image = styled.div`
   filter: url(#peachy);
 `;
 
-const List = styled.ol`
+const ContentWrapper = styled.div`
   position: relative;
   z-index: 99;
   width: 100%;
   height: 100%;
   padding: 16px;
+  display: flex;
+  flex-direction: column;
 `;
 
-const ArtistList = ({ artists, profilePictureUrl }) => {
+const Bottom = styled.div`
+  position: relative;
+  z-index: 99;
+  margin-top: auto;
+`;
+
+const BottomLogo = styled.img`
+  width: 20px;
+`;
+
+const Poster = ({ artists, profilePictureUrl }) => {
   const sections = [];
 
   for (let i = 1; i <= 3; i++) {
@@ -66,18 +81,30 @@ const ArtistList = ({ artists, profilePictureUrl }) => {
 
   return (
     <Wrapper>
-      <Poster>
+      <PosterWrapper>
         <PosterInner>
-          <List>{sections}</List>
+          <ContentWrapper>
+            <Title title="Spotifest" />
+            <div>{sections}</div>
+            <Bottom>
+              <a
+                href="https://www.spotify.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <BottomLogo src={SpotifyLogo} alt="" />
+              </a>
+            </Bottom>
+          </ContentWrapper>
           <Image image={profilePictureUrl} />
           <DuoToneFilter />
         </PosterInner>
-      </Poster>
+      </PosterWrapper>
     </Wrapper>
   );
 };
 
-ArtistList.propTypes = {
+Poster.propTypes = {
   artists: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -88,4 +115,4 @@ ArtistList.propTypes = {
   profilePictureUrl: PropTypes.string.isRequired
 };
 
-export default ArtistList;
+export default Poster;
