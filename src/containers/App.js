@@ -6,7 +6,8 @@ import {
   BACKEND_URLS,
   timeRanges,
   defaultBackgroundUrl,
-  SPOTIFY_ENDPOINTS
+  SPOTIFY_ENDPOINTS,
+  backgroundColors
 } from "../config/variables";
 import getMostCommonGenre from "../lib/getMostCommonGenre";
 import getArtistImportance from "../lib/getArtistImportance";
@@ -16,6 +17,7 @@ import branding from "../styles/branding";
 import Button from "../components/Button";
 import Poster from "../components/Poster";
 import TimeRangeSelector from "../components/TimeRangeSelector";
+import ColorSelector from "../components/ColorSelector";
 
 injectGlobal`
 ${reset} 
@@ -30,7 +32,8 @@ class App extends Component {
       mostCommonGenre: "",
       genreGroup: null,
       profilePictureUrl: "",
-      selectedTimeRangeIndex: 2
+      selectedTimeRangeIndex: 2,
+      backgroundColor: backgroundColors[0].name
     };
   }
 
@@ -105,7 +108,8 @@ class App extends Component {
       accessToken,
       artists,
       profilePictureUrl,
-      selectedTimeRangeIndex
+      selectedTimeRangeIndex,
+      backgroundColor
     } = this.state;
 
     return (
@@ -134,7 +138,18 @@ class App extends Component {
                 handleTimeRangeChange={this.handleTimeRangeChange}
                 selectedTimeRangeIndex={selectedTimeRangeIndex}
               />
-              <Poster profilePictureUrl={profilePictureUrl} artists={artists} />
+              <ColorSelector
+                backgroundColors={backgroundColors}
+                selectedColor={backgroundColor}
+                onButtonClick={color =>
+                  this.setState({ backgroundColor: color })
+                }
+              />
+              <Poster
+                backgroundColor={backgroundColor}
+                profilePictureUrl={profilePictureUrl}
+                artists={artists}
+              />
             </div>
           )}
         </div>

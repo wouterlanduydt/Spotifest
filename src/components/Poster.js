@@ -1,10 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import ArtistSection from "./ArtistSection";
 import Title from "./Title";
 import DuoToneFilter from "../styles/DuoToneFilter";
 import SpotifyLogo from "../assets/svg/spotify.svg";
+
+const getBackgroundColor = color =>
+  css`
+    -webkit-filter: url(#${color});
+    -moz-filter: url(#${color});
+    -o-filter: url(#${color});
+    -ms-filter: url(#${color});
+    filter: url(#${color});
+  `;
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -33,18 +42,14 @@ const PosterInner = styled.div`
 
 const Image = styled.div`
   position: absolute;
-  opacity: 0.7;
+  opacity: 0.6;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: ${props => `url(${props.image}) center no-repeat`};
   background-size: cover;
-  -webkit-filter: url(#peachy);
-  -moz-filter: url(#peachy);
-  -o-filter: url(#peachy);
-  -ms-filter: url(#peachy);
-  filter: url(#peachy);
+  ${props => getBackgroundColor(props.backgroundColor)};
 `;
 
 const ContentWrapper = styled.div`
@@ -67,7 +72,7 @@ const BottomLogo = styled.img`
   width: 20px;
 `;
 
-const Poster = ({ artists, profilePictureUrl }) => {
+const Poster = ({ artists, profilePictureUrl, backgroundColor }) => {
   const sections = [];
 
   for (let i = 1; i <= 3; i++) {
@@ -96,7 +101,7 @@ const Poster = ({ artists, profilePictureUrl }) => {
               </a>
             </Bottom>
           </ContentWrapper>
-          <Image image={profilePictureUrl} />
+          <Image image={profilePictureUrl} backgroundColor={backgroundColor} />
           <DuoToneFilter />
         </PosterInner>
       </PosterWrapper>
@@ -112,7 +117,8 @@ Poster.propTypes = {
       importance: PropTypes.number.isRequired
     })
   ),
-  profilePictureUrl: PropTypes.string.isRequired
+  profilePictureUrl: PropTypes.string.isRequired,
+  backgroundColor: PropTypes.string.isRequired
 };
 
 export default Poster;
