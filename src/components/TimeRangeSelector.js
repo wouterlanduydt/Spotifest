@@ -22,14 +22,11 @@ const Button = styled.button`
         `} padding: 4px 12px;
   font-size: 3.8vw;
   font-weight: 500;
+  margin: 0;
   border: 2px solid rgba(0, 0, 0, 0.8);
 
-  &:first-child {
-    margin-right: -2px;
-  }
-
-  &:last-child {
-    margin-left: -2px;
+  &:nth-child(2) {
+    margin: 0 -2px;
   }
 
   &:hover {
