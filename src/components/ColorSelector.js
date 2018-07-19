@@ -21,6 +21,10 @@ const Button = styled.button`
   &:not(:last-child) {
     margin-right: 6px;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const ColorSelector = ({ backgroundColors, selectedColor, onButtonClick }) => (
