@@ -28,11 +28,7 @@ const PosterInner = styled.div`
   height: 100%;
   background-color: black;
   box-shadow: 0px 4px 16px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 8px;
-
-  @media (min-width: 570px) {
-    margin-top: 24px;
-  }
+  margin-top: 24px;
 `;
 
 const Image = styled.div`

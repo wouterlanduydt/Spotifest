@@ -101,7 +101,12 @@ class App extends Component {
   };
 
   render() {
-    const { accessToken, artists, profilePictureUrl } = this.state;
+    const {
+      accessToken,
+      artists,
+      profilePictureUrl,
+      selectedTimeRangeIndex
+    } = this.state;
 
     return (
       <ThemeProvider theme={branding}>
@@ -127,6 +132,7 @@ class App extends Component {
               <TimeRangeSelector
                 timeRanges={timeRanges}
                 handleTimeRangeChange={this.handleTimeRangeChange}
+                selectedTimeRangeIndex={selectedTimeRangeIndex}
               />
               <Poster profilePictureUrl={profilePictureUrl} artists={artists} />
             </div>
