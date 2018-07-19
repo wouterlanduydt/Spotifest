@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { injectGlobal, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
 import queryString from "query-string";
-import { BACKEND_URLS } from "../config/variables";
+import {
+  BACKEND_URLS,
+  timeRanges,
+  defaultBackgroundUrl,
+  SPOTIFY_ENDPOINTS
+} from "../config/variables";
 import getMostCommonGenre from "../lib/getMostCommonGenre";
 import getArtistImportance from "../lib/getArtistImportance";
 import getGenreGroup from "../lib/getGenreGroup";
@@ -10,6 +15,7 @@ import global from "../styles/global";
 import branding from "../styles/branding";
 import Button from "../components/Button";
 import Poster from "../components/Poster";
+import TimeRangeSelector from "../components/TimeRangeSelector";
 
 injectGlobal`
 ${reset} 
@@ -23,7 +29,8 @@ class App extends Component {
       artists: [],
       mostCommonGenre: "",
       genreGroup: null,
-      profilePictureUrl: ""
+      profilePictureUrl: "",
+      selectedTimeRangeIndex: 2
     };
   }
 
@@ -31,23 +38,46 @@ class App extends Component {
     const parsedUrl = queryString.parse(window.location.search);
     const accessToken = parsedUrl.access_token;
     this.setState({ accessToken: accessToken });
-
     if (!accessToken) return;
 
-    fetch(
-      "https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50",
-      {
-        headers: {
-          Authorization: "Bearer " + accessToken
-        }
-      }
-    )
+    this.headers = {
+      Authorization: "Bearer " + accessToken
+    };
+
+    fetch(SPOTIFY_ENDPOINTS.me, {
+      headers: this.headers
+    })
+      .then(response => response.json())
+      .then(user => {
+        this.setState({
+          profilePictureUrl:
+            (user.images && user.images[0] && user.images[0].url) ||
+            defaultBackgroundUrl // default background
+        });
+      });
+
+    this.updateArtists();
+  };
+
+  updateArtists = () => {
+    const { selectedTimeRangeIndex, mostCommonGenre } = this.state;
+
+    const query =
+      "?" +
+      queryString.stringify({
+        limit: 50,
+        time_range: timeRanges[selectedTimeRangeIndex].value
+      });
+
+    fetch(SPOTIFY_ENDPOINTS.topArtists + query, {
+      headers: this.headers
+    })
       .then(response => response.json())
       .then(artists => {
         const genreArrays = artists.items.map(a => a.genres);
         this.setState({ mostCommonGenre: getMostCommonGenre(genreArrays) });
         this.setState({
-          genreGroup: getGenreGroup(this.state.mostCommonGenre)
+          genreGroup: getGenreGroup(mostCommonGenre)
         });
         this.setState({
           artists: artists.items.map((artist, i) => ({
@@ -58,26 +88,16 @@ class App extends Component {
         });
       })
       .catch(e => console.log(e));
-
-    fetch("https://api.spotify.com/v1/me", {
-      headers: {
-        Authorization: "Bearer " + accessToken
-      }
-    })
-      .then(response => response.json())
-      .then(user => {
-        this.setState({
-          profilePictureUrl:
-            (user.images && user.images[0] && user.images[0].url) ||
-            "https://assets.sk-static.com/assets/nw/components/homepage/hero-3-f594edb.jpg" // default background
-        });
-      });
   };
 
   handleLoginClick = () => {
     window.location = window.location.href.includes("localhost")
       ? BACKEND_URLS.LOCAL
       : BACKEND_URLS.PROD;
+  };
+
+  handleTimeRangeChange = i => {
+    this.setState({ selectedTimeRangeIndex: i }, this.updateArtists);
   };
 
   render() {
@@ -103,7 +123,13 @@ class App extends Component {
             </div>
           )}
           {artists.length !== 0 && (
-            <Poster profilePictureUrl={profilePictureUrl} artists={artists} />
+            <div>
+              <TimeRangeSelector
+                timeRanges={timeRanges}
+                handleTimeRangeChange={this.handleTimeRangeChange}
+              />
+              <Poster profilePictureUrl={profilePictureUrl} artists={artists} />
+            </div>
           )}
         </div>
       </ThemeProvider>
