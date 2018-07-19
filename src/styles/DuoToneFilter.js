@@ -2,6 +2,23 @@ import React from "react";
 
 const DuoToneFilter = () => (
   <svg xmlns="http://www.w3.org/2000/svg">
+    <filter id="blue">
+      <feColorMatrix
+        type="matrix"
+        result="gray"
+        values="1 0 0 0 0 
+                    1 0 0 0 0
+                    1 0 0 0 0
+                    0 0 0 1 0"
+      />
+
+      <feComponentTransfer colorInterpolationFilters="sRGB" result="duotone">
+        <feFuncR type="table" tableValues="0.2588235294 0.61960784317" />
+        <feFuncG type="table" tableValues="0.1333333333 0.937254902" />
+        <feFuncB type="table" tableValues="0.9450980392 0.8823529412" />
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+    </filter>
     <filter id="peachy">
       <feColorMatrix
         type="matrix"

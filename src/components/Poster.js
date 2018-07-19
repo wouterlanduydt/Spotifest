@@ -8,7 +8,7 @@ import SpotifyLogo from "../assets/svg/spotify.svg";
 
 const Wrapper = styled.div`
   margin: 0 auto;
-  max-width: 97vw;
+  max-width: 96vw;
   @media (min-width: 570px) {
     max-width: ${props => props.theme.constants.posterWidth};
   }

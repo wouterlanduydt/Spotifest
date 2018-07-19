@@ -50,7 +50,7 @@ const getArtistLinkCss = importance => {
   switch (importance) {
     case 1:
       return css`
-        font-size: 7.6vw;
+        font-size: 7vw;
         font-weight: 900;
         @media (min-width: ${props => props.theme.constants.posterWidth}) {
           font-size: 4.2em;
@@ -58,7 +58,7 @@ const getArtistLinkCss = importance => {
       `;
     case 2:
       return css`
-        font-size: 4.6vw;
+        font-size: 4.2vw;
         font-weight: 700;
         @media (min-width: ${props => props.theme.constants.posterWidth}) {
           font-size: 2.4em;
@@ -66,7 +66,7 @@ const getArtistLinkCss = importance => {
       `;
     case 3:
       return css`
-        font-size: 3.2vw;
+        font-size: 3vw;
         font-weight: 500;
         @media (min-width: ${props => props.theme.constants.posterWidth}) {
           font-size: 1.6em;
@@ -74,7 +74,7 @@ const getArtistLinkCss = importance => {
       `;
     default:
       return css`
-        font-size: 3.2vw;
+        font-size: 3vw;
         font-weight: 500;
         @media (min-width: ${props => props.theme.constants.posterWidth}) {
           font-size: 1.6em;
