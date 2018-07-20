@@ -44,7 +44,8 @@ const Footer = ({ name, websiteLink, sourceLink, color }) => (
 Footer.propTypes = {
   name: PropTypes.string.isRequired,
   websiteLink: PropTypes.string.isRequired,
-  sourceLink: PropTypes.string.isRequired
+  sourceLink: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired
 };
 
 export default Footer;
