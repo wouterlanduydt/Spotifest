@@ -155,6 +155,10 @@ class App extends Component {
                 name="Wouter Landuydt"
                 websiteLink="https://wouterlanduydt.be/"
                 sourceLink="https://github.com/wouterlanduydt/Spotifest"
+                color={
+                  backgroundColors.find(color => color.name === backgroundColor)
+                    .value
+                }
               />
             </div>
           )}

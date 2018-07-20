@@ -11,17 +11,32 @@ const StyledFooter = styled.footer`
   z-index: 99;
 `;
 
-const Footer = ({ name, websiteLink, sourceLink }) => (
+const Link = styled.a`
+  color: ${props => props.color};
+  font-weight: 600;
+`;
+
+const Footer = ({ name, websiteLink, sourceLink, color }) => (
   <StyledFooter>
     <span>
       Made by{" "}
-      <a href={websiteLink} target="_blank" rel="noopener noreferrer">
+      <Link
+        color={color}
+        href={websiteLink}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {name}
-      </a>{" "}
+      </Link>{" "}
       -{" "}
-      <a href={sourceLink} target="_blank" rel="noopener noreferrer">
+      <Link
+        color={color}
+        href={sourceLink}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         view source
-      </a>
+      </Link>
     </span>
   </StyledFooter>
 );
