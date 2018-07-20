@@ -18,6 +18,7 @@ import Button from "../components/Button";
 import Poster from "../components/Poster";
 import TimeRangeSelector from "../components/TimeRangeSelector";
 import ColorSelector from "../components/ColorSelector";
+import Footer from "../components/Footer";
 
 injectGlobal`
 ${reset} 
@@ -149,6 +150,11 @@ class App extends Component {
                 backgroundColor={backgroundColor}
                 profilePictureUrl={profilePictureUrl}
                 artists={artists}
+              />
+              <Footer
+                name="Wouter Landuydt"
+                websiteLink="https://wouterlanduydt.be/"
+                sourceLink="https://github.com/wouterlanduydt/Spotifest"
               />
             </div>
           )}
