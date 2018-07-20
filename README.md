@@ -1,8 +1,8 @@
 # Spotifest
 
-Spotifest is a web application that uses **Spotify data to generate your ideal festival poster**. After the user successfully logged in with his Spotify cridentials it shows a poster with his top artists.
+[Spotifest](https://spotify-top-artists.herokuapp.com/) is a web application that uses **Spotify data to generate your ideal festival poster**. After the user successfully logged in with his Spotify cridentials it shows a poster with his top artists.
 
-You can change the time range and theme of the poster. The data will be more accurate if you're a frequent Spotify user.
+You can change the time range and theme of the poster. Data will be more accurate if you're a frequent Spotify user.
 
 ![Screenshot](screenshot.png)
 
