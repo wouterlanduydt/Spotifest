@@ -14,6 +14,11 @@ const StyledFooter = styled.footer`
 const Link = styled.a`
   color: ${props => props.color};
   font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const Footer = ({ name, websiteLink, sourceLink, color }) => (

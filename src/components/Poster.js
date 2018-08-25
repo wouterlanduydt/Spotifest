@@ -6,7 +6,7 @@ import Title from "./Title";
 import DuoToneFilter from "../styles/DuoToneFilter";
 import SpotifyLogo from "../assets/svg/spotify.svg";
 
-const getBackgroundColor = color =>
+const getFilterColor = color =>
   css`
     -webkit-filter: url(#${color});
     -moz-filter: url(#${color});
@@ -49,7 +49,8 @@ const Image = styled.div`
   height: 100%;
   background: ${props => `url(${props.image}) center no-repeat`};
   background-size: cover;
-  ${props => getBackgroundColor(props.backgroundColor)};
+  ${props => getFilterColor(props.backgroundColor)};
+  image-rendering: crisp-edges;
 `;
 
 const ContentWrapper = styled.div`

@@ -91,9 +91,11 @@ const ArtistLink = styled.a`
   color: white;
   text-shadow: rgba(0, 0, 0, 0.2) 0px 0 24px;
   text-decoration: none;
-
   ${props => getArtistLinkCss(props.importance)};
-  &:hover {
+
+  &:hover,
+  &:focus {
+    outline: none;
     text-decoration: underline;
   }
 `;

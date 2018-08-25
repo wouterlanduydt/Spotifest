@@ -24,13 +24,26 @@ const Button = styled.button`
   font-weight: 500;
   margin: 0;
   border: 2px solid rgba(0, 0, 0, 0.8);
+  transition: all 200ms ease-in-out;
+
+  &:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+
+  &:last-child {
+    border-radius: 0 4px 4px 0;
+  }
 
   &:nth-child(2) {
     margin: 0 -2px;
   }
 
-  &:hover {
+  &:hover,
+  &:focus {
+    outline: none;
     cursor: pointer;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
   }
 
   @media (min-width: 400px) {

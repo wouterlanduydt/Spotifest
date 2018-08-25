@@ -14,4 +14,8 @@ export default css`
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   }
+
+  :focus {
+    outline: 3px solid #74b0fc;
+  }
 `;
