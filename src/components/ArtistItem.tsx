@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import { constants } from "styles/branding";
 
 const getWrapperCss = (importance: number) => {
   switch (importance) {
@@ -51,7 +52,7 @@ const getArtistLinkCss = (importance: number) => {
       return css`
         font-size: 7vw;
         font-weight: 900;
-        @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
+        @media (min-width: ${constants.posterWidth}) {
           font-size: 4.2em;
         }
       `;
@@ -59,7 +60,7 @@ const getArtistLinkCss = (importance: number) => {
       return css`
         font-size: 4.2vw;
         font-weight: 700;
-        @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
+        @media (min-width: ${constants.posterWidth}) {
           font-size: 2.4em;
         }
       `;
@@ -67,7 +68,7 @@ const getArtistLinkCss = (importance: number) => {
       return css`
         font-size: 3vw;
         font-weight: 500;
-        @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
+        @media (min-width: ${constants.posterWidth}) {
           font-size: 1.6em;
         }
       `;
@@ -75,7 +76,7 @@ const getArtistLinkCss = (importance: number) => {
       return css`
         font-size: 3vw;
         font-weight: 500;
-        @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
+        @media (min-width: ${constants.posterWidth}) {
           font-size: 1.6em;
         }
       `;
@@ -107,12 +108,7 @@ type TProps = {
 
 const ArtistItem = ({ name, link, importance }: TProps) => (
   <Wrapper importance={importance}>
-    <ArtistLink
-      importance={importance}
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <ArtistLink importance={importance} href={link} rel="noopener noreferrer">
       {name}
     </ArtistLink>
   </Wrapper>

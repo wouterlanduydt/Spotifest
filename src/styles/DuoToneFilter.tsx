@@ -2,11 +2,12 @@ import React from "react";
 
 const DuoToneFilter = () => (
   <svg xmlns="http://www.w3.org/2000/svg">
-    <filter id="blue">
+    {/* filter ID is the hex code without # */}
+    <filter id="5057ad">
       <feColorMatrix
         type="matrix"
         result="gray"
-        values="1 0 0 0 0 
+        values="1 0 0 0 0
                     1 0 0 0 0
                     1 0 0 0 0
                     0 0 0 1 0"
@@ -19,11 +20,12 @@ const DuoToneFilter = () => (
         <feFuncA type="table" tableValues="0 1" />
       </feComponentTransfer>
     </filter>
-    <filter id="peachy">
+    {/* filter ID is the hex code without # */}
+    <filter id="b14e72">
       <feColorMatrix
         type="matrix"
         result="gray"
-        values="1 0 0 0 0 
+        values="1 0 0 0 0
                     1 0 0 0 0
                     1 0 0 0 0
                     0 0 0 1 0"

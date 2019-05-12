@@ -5,21 +5,22 @@ import Title from "./Title";
 import DuoToneFilter from "../styles/DuoToneFilter";
 import SpotifyLogo from "../assets/svg/spotify.svg";
 import { TArtist } from "types/general";
+import { constants } from "styles/branding";
 
 const getFilterColor = (color: string) =>
   css`
-    -webkit-filter: url(#${color});
-    -moz-filter: url(#${color});
-    -o-filter: url(#${color});
-    -ms-filter: url(#${color});
-    filter: url(#${color});
+    -webkit-filter: url(${color});
+    -moz-filter: url(${color});
+    -o-filter: url(${color});
+    -ms-filter: url(${color});
+    filter: url(${color});
   `;
 
 const Wrapper = styled.div`
   margin: 0 auto;
   max-width: 96vw;
   @media (min-width: 570px) {
-    max-width: ${({ theme }) => theme.constants.posterWidth};
+    max-width: ${constants.posterWidth};
   }
 `;
 
@@ -48,6 +49,7 @@ const Image = styled.div<{ image: string; backgroundColor: string }>`
   width: 100%;
   height: 100%;
   background: ${({ image }) => `url(${image}) center no-repeat`};
+  background-color: ${({ backgroundColor }) => backgroundColor};
   background-size: cover;
   ${({ backgroundColor }) => getFilterColor(backgroundColor)};
   image-rendering: crisp-edges;
@@ -99,11 +101,7 @@ const Poster = ({ artists, profilePictureUrl, backgroundColor }: TProps) => {
             <Title title="Spotifest" />
             <div>{sections}</div>
             <Bottom>
-              <a
-                href="https://www.spotify.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://www.spotify.com" rel="noopener noreferrer">
                 <BottomLogo src={SpotifyLogo} alt="" />
               </a>
             </Bottom>

@@ -9,12 +9,9 @@ export const timeRanges = [
   { value: "long_term", label: "Long term" }
 ];
 
-export const defaultBackgroundUrl =
-  "https://assets.sk-static.com/assets/nw/components/homepage/hero-3-f594edb.jpg";
+export const DEFAULT_BG = "https://lorempixel.com/480/640/nightlife";
 
-export const SPOTIFY_ENDPOINTS = {
-  topArtists: "https://api.spotify.com/v1/me/top/artists",
-  me: "https://api.spotify.com/v1/me"
+export const SPOTIFY_API = {
+  TOP_ARTISTS: "https://api.spotify.com/v1/me/top/artists",
+  ME: "https://api.spotify.com/v1/me"
 };
-
-export const backgroundColors = ["#b14e72", "#5057ad"];

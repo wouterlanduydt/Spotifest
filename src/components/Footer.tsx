@@ -27,7 +27,7 @@ type TProps = {
 
 const Footer = ({ color }: TProps) => {
   const link = (text: string, url: string) => (
-    <Link href={url} color={color} target="_blank" rel="noopener noreferrer">
+    <Link href={url} color={color} rel="noopener noreferrer">
       {text}{" "}
     </Link>
   );

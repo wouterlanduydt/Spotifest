@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { constants } from "styles/branding";
 
 const Wrapper = styled.header`
   position: relative;
@@ -21,7 +22,7 @@ const StyledTitle = styled.h1`
   border: 2px solid white;
   color: white;
 
-  @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
+  @media (min-width: ${constants.posterWidth}) {
     padding: 12px 24px;
     font-size: 2em;
   }

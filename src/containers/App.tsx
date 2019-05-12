@@ -1,17 +1,16 @@
 import React, { Component } from "react";
-import { createGlobalStyle, ThemeProvider } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import queryString from "query-string";
 import {
   BACKEND_URLS,
   timeRanges,
-  defaultBackgroundUrl,
-  SPOTIFY_ENDPOINTS,
-  backgroundColors
+  DEFAULT_BG,
+  SPOTIFY_API
 } from "../config/variables";
 import getArtistImportance from "../lib/getArtistImportance";
 import global from "../styles/global";
-import branding from "../styles/branding";
+import { backgroundColors } from "../styles/branding";
 import Button from "../components/Button";
 import Poster from "../components/Poster";
 import TimeRangeSelector from "../components/TimeRangeSelector";
@@ -59,13 +58,12 @@ class App extends Component<TProps, TState> {
       Authorization: "Bearer " + accessToken
     };
 
-    fetch(SPOTIFY_ENDPOINTS.me, { headers: this.headers })
+    fetch(SPOTIFY_API.ME, { headers: this.headers })
       .then(response => response.json())
       .then(user =>
         this.setState({
           profilePictureUrl:
-            (user.images && user.images[0] && user.images[0].url) ||
-            defaultBackgroundUrl // default background
+            (user.images && user.images[0] && user.images[0].url) || DEFAULT_BG
         })
       );
 
@@ -82,7 +80,7 @@ class App extends Component<TProps, TState> {
         time_range: timeRanges[selectedTimeRangeIndex].value
       });
 
-    fetch(SPOTIFY_ENDPOINTS.topArtists + query, {
+    fetch(SPOTIFY_API.TOP_ARTISTS + query, {
       headers: this.headers
     })
       .then(response => response.json())
@@ -116,48 +114,46 @@ class App extends Component<TProps, TState> {
     } = this.state;
 
     return (
-      <ThemeProvider theme={branding}>
-        <>
-          <GlobalStyle />
-          <div>
-            {!accessToken && (
-              <div
-                style={{
-                  width: "100vw",
-                  height: "100vh",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
-                <Button onClick={this.handleLogin} text="Login with Spotify" />
-              </div>
-            )}
-            {artists.length !== 0 && (
-              <div>
-                <TimeRangeSelector
-                  timeRanges={timeRanges}
-                  handleTimeRangeChange={this.handleTimeRangeChange}
-                  selectedTimeRangeIndex={selectedTimeRangeIndex}
-                />
-                <ColorSelector
-                  backgroundColors={backgroundColors}
-                  selectedColor={backgroundColor}
-                  onButtonClick={(backgroundColor: string) =>
-                    this.setState({ backgroundColor })
-                  }
-                />
-                <Poster
-                  backgroundColor={backgroundColor}
-                  profilePictureUrl={profilePictureUrl}
-                  artists={artists}
-                />
-                <Footer color={backgroundColor} />
-              </div>
-            )}
-          </div>
-        </>
-      </ThemeProvider>
+      <>
+        <GlobalStyle />
+        <div>
+          {!accessToken && (
+            <div
+              style={{
+                width: "100vw",
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Button onClick={this.handleLogin} text="Login with Spotify" />
+            </div>
+          )}
+          {artists.length !== 0 && (
+            <div>
+              <TimeRangeSelector
+                timeRanges={timeRanges}
+                handleTimeRangeChange={this.handleTimeRangeChange}
+                selectedTimeRangeIndex={selectedTimeRangeIndex}
+              />
+              <ColorSelector
+                backgroundColors={backgroundColors}
+                selectedColor={backgroundColor}
+                onButtonClick={(backgroundColor: string) =>
+                  this.setState({ backgroundColor })
+                }
+              />
+              <Poster
+                backgroundColor={backgroundColor}
+                profilePictureUrl={profilePictureUrl}
+                artists={artists}
+              />
+              <Footer color={backgroundColor} />
+            </div>
+          )}
+        </div>
+      </>
     );
   }
 }

@@ -16,6 +16,6 @@ export default css`
   }
 
   :focus {
-    outline: 3px solid #74b0fc;
+    outline: 2px solid #74b0fc;
   }
 `;
