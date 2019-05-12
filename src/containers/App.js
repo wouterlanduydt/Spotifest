@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { injectGlobal, ThemeProvider } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import reset from "styled-reset";
 import queryString from "query-string";
 import {
@@ -20,8 +20,8 @@ import TimeRangeSelector from "../components/TimeRangeSelector";
 import ColorSelector from "../components/ColorSelector";
 import Footer from "../components/Footer";
 
-injectGlobal`
-${reset} 
+const GlobalStyle = createGlobalStyle`
+${reset}
 ${global}`;
 
 class App extends Component {
@@ -115,54 +115,58 @@ class App extends Component {
 
     return (
       <ThemeProvider theme={branding}>
-        <div>
-          {!accessToken && (
-            <div
-              style={{
-                width: "100vw",
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Button
-                onButtonClick={() => this.handleLoginClick()}
-                text="Login with Spotify"
-              />
-            </div>
-          )}
-          {artists.length !== 0 && (
-            <div>
-              <TimeRangeSelector
-                timeRanges={timeRanges}
-                handleTimeRangeChange={this.handleTimeRangeChange}
-                selectedTimeRangeIndex={selectedTimeRangeIndex}
-              />
-              <ColorSelector
-                backgroundColors={backgroundColors}
-                selectedColor={backgroundColor}
-                onButtonClick={color =>
-                  this.setState({ backgroundColor: color })
-                }
-              />
-              <Poster
-                backgroundColor={backgroundColor}
-                profilePictureUrl={profilePictureUrl}
-                artists={artists}
-              />
-              <Footer
-                name="Wouter Landuydt"
-                websiteLink="https://wouterlanduydt.be/"
-                sourceLink="https://github.com/wouterlanduydt/Spotifest"
-                color={
-                  backgroundColors.find(color => color.name === backgroundColor)
-                    .value
-                }
-              />
-            </div>
-          )}
-        </div>
+        <>
+          <GlobalStyle />
+          <div>
+            {!accessToken && (
+              <div
+                style={{
+                  width: "100vw",
+                  height: "100vh",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Button
+                  onButtonClick={() => this.handleLoginClick()}
+                  text="Login with Spotify"
+                />
+              </div>
+            )}
+            {artists.length !== 0 && (
+              <div>
+                <TimeRangeSelector
+                  timeRanges={timeRanges}
+                  handleTimeRangeChange={this.handleTimeRangeChange}
+                  selectedTimeRangeIndex={selectedTimeRangeIndex}
+                />
+                <ColorSelector
+                  backgroundColors={backgroundColors}
+                  selectedColor={backgroundColor}
+                  onButtonClick={color =>
+                    this.setState({ backgroundColor: color })
+                  }
+                />
+                <Poster
+                  backgroundColor={backgroundColor}
+                  profilePictureUrl={profilePictureUrl}
+                  artists={artists}
+                />
+                <Footer
+                  name="Wouter Landuydt"
+                  websiteLink="https://wouterlanduydt.be/"
+                  sourceLink="https://github.com/wouterlanduydt/Spotifest"
+                  color={
+                    backgroundColors.find(
+                      color => color.name === backgroundColor
+                    ).value
+                  }
+                />
+              </div>
+            )}
+          </div>
+        </>
       </ThemeProvider>
     );
   }
