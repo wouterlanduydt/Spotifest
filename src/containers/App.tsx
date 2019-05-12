@@ -86,16 +86,15 @@ class App extends Component<TProps, TState> {
       headers: this.headers
     })
       .then(response => response.json())
-      .then(({ items: artists }: TTopArtistsResponse) => {
-        console.log(artists);
+      .then(({ items: artists }: TTopArtistsResponse) =>
         this.setState({
           artists: artists.map((artist, i) => ({
             name: artist.name,
             link: artist.external_urls.spotify,
             importance: getArtistImportance(i)
           }))
-        });
-      })
+        })
+      )
       .catch(e => console.log(e));
   };
 
@@ -153,12 +152,7 @@ class App extends Component<TProps, TState> {
                   profilePictureUrl={profilePictureUrl}
                   artists={artists}
                 />
-                <Footer
-                  name="Wouter Landuydt"
-                  websiteLink="https://wouterlanduydt.be/"
-                  sourceLink="https://github.com/wouterlanduydt/Spotifest"
-                  color={backgroundColor}
-                />
+                <Footer color={backgroundColor} />
               </div>
             )}
           </div>

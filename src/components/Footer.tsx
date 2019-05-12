@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { author, repository, version } from "../../package.json";
 
 const StyledFooter = styled.footer`
   margin-top: 56px;
@@ -10,8 +11,8 @@ const StyledFooter = styled.footer`
   z-index: 99;
 `;
 
-const Link = styled.a`
-  color: ${props => props.color};
+const Link = styled.a<{ color: string }>`
+  color: ${({ color }) => color};
   font-weight: 600;
   text-decoration: none;
 
@@ -21,35 +22,24 @@ const Link = styled.a`
 `;
 
 type TProps = {
-  name: string;
-  websiteLink: string;
-  sourceLink: string;
   color: string;
 };
 
-const Footer = ({ name, websiteLink, sourceLink, color }: TProps) => (
-  <StyledFooter>
-    <span>
-      Made by{" "}
-      <Link
-        color={color}
-        href={websiteLink}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {name}
-      </Link>{" "}
-      -{" "}
-      <Link
-        color={color}
-        href={sourceLink}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        view source
-      </Link>
-    </span>
-  </StyledFooter>
-);
+const Footer = ({ color }: TProps) => {
+  const link = (text: string, url: string) => (
+    <Link href={url} color={color} target="_blank" rel="noopener noreferrer">
+      {text}{" "}
+    </Link>
+  );
 
-export default Footer;
+  return (
+    <StyledFooter>
+      <span>
+        Made by {link(author.name, author.url)} -{" "}
+        {link("view source", repository)} - {version}
+      </span>
+    </StyledFooter>
+  );
+};
+
+export default React.memo(Footer);
