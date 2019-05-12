@@ -13,6 +13,7 @@ import ColorSelector from '../components/ColorSelector';
 import Footer from '../components/Footer';
 import { TTopArtistsResponse } from 'types/api';
 import { TArtist } from 'types/general';
+import { getProfileDetails } from 'api/spotify.api';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -52,6 +53,8 @@ class App extends Component<TProps, TState> {
     this.headers = {
       Authorization: 'Bearer ' + accessToken,
     };
+
+    // getProfileDetails({ headers: this.headers });
 
     fetch(SPOTIFY_API.ME, { headers: this.headers })
       .then(response => response.json())
@@ -110,41 +113,39 @@ class App extends Component<TProps, TState> {
     return (
       <>
         <GlobalStyle />
-        <div>
-          {!accessToken && (
-            <div
-              style={{
-                width: '100vw',
-                height: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Button onClick={this.handleLogin} text="Login with Spotify" />
-            </div>
-          )}
-          {artists.length !== 0 && (
-            <div>
-              <TimeRangeSelector
-                timeRanges={timeRanges}
-                handleTimeRangeChange={this.handleTimeRangeChange}
-                selectedTimeRangeIndex={selectedTimeRangeIndex}
-              />
-              <ColorSelector
-                backgroundColors={backgroundColors}
-                selectedColor={backgroundColor}
-                onButtonClick={(backgroundColor: string) => this.setState({ backgroundColor })}
-              />
-              <Poster
-                backgroundColor={backgroundColor}
-                profilePictureUrl={profilePictureUrl}
-                artists={artists}
-              />
-              <Footer color={backgroundColor} />
-            </div>
-          )}
-        </div>
+        {!accessToken && (
+          <div
+            style={{
+              width: '100vw',
+              height: '100vh',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Button onClick={this.handleLogin} text="Login with Spotify" />
+          </div>
+        )}
+        {artists.length !== 0 && (
+          <>
+            <TimeRangeSelector
+              timeRanges={timeRanges}
+              handleTimeRangeChange={this.handleTimeRangeChange}
+              selectedTimeRangeIndex={selectedTimeRangeIndex}
+            />
+            <ColorSelector
+              backgroundColors={backgroundColors}
+              selectedColor={backgroundColor}
+              onButtonClick={(backgroundColor: string) => this.setState({ backgroundColor })}
+            />
+            <Poster
+              backgroundColor={backgroundColor}
+              profilePictureUrl={profilePictureUrl}
+              artists={artists}
+            />
+            <Footer color={backgroundColor} />
+          </>
+        )}
       </>
     );
   }

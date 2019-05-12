@@ -1,20 +1,11 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import ArtistSection from './ArtistSection';
 import Title from './Title';
 import DuoToneFilter from '../styles/DuoToneFilter';
 import SpotifyLogo from '../assets/svg/spotify.svg';
 import { TArtist } from 'types/general';
 import { constants } from 'styles/branding';
-
-const getFilterColor = (color: string) =>
-  css`
-    -webkit-filter: url(${color});
-    -moz-filter: url(${color});
-    -o-filter: url(${color});
-    -ms-filter: url(${color});
-    filter: url(${color});
-  `;
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -51,7 +42,7 @@ const Image = styled.div<{ image: string; backgroundColor: string }>`
   background: ${({ image }) => `url(${image}) center no-repeat`};
   background-color: ${({ backgroundColor }) => backgroundColor};
   background-size: cover;
-  ${({ backgroundColor }) => getFilterColor(backgroundColor)};
+  filter: ${({ backgroundColor }) => `url(${backgroundColor})`};
   image-rendering: crisp-edges;
 `;
 

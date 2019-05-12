@@ -15,6 +15,7 @@
     "prettier": "prettier 'src/**/*.{ts,tsx}' --write"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "query-string": "6.5.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
