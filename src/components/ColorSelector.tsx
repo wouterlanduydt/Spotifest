@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   display: flex;
@@ -8,8 +8,7 @@ const Wrapper = styled.div`
 `;
 
 const Button = styled.button<{ isSelected: boolean; color: string }>`
-  border: ${({ isSelected }) =>
-    isSelected ? "2px solid rgba(0, 0, 0, 0.8)" : "none"};
+  border: ${({ isSelected }) => (isSelected ? '2px solid rgba(0, 0, 0, 0.8)' : 'none')};
   width: 24px;
   height: 24px;
   background-color: ${({ color }) => color};
@@ -25,9 +24,7 @@ const Button = styled.button<{ isSelected: boolean; color: string }>`
   &:hover {
     cursor: pointer;
     border: ${({ isSelected }) =>
-      isSelected
-        ? "2px solid rgba(0, 0, 0, 0.8)"
-        : "2px solid rgba(0, 0, 0, 0.6)"};
+      isSelected ? '2px solid rgba(0, 0, 0, 0.8)' : '2px solid rgba(0, 0, 0, 0.6)'};
   }
 
   &:focus {
@@ -41,11 +38,7 @@ type TProps = {
   onButtonClick: (color: string) => void;
 };
 
-const ColorSelector = ({
-  backgroundColors,
-  selectedColor,
-  onButtonClick
-}: TProps) => (
+const ColorSelector = ({ backgroundColors, selectedColor, onButtonClick }: TProps) => (
   <Wrapper>
     {backgroundColors.map(color => (
       <Button

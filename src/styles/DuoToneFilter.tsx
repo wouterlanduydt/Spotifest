@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const DuoToneFilter = () => (
   <svg xmlns="http://www.w3.org/2000/svg">

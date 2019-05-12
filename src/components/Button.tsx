@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const StyledButton = styled.button`
   border: none;
@@ -16,14 +16,10 @@ const StyledButton = styled.button`
 `;
 
 type TProps = {
-  onClick:
-    | ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void)
-    | undefined;
+  onClick: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
   text: string;
 };
 
-const Button = ({ onClick, text }: TProps) => (
-  <StyledButton onClick={onClick}>{text}</StyledButton>
-);
+const Button = ({ onClick, text }: TProps) => <StyledButton onClick={onClick}>{text}</StyledButton>;
 
 export default Button;

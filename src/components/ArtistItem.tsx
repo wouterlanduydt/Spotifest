@@ -1,6 +1,6 @@
-import React from "react";
-import styled, { css } from "styled-components";
-import { constants } from "styles/branding";
+import React from 'react';
+import styled, { css } from 'styled-components';
+import { constants } from 'styles/branding';
 
 const getWrapperCss = (importance: number) => {
   switch (importance) {

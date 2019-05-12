@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import ArtistItem from "./ArtistItem";
-import { TArtist } from "types/general";
+import React from 'react';
+import styled from 'styled-components';
+import ArtistItem from './ArtistItem';
+import { TArtist } from 'types/general';
 
 const Wrapper = styled.div`
   &:nth-child(1) {

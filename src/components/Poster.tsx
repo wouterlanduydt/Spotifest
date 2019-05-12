@@ -1,11 +1,11 @@
-import React from "react";
-import styled, { css } from "styled-components";
-import ArtistSection from "./ArtistSection";
-import Title from "./Title";
-import DuoToneFilter from "../styles/DuoToneFilter";
-import SpotifyLogo from "../assets/svg/spotify.svg";
-import { TArtist } from "types/general";
-import { constants } from "styles/branding";
+import React from 'react';
+import styled, { css } from 'styled-components';
+import ArtistSection from './ArtistSection';
+import Title from './Title';
+import DuoToneFilter from '../styles/DuoToneFilter';
+import SpotifyLogo from '../assets/svg/spotify.svg';
+import { TArtist } from 'types/general';
+import { constants } from 'styles/branding';
 
 const getFilterColor = (color: string) =>
   css`
@@ -86,10 +86,7 @@ const Poster = ({ artists, profilePictureUrl, backgroundColor }: TProps) => {
 
   for (let i = 1; i <= 3; i++) {
     sections.push(
-      <ArtistSection
-        key={i}
-        artists={artists.filter(artist => artist.importance === i)}
-      />
+      <ArtistSection key={i} artists={artists.filter(artist => artist.importance === i)} />,
     );
   }
 

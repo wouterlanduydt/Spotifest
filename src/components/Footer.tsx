@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { author, repository, version } from "../../package.json";
+import React from 'react';
+import styled from 'styled-components';
+import { author, repository, version } from '../../package.json';
 
 const StyledFooter = styled.footer`
   margin-top: 56px;
@@ -28,15 +28,14 @@ type TProps = {
 const Footer = ({ color }: TProps) => {
   const link = (text: string, url: string) => (
     <Link href={url} color={color} rel="noopener noreferrer">
-      {text}{" "}
+      {text}{' '}
     </Link>
   );
 
   return (
     <StyledFooter>
       <span>
-        Made by {link(author.name, author.url)} -{" "}
-        {link("view source", repository)} - {version}
+        Made by {link(author.name, author.url)} - {link('view source', repository)} - {version}
       </span>
     </StyledFooter>
   );

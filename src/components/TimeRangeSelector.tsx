@@ -1,5 +1,5 @@
-import React from "react";
-import styled, { css } from "styled-components";
+import React from 'react';
+import styled, { css } from 'styled-components';
 
 const Wrapper = styled.div`
   display: flex;
@@ -62,7 +62,7 @@ type TProps = {
 const TimeRangeSelector = ({
   timeRanges,
   handleTimeRangeChange,
-  selectedTimeRangeIndex
+  selectedTimeRangeIndex,
 }: TProps) => (
   <Wrapper>
     {timeRanges.map((timeRange, i) => (

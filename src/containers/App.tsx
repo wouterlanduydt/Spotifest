@@ -1,23 +1,18 @@
-import React, { Component } from "react";
-import { createGlobalStyle } from "styled-components";
-import reset from "styled-reset";
-import queryString from "query-string";
-import {
-  BACKEND_URLS,
-  timeRanges,
-  DEFAULT_BG,
-  SPOTIFY_API
-} from "../config/variables";
-import getArtistImportance from "../lib/getArtistImportance";
-import global from "../styles/global";
-import { backgroundColors } from "../styles/branding";
-import Button from "../components/Button";
-import Poster from "../components/Poster";
-import TimeRangeSelector from "../components/TimeRangeSelector";
-import ColorSelector from "../components/ColorSelector";
-import Footer from "../components/Footer";
-import { TTopArtistsResponse } from "types/api";
-import { TArtist } from "types/general";
+import React, { Component } from 'react';
+import { createGlobalStyle } from 'styled-components';
+import reset from 'styled-reset';
+import queryString from 'query-string';
+import { BACKEND_URLS, timeRanges, DEFAULT_BG, SPOTIFY_API } from '../config/constants';
+import getArtistImportance from '../lib/getArtistImportance';
+import global from '../styles/global';
+import { backgroundColors } from '../styles/branding';
+import Button from '../components/Button';
+import Poster from '../components/Poster';
+import TimeRangeSelector from '../components/TimeRangeSelector';
+import ColorSelector from '../components/ColorSelector';
+import Footer from '../components/Footer';
+import { TTopArtistsResponse } from 'types/api';
+import { TArtist } from 'types/general';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -38,11 +33,11 @@ class App extends Component<TProps, TState> {
   constructor(props: TProps) {
     super(props);
     this.state = {
-      accessToken: "",
+      accessToken: '',
       artists: [],
-      profilePictureUrl: "",
+      profilePictureUrl: '',
       selectedTimeRangeIndex: 2,
-      backgroundColor: backgroundColors[0]
+      backgroundColor: backgroundColors[0],
     };
   }
 
@@ -55,16 +50,15 @@ class App extends Component<TProps, TState> {
     if (!accessToken) return;
 
     this.headers = {
-      Authorization: "Bearer " + accessToken
+      Authorization: 'Bearer ' + accessToken,
     };
 
     fetch(SPOTIFY_API.ME, { headers: this.headers })
       .then(response => response.json())
       .then(user =>
         this.setState({
-          profilePictureUrl:
-            (user.images && user.images[0] && user.images[0].url) || DEFAULT_BG
-        })
+          profilePictureUrl: (user.images && user.images[0] && user.images[0].url) || DEFAULT_BG,
+        }),
       );
 
     this.updateArtists();
@@ -74,14 +68,14 @@ class App extends Component<TProps, TState> {
     const { selectedTimeRangeIndex } = this.state;
 
     const query =
-      "?" +
+      '?' +
       queryString.stringify({
         limit: 50,
-        time_range: timeRanges[selectedTimeRangeIndex].value
+        time_range: timeRanges[selectedTimeRangeIndex].value,
       });
 
     fetch(SPOTIFY_API.TOP_ARTISTS + query, {
-      headers: this.headers
+      headers: this.headers,
     })
       .then(response => response.json())
       .then(({ items: artists }: TTopArtistsResponse) =>
@@ -89,15 +83,15 @@ class App extends Component<TProps, TState> {
           artists: artists.map((artist, i) => ({
             name: artist.name,
             link: artist.external_urls.spotify,
-            importance: getArtistImportance(i)
-          }))
-        })
+            importance: getArtistImportance(i),
+          })),
+        }),
       )
       .catch(e => console.log(e));
   };
 
   handleLogin = () =>
-    ((window.location as any) = window.location.href.includes("localhost")
+    ((window.location as any) = window.location.href.includes('localhost')
       ? BACKEND_URLS.LOCAL
       : BACKEND_URLS.PROD);
 
@@ -110,7 +104,7 @@ class App extends Component<TProps, TState> {
       artists,
       profilePictureUrl,
       selectedTimeRangeIndex,
-      backgroundColor
+      backgroundColor,
     } = this.state;
 
     return (
@@ -120,11 +114,11 @@ class App extends Component<TProps, TState> {
           {!accessToken && (
             <div
               style={{
-                width: "100vw",
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
+                width: '100vw',
+                height: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
               <Button onClick={this.handleLogin} text="Login with Spotify" />
@@ -140,9 +134,7 @@ class App extends Component<TProps, TState> {
               <ColorSelector
                 backgroundColors={backgroundColors}
                 selectedColor={backgroundColor}
-                onButtonClick={(backgroundColor: string) =>
-                  this.setState({ backgroundColor })
-                }
+                onButtonClick={(backgroundColor: string) => this.setState({ backgroundColor })}
               />
               <Poster
                 backgroundColor={backgroundColor}

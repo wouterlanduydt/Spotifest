@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { constants } from "styles/branding";
+import React from 'react';
+import styled from 'styled-components';
+import { constants } from 'styles/branding';
 
 const Wrapper = styled.header`
   position: relative;
