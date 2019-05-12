@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
 const StyledButton = styled.button`
   border: none;
@@ -16,13 +15,15 @@ const StyledButton = styled.button`
   }
 `;
 
-const Button = ({ onButtonClick, text }) => (
-  <StyledButton onClick={onButtonClick}>{text}</StyledButton>
-);
-
-Button.propTypes = {
-  onButtonClick: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired
+type TProps = {
+  onClick:
+    | ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void)
+    | undefined;
+  text: string;
 };
+
+const Button = ({ onClick, text }: TProps) => (
+  <StyledButton onClick={onClick}>{text}</StyledButton>
+);
 
 export default Button;

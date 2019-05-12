@@ -1,6 +1,5 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import PropTypes from "prop-types";
 
 const Wrapper = styled.div`
   display: flex;
@@ -8,10 +7,10 @@ const Wrapper = styled.div`
   margin: 20px 0 0;
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ isSelected: boolean }>`
   border: none;
-  ${props =>
-    props.isSelected
+  ${({ isSelected }) =>
+    isSelected
       ? css`
           background-color: rgba(0, 0, 0, 0.8);
           color: white;
@@ -51,11 +50,20 @@ const Button = styled.button`
   }
 `;
 
+type TProps = {
+  timeRanges: {
+    value: string;
+    label: string;
+  }[];
+  handleTimeRangeChange: (i: number) => void;
+  selectedTimeRangeIndex: number;
+};
+
 const TimeRangeSelector = ({
   timeRanges,
   handleTimeRangeChange,
   selectedTimeRangeIndex
-}) => (
+}: TProps) => (
   <Wrapper>
     {timeRanges.map((timeRange, i) => (
       <Button
@@ -68,16 +76,5 @@ const TimeRangeSelector = ({
     ))}
   </Wrapper>
 );
-
-TimeRangeSelector.propTypes = {
-  timeRanges: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired
-    })
-  ),
-  handleTimeRangeChange: PropTypes.func.isRequired,
-  selectedTimeRangeIndex: PropTypes.number.isRequired
-};
 
 export default TimeRangeSelector;

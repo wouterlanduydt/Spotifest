@@ -17,10 +17,4 @@ export const SPOTIFY_ENDPOINTS = {
   me: "https://api.spotify.com/v1/me"
 };
 
-export const backgroundColors = [
-  { name: "peachy", value: "#b14e72" },
-  {
-    name: "blue",
-    value: "#5057ad"
-  }
-];
+export const backgroundColors = ["#b14e72", "#5057ad"];

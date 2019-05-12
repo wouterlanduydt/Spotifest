@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 import ArtistItem from "./ArtistItem";
+import { TArtist } from "types/general";
 
 const Wrapper = styled.div`
   &:nth-child(1) {
@@ -24,10 +24,14 @@ const ArtistList = styled.ol`
   flex-wrap: wrap;
 `;
 
-const ArtistSection = ({ artists }) => (
+type TProps = {
+  artists: TArtist[];
+};
+
+const ArtistSection = ({ artists }: TProps) => (
   <Wrapper>
     <ArtistList>
-      {artists.map((artist, i) => (
+      {artists.map(artist => (
         <ArtistItem
           key={artist.name}
           link={artist.link}
@@ -38,15 +42,5 @@ const ArtistSection = ({ artists }) => (
     </ArtistList>
   </Wrapper>
 );
-
-ArtistSection.propTypes = {
-  artists: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      link: PropTypes.string.isRequired,
-      importance: PropTypes.number.isRequired
-    })
-  )
-};
 
 export default ArtistSection;

@@ -1,12 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled, { css } from "styled-components";
 import ArtistSection from "./ArtistSection";
 import Title from "./Title";
 import DuoToneFilter from "../styles/DuoToneFilter";
 import SpotifyLogo from "../assets/svg/spotify.svg";
+import { TArtist } from "types/general";
 
-const getFilterColor = color =>
+const getFilterColor = (color: string) =>
   css`
     -webkit-filter: url(#${color});
     -moz-filter: url(#${color});
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
   max-width: 96vw;
   @media (min-width: 570px) {
-    max-width: ${props => props.theme.constants.posterWidth};
+    max-width: ${({ theme }) => theme.constants.posterWidth};
   }
 `;
 
@@ -40,16 +40,16 @@ const PosterInner = styled.div`
   margin-top: 24px;
 `;
 
-const Image = styled.div`
+const Image = styled.div<{ image: string; backgroundColor: string }>`
   position: absolute;
   opacity: 0.6;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: ${props => `url(${props.image}) center no-repeat`};
+  background: ${({ image }) => `url(${image}) center no-repeat`};
   background-size: cover;
-  ${props => getFilterColor(props.backgroundColor)};
+  ${({ backgroundColor }) => getFilterColor(backgroundColor)};
   image-rendering: crisp-edges;
 `;
 
@@ -73,7 +73,13 @@ const BottomLogo = styled.img`
   width: 20px;
 `;
 
-const Poster = ({ artists, profilePictureUrl, backgroundColor }) => {
+type TProps = {
+  artists: TArtist[];
+  profilePictureUrl: string;
+  backgroundColor: string;
+};
+
+const Poster = ({ artists, profilePictureUrl, backgroundColor }: TProps) => {
   const sections = [];
 
   for (let i = 1; i <= 3; i++) {
@@ -108,18 +114,6 @@ const Poster = ({ artists, profilePictureUrl, backgroundColor }) => {
       </PosterWrapper>
     </Wrapper>
   );
-};
-
-Poster.propTypes = {
-  artists: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      link: PropTypes.string.isRequired,
-      importance: PropTypes.number.isRequired
-    })
-  ),
-  profilePictureUrl: PropTypes.string.isRequired,
-  backgroundColor: PropTypes.string.isRequired
 };
 
 export default Poster;

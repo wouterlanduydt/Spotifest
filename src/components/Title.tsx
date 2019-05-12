@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
 const Wrapper = styled.header`
   position: relative;
@@ -22,20 +21,20 @@ const StyledTitle = styled.h1`
   border: 2px solid white;
   color: white;
 
-  @media (min-width: ${props => props.theme.constants.posterWidth}) {
+  @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
     padding: 12px 24px;
     font-size: 2em;
   }
 `;
 
-const Title = ({ title }) => (
+type TProps = {
+  title: string;
+};
+
+const Title = ({ title }: TProps) => (
   <Wrapper>
     <StyledTitle>{title}</StyledTitle>
   </Wrapper>
 );
-
-Title.propTypes = {
-  title: PropTypes.string
-};
 
 export default Title;

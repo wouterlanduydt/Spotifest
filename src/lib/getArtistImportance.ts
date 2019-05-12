@@ -1,4 +1,4 @@
-const getArtistImportance = position => {
+const getArtistImportance = (position: number) => {
   if (position <= 3) {
     return 1;
   } else if (position > 1 && position <= 20) {
@@ -6,6 +6,7 @@ const getArtistImportance = position => {
   } else if (position > 20) {
     return 3;
   }
+  return 3;
 };
 
 export default getArtistImportance;

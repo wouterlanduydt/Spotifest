@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
 const StyledFooter = styled.footer`
   margin-top: 56px;
@@ -21,7 +20,14 @@ const Link = styled.a`
   }
 `;
 
-const Footer = ({ name, websiteLink, sourceLink, color }) => (
+type TProps = {
+  name: string;
+  websiteLink: string;
+  sourceLink: string;
+  color: string;
+};
+
+const Footer = ({ name, websiteLink, sourceLink, color }: TProps) => (
   <StyledFooter>
     <span>
       Made by{" "}
@@ -45,12 +51,5 @@ const Footer = ({ name, websiteLink, sourceLink, color }) => (
     </span>
   </StyledFooter>
 );
-
-Footer.propTypes = {
-  name: PropTypes.string.isRequired,
-  websiteLink: PropTypes.string.isRequired,
-  sourceLink: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired
-};
 
 export default Footer;

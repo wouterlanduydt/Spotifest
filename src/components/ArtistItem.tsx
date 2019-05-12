@@ -1,8 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled, { css } from "styled-components";
 
-const getWrapperCss = importance => {
+const getWrapperCss = (importance: number) => {
   switch (importance) {
     case 1:
       return css`
@@ -46,13 +45,13 @@ const getWrapperCss = importance => {
   }
 };
 
-const getArtistLinkCss = importance => {
+const getArtistLinkCss = (importance: number) => {
   switch (importance) {
     case 1:
       return css`
         font-size: 7vw;
         font-weight: 900;
-        @media (min-width: ${props => props.theme.constants.posterWidth}) {
+        @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
           font-size: 4.2em;
         }
       `;
@@ -60,7 +59,7 @@ const getArtistLinkCss = importance => {
       return css`
         font-size: 4.2vw;
         font-weight: 700;
-        @media (min-width: ${props => props.theme.constants.posterWidth}) {
+        @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
           font-size: 2.4em;
         }
       `;
@@ -68,7 +67,7 @@ const getArtistLinkCss = importance => {
       return css`
         font-size: 3vw;
         font-weight: 500;
-        @media (min-width: ${props => props.theme.constants.posterWidth}) {
+        @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
           font-size: 1.6em;
         }
       `;
@@ -76,22 +75,22 @@ const getArtistLinkCss = importance => {
       return css`
         font-size: 3vw;
         font-weight: 500;
-        @media (min-width: ${props => props.theme.constants.posterWidth}) {
+        @media (min-width: ${({ theme }) => theme.constants.posterWidth}) {
           font-size: 1.6em;
         }
       `;
   }
 };
 
-const Wrapper = styled.li`
-  ${props => getWrapperCss(props.importance)};
+const Wrapper = styled.li<{ importance: number }>`
+  ${({ importance }) => getWrapperCss(importance)};
 `;
 
-const ArtistLink = styled.a`
+const ArtistLink = styled.a<{ importance: number }>`
   color: white;
   text-shadow: rgba(0, 0, 0, 0.2) 0px 0 24px;
   text-decoration: none;
-  ${props => getArtistLinkCss(props.importance)};
+  ${({ importance }) => getArtistLinkCss(importance)};
 
   &:hover,
   &:focus {
@@ -100,7 +99,13 @@ const ArtistLink = styled.a`
   }
 `;
 
-const ArtistItem = ({ name, link, importance }) => (
+type TProps = {
+  name: string;
+  link: string;
+  importance: number;
+};
+
+const ArtistItem = ({ name, link, importance }: TProps) => (
   <Wrapper importance={importance}>
     <ArtistLink
       importance={importance}
@@ -112,11 +117,5 @@ const ArtistItem = ({ name, link, importance }) => (
     </ArtistLink>
   </Wrapper>
 );
-
-ArtistItem.propTypes = {
-  name: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
-  importance: PropTypes.number.isRequired
-};
 
 export default ArtistItem;
