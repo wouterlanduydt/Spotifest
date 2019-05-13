@@ -12,8 +12,9 @@ import TimeRangeSelector from '../components/TimeRangeSelector';
 import ColorSelector from '../components/ColorSelector';
 import Footer from '../components/Footer';
 import { TTopArtistsResponse } from 'types/api';
-import { TArtist } from 'types/general';
-import { getProfileDetails } from 'api/spotify.api';
+import { TArtist, ETimeRange } from 'types/general';
+import { connect } from 'react-redux';
+import { setSpotifyAccessToken, getUserDetailsStart, getTopArtistsStart } from 'redux/actions';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -47,14 +48,18 @@ class App extends Component<TProps, TState> {
   componentDidMount = () => {
     const parsedUrl = queryString.parse(window.location.search);
     const accessToken = parsedUrl.access_token as string;
+    // @ts-ignore
+    this.props.setSpotifyAccessToken(accessToken);
+    // @ts-ignore
+    this.props.getUserDetailsStart();
+    // @ts-ignore
+    this.props.getTopArtistsStart(ETimeRange.long);
     this.setState({ accessToken });
     if (!accessToken) return;
 
     this.headers = {
       Authorization: 'Bearer ' + accessToken,
     };
-
-    // getProfileDetails({ headers: this.headers });
 
     fetch(SPOTIFY_API.ME, { headers: this.headers })
       .then(response => response.json())
@@ -151,4 +156,7 @@ class App extends Component<TProps, TState> {
   }
 }
 
-export default App;
+export default connect(
+  null,
+  { getUserDetailsStart, setSpotifyAccessToken, getTopArtistsStart },
+)(App);

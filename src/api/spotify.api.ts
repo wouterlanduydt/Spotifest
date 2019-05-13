@@ -1,13 +1,9 @@
-import axios from 'axios';
+import SpotifyWebApi from 'spotify-web-api-js';
+import { ETimeRange } from 'types/general';
 
-export const getProfileDetails = (headers: any) =>
-  axios
-    .get('https://api.spotify.com/v1/me', headers)
-    .then(function(response) {
-      // handle success
-      console.log(response);
-    })
-    .catch(function(error) {
-      // handle error
-      console.log(error);
-    });
+export const spotifyApi = new SpotifyWebApi();
+
+export const fetchUserDetails = () => spotifyApi.getMe();
+
+export const fetchTopArtists = (time_range: ETimeRange) =>
+  spotifyApi.getMyTopArtists({ limit: 50, time_range });
