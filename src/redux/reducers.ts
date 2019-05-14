@@ -9,6 +9,12 @@ import {
 } from './actions';
 import { ETimeRange } from 'types/general';
 
+export type TTopArtists = {
+  value: SpotifyApi.ArtistObjectFull[] | null;
+  isLoading: boolean;
+  error: Error | null;
+};
+
 export interface IState {
   user: {
     value: SpotifyApi.UserObjectPrivate | null;
@@ -16,21 +22,9 @@ export interface IState {
     error: Error | null;
   };
   artists: {
-    [ETimeRange.short]: {
-      value: SpotifyApi.ArtistObjectFull[] | null;
-      isLoading: boolean;
-      error: Error | null;
-    };
-    [ETimeRange.medium]: {
-      value: SpotifyApi.ArtistObjectFull[] | null;
-      isLoading: boolean;
-      error: Error | null;
-    };
-    [ETimeRange.long]: {
-      value: SpotifyApi.ArtistObjectFull[] | null;
-      isLoading: boolean;
-      error: Error | null;
-    };
+    [ETimeRange.short]: TTopArtists;
+    [ETimeRange.medium]: TTopArtists;
+    [ETimeRange.long]: TTopArtists;
   };
 }
 

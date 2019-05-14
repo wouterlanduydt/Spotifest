@@ -24,7 +24,7 @@ function* getUserDetailsFlow() {
   }
 }
 
-function* getTOpArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
+function* getTopArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
   try {
     const { items: value } = yield call(fetchTopArtists, timeRange);
     yield put(getTopArtistsSuccess({ timeRange, value }));
@@ -35,7 +35,7 @@ function* getTOpArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
 
 function* saga() {
   yield takeLatest(getUserDetailsStart, getUserDetailsFlow);
-  yield takeLatest(getTopArtistsStart, getTOpArtistsFlow);
+  yield takeLatest(getTopArtistsStart, getTopArtistsFlow);
 }
 
 export default saga;

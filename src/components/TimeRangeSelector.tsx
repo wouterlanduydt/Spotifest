@@ -1,6 +1,9 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { ETimeRange } from 'types/general';
+import { connect } from 'react-redux';
+import { getTopArtistsStart } from 'redux/actions';
+import { IState } from 'redux/reducers';
 
 const Wrapper = styled.div`
   display: flex;
@@ -54,15 +57,20 @@ const Button = styled.button<{ isSelected: boolean }>`
 type TProps = {
   timeRange: ETimeRange;
   setTimeRange: (timeRange: ETimeRange) => void;
+  getTopArtistsStart: (timeRange: ETimeRange) => void;
+  artists: IState['artists'];
 };
 
-const TimeRangeSelector = ({ timeRange, setTimeRange }: TProps) => (
+const TimeRangeSelector = ({ timeRange, setTimeRange, getTopArtistsStart, artists }: TProps) => (
   <Wrapper>
-    {Object.values(ETimeRange).map(timeRangeItem => (
+    {Object.values(ETimeRange).map((timeRangeItem: ETimeRange) => (
       <Button
         key={timeRangeItem}
         isSelected={timeRangeItem === timeRange}
-        onClick={() => setTimeRange(timeRangeItem)}
+        onClick={() => {
+          if (!artists[timeRangeItem].value) getTopArtistsStart(timeRangeItem);
+          setTimeRange(timeRangeItem);
+        }}
       >
         {timeRangeItem}
       </Button>
@@ -70,4 +78,7 @@ const TimeRangeSelector = ({ timeRange, setTimeRange }: TProps) => (
   </Wrapper>
 );
 
-export default TimeRangeSelector;
+export default connect(
+  ({ artists }: IState) => ({ artists }),
+  { getTopArtistsStart },
+)(React.memo(TimeRangeSelector));

@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import ArtistSection from './ArtistSection';
+// import ArtistSection from './ArtistSection';
 import Title from './Title';
 import DuoToneFilter from '../styles/DuoToneFilter';
 import SpotifyLogo from '../assets/svg/spotify.svg';
-import { TArtist } from 'types/general';
+import { ESortCriteria } from 'types/general';
 import { constants } from 'styles/branding';
+import { TTopArtists } from 'redux/reducers';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -67,27 +68,54 @@ const BottomLogo = styled.img`
 `;
 
 type TProps = {
-  artists: TArtist[];
+  artists: TTopArtists;
   profilePictureUrl: string;
   backgroundColor: string;
 };
 
 const Poster = ({ artists, profilePictureUrl, backgroundColor }: TProps) => {
-  const sections = [];
+  // const sections = [];
 
-  for (let i = 1; i <= 3; i++) {
-    sections.push(
-      <ArtistSection key={i} artists={artists.filter(artist => artist.importance === i)} />,
-    );
-  }
+  // for (let i = 1; i <= 3; i++) {
+  //   sections.push(
+  //     <ArtistSection key={i} artists={artists.filter(artist => artist.importance === i)} />,
+  //   );
+  // }
+
+  const [sortCriteria, setSortCriteria] = React.useState<ESortCriteria>(ESortCriteria.calculated);
+  // TODO: move this to a util
+  const getSortedArtists = (artistsValue: SpotifyApi.ArtistObjectFull[]) => {
+    switch (sortCriteria) {
+      case ESortCriteria.popularity:
+        return [...artistsValue].sort((a, b) => b.popularity - a.popularity);
+
+      case ESortCriteria.followers:
+        return [...artistsValue].sort((a, b) => b.followers.total - a.followers.total);
+
+      case ESortCriteria.alphabetically:
+        return [...artistsValue].sort((a, b) => a.name.localeCompare(b.name));
+
+      default:
+        return artistsValue;
+    }
+  };
 
   return (
     <Wrapper>
       <PosterWrapper>
         <PosterInner>
           <ContentWrapper>
+            <button onClick={() => setSortCriteria(ESortCriteria.popularity)}>popularity</button>
+            <button onClick={() => setSortCriteria(ESortCriteria.followers)}>followers</button>
+            <button onClick={() => setSortCriteria(ESortCriteria.calculated)}>calculated</button>
+            <button onClick={() => setSortCriteria(ESortCriteria.alphabetically)}>
+              alphabetically
+            </button>
             <Title title="Spotifest" />
-            <div>{sections}</div>
+            <p>
+              {JSON.stringify(artists.value && getSortedArtists(artists.value).map(i => i.name))}
+            </p>
+            {/* <div>{sections}</div> */}
             <Bottom>
               <a href="https://www.spotify.com" rel="noopener noreferrer">
                 <BottomLogo src={SpotifyLogo} alt="" />
@@ -102,4 +130,4 @@ const Poster = ({ artists, profilePictureUrl, backgroundColor }: TProps) => {
   );
 };
 
-export default Poster;
+export default React.memo(Poster);

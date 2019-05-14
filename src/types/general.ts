@@ -9,3 +9,10 @@ export enum ETimeRange {
   medium = 'medium_term',
   long = 'long_term',
 }
+
+export enum ESortCriteria {
+  popularity = 'popularity',
+  alphabetically = 'alphabetically',
+  followers = 'followers',
+  calculated = 'calculated',
+}

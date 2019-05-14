@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import queryString from 'query-string';
-import { BACKEND_URLS, SPOTIFY_API, DEFAULT_BG } from '../config/constants';
-import getArtistImportance from '../lib/getArtistImportance';
+import { BACKEND_URLS, DEFAULT_BG } from '../config/constants';
 import global from '../styles/global';
 import { backgroundColors } from '../styles/branding';
 import Button from '../components/Button';
@@ -11,7 +10,6 @@ import Poster from '../components/Poster';
 import TimeRangeSelector from '../components/TimeRangeSelector';
 import ColorSelector from '../components/ColorSelector';
 import Footer from '../components/Footer';
-import { TTopArtistsResponse } from 'types/api';
 import { ETimeRange } from 'types/general';
 import { connect } from 'react-redux';
 import { getUserDetailsStart, getTopArtistsStart } from 'redux/actions';
@@ -27,6 +25,7 @@ type TProps = {
   getUserDetailsStart: () => void;
   getTopArtistsStart: (timeRange: ETimeRange) => void;
   user: IState['user'];
+  artists: IState['artists'];
 };
 
 type TState = {
@@ -57,12 +56,12 @@ class App extends Component<TProps, TState> {
 
   render() {
     const { backgroundColor, timeRange } = this.state;
-    const { user } = this.props;
+    const { user, artists } = this.props;
 
     return (
       <>
         <GlobalStyle />
-        {user.value === null && (
+        {user.value === null ? (
           <div
             style={{
               width: '100vw',
@@ -74,35 +73,36 @@ class App extends Component<TProps, TState> {
           >
             <Button onClick={this.handleLogin} text="Login with Spotify" />
           </div>
+        ) : (
+          <>
+            <TimeRangeSelector
+              setTimeRange={(timeRange: ETimeRange) => this.setState({ timeRange })}
+              timeRange={timeRange}
+            />
+            <ColorSelector
+              backgroundColors={backgroundColors}
+              selectedColor={backgroundColor}
+              onButtonClick={(backgroundColor: string) => this.setState({ backgroundColor })}
+            />
+            <Poster
+              backgroundColor={backgroundColor}
+              profilePictureUrl={
+                (this.props.user.value &&
+                  this.props.user.value.images &&
+                  this.props.user.value.images[0].url) ||
+                DEFAULT_BG
+              }
+              artists={artists[timeRange]}
+            />
+            <Footer color={backgroundColor} />
+          </>
         )}
-        <>
-          <TimeRangeSelector
-            setTimeRange={(timeRange: ETimeRange) => this.setState({ timeRange })}
-            timeRange={timeRange}
-          />
-          <ColorSelector
-            backgroundColors={backgroundColors}
-            selectedColor={backgroundColor}
-            onButtonClick={(backgroundColor: string) => this.setState({ backgroundColor })}
-          />
-          <Poster
-            backgroundColor={backgroundColor}
-            profilePictureUrl={
-              (this.props.user.value &&
-                this.props.user.value.images &&
-                this.props.user.value.images[0].url) ||
-              DEFAULT_BG
-            }
-            artists={[]}
-          />
-          <Footer color={backgroundColor} />
-        </>
       </>
     );
   }
 }
 
 export default connect(
-  ({ user }: IState) => ({ user }),
+  ({ user, artists }: IState) => ({ user, artists }),
   { getUserDetailsStart, getTopArtistsStart },
 )(App);
