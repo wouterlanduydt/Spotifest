@@ -3,25 +3,16 @@ import {
   getUserDetailsStart,
   getUserDetailsSuccess,
   getUserDetailsFail,
-  setSpotifyAccessToken,
   getTopArtistsStart,
   getTopArtistsFail,
   getTopArtistsSuccess,
 } from './actions';
-import { fetchUserDetails, spotifyApi, fetchTopArtists } from 'api/spotify.api';
+import { fetchUserDetails, fetchTopArtists } from 'api/spotify.api';
 import { ETimeRange } from 'types/general';
 
 type TAction<T = void> = {
   type: string;
   payload: T;
-};
-
-const setSpotifyAccessTokenFlow = ({ payload: accessToken }: TAction<string>) => {
-  try {
-    spotifyApi.setAccessToken(accessToken);
-  } catch (e) {
-    console.log('Error setting access token: ', e);
-  }
 };
 
 function* getUserDetailsFlow() {
@@ -43,7 +34,6 @@ function* getTOpArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
 }
 
 function* saga() {
-  yield takeLatest(setSpotifyAccessToken, setSpotifyAccessTokenFlow);
   yield takeLatest(getUserDetailsStart, getUserDetailsFlow);
   yield takeLatest(getTopArtistsStart, getTOpArtistsFlow);
 }

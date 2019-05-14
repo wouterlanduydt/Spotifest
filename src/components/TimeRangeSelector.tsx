@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { ETimeRange } from 'types/general';
 
 const Wrapper = styled.div`
   display: flex;
@@ -51,27 +52,19 @@ const Button = styled.button<{ isSelected: boolean }>`
 `;
 
 type TProps = {
-  timeRanges: {
-    value: string;
-    label: string;
-  }[];
-  handleTimeRangeChange: (i: number) => void;
-  selectedTimeRangeIndex: number;
+  timeRange: ETimeRange;
+  setTimeRange: (timeRange: ETimeRange) => void;
 };
 
-const TimeRangeSelector = ({
-  timeRanges,
-  handleTimeRangeChange,
-  selectedTimeRangeIndex,
-}: TProps) => (
+const TimeRangeSelector = ({ timeRange, setTimeRange }: TProps) => (
   <Wrapper>
-    {timeRanges.map((timeRange, i) => (
+    {Object.values(ETimeRange).map(timeRangeItem => (
       <Button
-        key={timeRange.label}
-        isSelected={selectedTimeRangeIndex === i}
-        onClick={() => handleTimeRangeChange(i)}
+        key={timeRangeItem}
+        isSelected={timeRangeItem === timeRange}
+        onClick={() => setTimeRange(timeRangeItem)}
       >
-        {timeRange.label}
+        {timeRangeItem}
       </Button>
     ))}
   </Wrapper>

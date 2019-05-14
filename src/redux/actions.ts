@@ -1,8 +1,6 @@
 import { createAction } from 'redux-act';
 import { ETimeRange } from 'types/general';
 
-export const setSpotifyAccessToken = createAction<string>('SET_SPOTIFY_ACCESS_TOKEN');
-
 export const getUserDetailsStart = createAction('GET_USER_DETAILS_START');
 export const getUserDetailsSuccess = createAction<SpotifyApi.UserObjectPrivate>(
   'GET_USER_DETAILS_SUCCESS',

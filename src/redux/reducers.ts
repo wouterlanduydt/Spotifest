@@ -9,7 +9,7 @@ import {
 } from './actions';
 import { ETimeRange } from 'types/general';
 
-interface IState {
+export interface IState {
   user: {
     value: SpotifyApi.UserObjectPrivate | null;
     isLoading: boolean;
