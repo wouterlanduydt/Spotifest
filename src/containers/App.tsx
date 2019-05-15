@@ -2,19 +2,18 @@ import React, { Component } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import queryString from 'query-string';
-import { BACKEND_URLS, DEFAULT_BG } from '../config/constants';
+import { BACKEND_URLS } from '../config/constants';
 import global from '../styles/global';
-import { backgroundColors } from '../styles/branding';
 import Button from '../components/Button';
 import Poster from '../components/Poster';
-import TimeRangeSelector from '../components/TimeRangeSelector';
-import ColorSelector from '../components/ColorSelector';
+import TabBar from '../components/TabBar';
 import Footer from '../components/Footer';
-import { ETimeRange } from 'types/general';
+import { ETimeRange, ESortCriteria } from 'types/general';
 import { connect } from 'react-redux';
 import { getUserDetailsStart, getTopArtistsStart } from 'redux/actions';
 import { IState } from 'redux/reducers';
 import { spotifyApi } from 'api/spotify.api';
+import idx from 'idx';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -29,16 +28,16 @@ type TProps = {
 };
 
 type TState = {
-  backgroundColor: string;
   timeRange: ETimeRange;
+  sortCriteria: ESortCriteria;
 };
 
 class App extends Component<TProps, TState> {
   constructor(props: TProps) {
     super(props);
     this.state = {
-      backgroundColor: backgroundColors[0],
       timeRange: ETimeRange.long,
+      sortCriteria: ESortCriteria.calculated,
     };
   }
 
@@ -55,8 +54,8 @@ class App extends Component<TProps, TState> {
       : BACKEND_URLS.PROD);
 
   render() {
-    const { backgroundColor, timeRange } = this.state;
-    const { user, artists } = this.props;
+    const { timeRange, sortCriteria } = this.state;
+    const { user, artists, getTopArtistsStart } = this.props;
 
     return (
       <>
@@ -75,26 +74,26 @@ class App extends Component<TProps, TState> {
           </div>
         ) : (
           <>
-            <TimeRangeSelector
-              setTimeRange={(timeRange: ETimeRange) => this.setState({ timeRange })}
-              timeRange={timeRange}
+            <TabBar
+              items={Object.values(ETimeRange)}
+              onChange={(timeRange: any) => {
+                if (!artists[timeRange as ETimeRange].value) getTopArtistsStart(timeRange);
+                this.setState({ timeRange });
+              }}
+              initialValue={timeRange}
             />
-            <ColorSelector
-              backgroundColors={backgroundColors}
-              selectedColor={backgroundColor}
-              onButtonClick={(backgroundColor: string) => this.setState({ backgroundColor })}
+            <TabBar
+              items={Object.values(ESortCriteria)}
+              onChange={(sortCriteria: any) => this.setState({ sortCriteria })}
+              initialValue={sortCriteria}
             />
+
             <Poster
-              backgroundColor={backgroundColor}
-              profilePictureUrl={
-                (this.props.user.value &&
-                  this.props.user.value.images &&
-                  this.props.user.value.images[0].url) ||
-                DEFAULT_BG
-              }
+              username={idx(user, _ => _.value.display_name)}
               artists={artists[timeRange]}
+              sortCriteria={sortCriteria}
             />
-            <Footer color={backgroundColor} />
+            <Footer />
           </>
         )}
       </>

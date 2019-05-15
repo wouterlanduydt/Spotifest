@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { ETimeRange } from 'types/general';
+import { ETimeRange, ESortCriteria } from 'types/general';
 import { connect } from 'react-redux';
 import { getTopArtistsStart } from 'redux/actions';
 import { IState } from 'redux/reducers';
@@ -8,7 +8,7 @@ import { IState } from 'redux/reducers';
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 20px 0 0;
+  margin: 16px 0 0;
 `;
 
 const Button = styled.button<{ isSelected: boolean }>`
@@ -54,31 +54,36 @@ const Button = styled.button<{ isSelected: boolean }>`
   }
 `;
 
-type TProps = {
-  timeRange: ETimeRange;
-  setTimeRange: (timeRange: ETimeRange) => void;
-  getTopArtistsStart: (timeRange: ETimeRange) => void;
-  artists: IState['artists'];
+type TProps<T> = {
+  initialValue: T;
+  items: T[];
+  onChange: (value: T) => void;
 };
 
-const TimeRangeSelector = ({ timeRange, setTimeRange, getTopArtistsStart, artists }: TProps) => (
-  <Wrapper>
-    {Object.values(ETimeRange).map((timeRangeItem: ETimeRange) => (
-      <Button
-        key={timeRangeItem}
-        isSelected={timeRangeItem === timeRange}
-        onClick={() => {
-          if (!artists[timeRangeItem].value) getTopArtistsStart(timeRangeItem);
-          setTimeRange(timeRangeItem);
-        }}
-      >
-        {timeRangeItem}
-      </Button>
-    ))}
-  </Wrapper>
-);
+// TODO: fix types
+const TabBar = <T extends ETimeRange | ESortCriteria>({
+  items,
+  onChange,
+  initialValue,
+}: TProps<T>) => {
+  const [selectedItem, setSelectedItem] = React.useState(initialValue);
 
-export default connect(
-  ({ artists }: IState) => ({ artists }),
-  { getTopArtistsStart },
-)(React.memo(TimeRangeSelector));
+  return (
+    <Wrapper>
+      {items.map(item => (
+        <Button
+          key={String(item)}
+          onClick={() => {
+            onChange(item);
+            setSelectedItem(item);
+          }}
+          isSelected={item === selectedItem}
+        >
+          {item}
+        </Button>
+      ))}
+    </Wrapper>
+  );
+};
+
+export default React.memo(TabBar);

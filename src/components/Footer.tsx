@@ -3,16 +3,11 @@ import styled from 'styled-components';
 import { author, repository, version } from '../../package.json';
 
 const StyledFooter = styled.footer`
-  margin-top: 56px;
-  display: flex;
-  justify-content: center;
   font-size: 1.2em;
-  position: relative;
-  z-index: 99;
 `;
 
-const Link = styled.a<{ color: string }>`
-  color: ${({ color }) => color};
+const Link = styled.a`
+  color: #1fc14a;
   font-weight: 600;
   text-decoration: none;
 
@@ -21,13 +16,11 @@ const Link = styled.a<{ color: string }>`
   }
 `;
 
-type TProps = {
-  color: string;
-};
+type TProps = {};
 
-const Footer = ({ color }: TProps) => {
+const Footer = ({  }: TProps) => {
   const link = (text: string, url: string) => (
-    <Link href={url} color={color} rel="noopener noreferrer">
+    <Link href={url} rel="noopener noreferrer">
       {text}
     </Link>
   );

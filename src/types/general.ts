@@ -11,8 +11,8 @@ export enum ETimeRange {
 }
 
 export enum ESortCriteria {
-  popularity = 'popularity',
-  alphabetically = 'alphabetically',
-  followers = 'followers',
   calculated = 'calculated',
+  popularity = 'popularity',
+  followers = 'followers',
+  alphabetically = 'alphabetically',
 }
