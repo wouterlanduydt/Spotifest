@@ -29,15 +29,7 @@ const Button = styled.button<{ isSelected: boolean }>`
   border: 2px solid rgba(0, 0, 0, 0.8);
   transition: all 200ms ease-in-out;
 
-  &:first-child {
-    border-radius: 4px 0 0 4px;
-  }
-
-  &:last-child {
-    border-radius: 0 4px 4px 0;
-  }
-
-  &:nth-child(2) {
+  &:not(:last-child) {
     margin: 0 -2px;
   }
 

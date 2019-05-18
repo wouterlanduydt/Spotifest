@@ -1,6 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { isTopArtist, isMidArtist } from 'lib';
+import { ESortCriteria } from 'types/general';
 
 type TProps = {
   artist: SpotifyApi.ArtistObjectFull;
@@ -13,11 +14,29 @@ const getFontSize = (pos: number, total: number) => {
   return '3.4vw';
 };
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const Wrap = styled.li<{ position: number }>`
   margin: 0.6vw 1vw;
   font-size: ${({ position }) => getFontSize(position, 50)};
   font-weight: ${({ position }) => (position % 2 === 0 ? 800 : 500)};
   text-transform: uppercase;
+  opacity: 0;
+
+  animation-fill-mode: forwards;
+  animation-name: ${fadeIn};
+  animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
+  animation-delay: ${({ position }) => position * 5}ms;
 `;
 
 const Text = styled.a`
@@ -25,7 +44,7 @@ const Text = styled.a`
   color: white;
 `;
 
-const ArtistItem = ({ artist: { name, external_urls }, position }: TProps) => (
+const ArtistItem = ({ artist: { name, external_urls, id }, position }: TProps) => (
   <Wrap position={position}>
     <Text href={external_urls.spotify} rel="noopener noreferrer">
       {name}

@@ -92,6 +92,7 @@ class App extends Component<TProps, TState> {
               username={idx(user, _ => _.value.display_name)}
               artists={artists[timeRange]}
               sortCriteria={sortCriteria}
+              timeRange={timeRange}
             />
             <Footer />
           </>

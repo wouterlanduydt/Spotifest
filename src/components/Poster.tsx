@@ -1,7 +1,7 @@
 import React from 'react';
 import Title from './Title';
 import SpotifyLogo from '../assets/svg/spotify.svg';
-import { ESortCriteria } from 'types/general';
+import { ESortCriteria, ETimeRange } from 'types/general';
 import { TTopArtists } from 'redux/reducers';
 import ArtistItem from './ArtistItem';
 import { getSortedArtists, getHeadlinerAmt } from 'lib';
@@ -11,6 +11,7 @@ type TProps = {
   username: string | undefined | null;
   artists: TTopArtists;
   sortCriteria: ESortCriteria;
+  timeRange: ETimeRange;
 };
 
 const Wrap = styled.div`
@@ -24,20 +25,27 @@ const Wrap = styled.div`
   margin: 0 auto;
   padding: 8px;
   background: linear-gradient(45deg, #536976, #292e49);
+  margin-top: 16px;
 `;
 
 const ArtistsWrap = styled.ol`
   display: flex;
-  /* width: 100%; */
-  margin: 0 auto;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 `;
 
-const Poster = ({ artists, sortCriteria, username }: TProps) => {
+const Poster = ({ artists, sortCriteria, timeRange, username }: TProps) => {
   return (
     <Wrap>
       <Title title="Spotifest" username={username} />
+      {artists.isLoading && (
+        <img
+          src={require('../assets/svg/loading-indicator.svg')}
+          width={24}
+          style={{ marginTop: 24 }}
+        />
+      )}
       <ArtistsWrap>
         {artists.value &&
           getSortedArtists(artists.value, sortCriteria).map((artist, i) => {
@@ -45,7 +53,11 @@ const Poster = ({ artists, sortCriteria, username }: TProps) => {
 
             return (
               <React.Fragment key={artist.id}>
-                <ArtistItem artist={artist} position={i} />
+                <ArtistItem
+                  artist={artist}
+                  position={i}
+                  key={`${artist.id}-${i}-${sortCriteria}-${timeRange}`}
+                />
                 {(i === topArtists || i === midArtists) && (
                   <div style={{ width: '100%', height: '2vw' }} />
                 )}
