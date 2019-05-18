@@ -13,9 +13,8 @@ export default css`
     font-size: 62.5%;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
       'Open Sans', 'Helvetica Neue', sans-serif;
-  }
 
-  :focus {
-    outline: 2px solid #74b0fc;
+    background: linear-gradient(45deg, #232526, #181818);
+    min-height: 100vh;
   }
 `;

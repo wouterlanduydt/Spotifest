@@ -7,16 +7,13 @@ const StyledFooter = styled.footer`
   margin: 8px auto 0;
   width: 100%;
   text-align: center;
+  color: white;
 `;
 
 const Link = styled.a`
-  color: #292e49;
+  color: white;
   font-weight: 600;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  text-decoration: underline;
 `;
 
 type TProps = {};
