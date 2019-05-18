@@ -20,7 +20,7 @@ const Wrap = styled.div`
   align-items: center;
   width: 96vw;
   height: 135vw;
-  max-width: 640px;
+  max-width: ${({ theme }) => theme.maxPoster}px;
   max-height: 900px;
   margin: 0 auto;
   padding: 8px;
@@ -33,6 +33,15 @@ const ArtistsWrap = styled.ol`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+`;
+
+const Separator = styled.div`
+  width: 100%;
+  height: 2vw;
+
+  @media (min-width: ${({ theme }) => theme.maxPoster}px) {
+    height: 12px;
+  }
 `;
 
 const Poster = ({ artists, sortCriteria, timeRange, username }: TProps) => {
@@ -58,9 +67,7 @@ const Poster = ({ artists, sortCriteria, timeRange, username }: TProps) => {
                   position={i}
                   key={`${artist.id}-${i}-${sortCriteria}-${timeRange}`}
                 />
-                {(i === topArtists || i === midArtists) && (
-                  <div style={{ width: '100%', height: '2vw' }} />
-                )}
+                {(i === topArtists || i === midArtists) && <Separator />}
               </React.Fragment>
             );
           })}
