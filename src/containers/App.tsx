@@ -2,92 +2,50 @@ import React, { Component } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import queryString from 'query-string';
-import { BACKEND_URLS, timeRanges, DEFAULT_BG, SPOTIFY_API } from '../config/constants';
-import getArtistImportance from '../lib/getArtistImportance';
+import { BACKEND_URLS } from '../config/constants';
 import global from '../styles/global';
-import { backgroundColors } from '../styles/branding';
 import Button from '../components/Button';
 import Poster from '../components/Poster';
-import TimeRangeSelector from '../components/TimeRangeSelector';
-import ColorSelector from '../components/ColorSelector';
+import TabBar from '../components/TabBar';
 import Footer from '../components/Footer';
-import { TTopArtistsResponse } from 'types/api';
-import { TArtist } from 'types/general';
+import { ETimeRange, ESortCriteria } from 'types/general';
+import { connect } from 'react-redux';
+import { getUserDetailsStart, getTopArtistsStart } from 'redux/actions';
+import { IState } from 'redux/reducers';
+import { spotifyApi } from 'api/spotify.api';
+import idx from 'idx';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
   ${global}
 `;
 
-type TProps = {};
+type TProps = {
+  getUserDetailsStart: () => void;
+  getTopArtistsStart: (timeRange: ETimeRange) => void;
+  user: IState['user'];
+  artists: IState['artists'];
+};
 
 type TState = {
-  accessToken: string;
-  artists: TArtist[];
-  profilePictureUrl: string;
-  selectedTimeRangeIndex: number;
-  backgroundColor: string;
+  timeRange: ETimeRange;
+  sortCriteria: ESortCriteria;
 };
 
 class App extends Component<TProps, TState> {
   constructor(props: TProps) {
     super(props);
     this.state = {
-      accessToken: '',
-      artists: [],
-      profilePictureUrl: '',
-      selectedTimeRangeIndex: 2,
-      backgroundColor: backgroundColors[0],
+      timeRange: ETimeRange.long,
+      sortCriteria: ESortCriteria.calculated,
     };
   }
 
-  headers = {};
-
   componentDidMount = () => {
     const parsedUrl = queryString.parse(window.location.search);
-    const accessToken = parsedUrl.access_token as string;
-    this.setState({ accessToken });
-    if (!accessToken) return;
-
-    this.headers = {
-      Authorization: 'Bearer ' + accessToken,
-    };
-
-    fetch(SPOTIFY_API.ME, { headers: this.headers })
-      .then(response => response.json())
-      .then(user =>
-        this.setState({
-          profilePictureUrl: (user.images && user.images[0] && user.images[0].url) || DEFAULT_BG,
-        }),
-      );
-
-    this.updateArtists();
-  };
-
-  updateArtists = () => {
-    const { selectedTimeRangeIndex } = this.state;
-
-    const query =
-      '?' +
-      queryString.stringify({
-        limit: 50,
-        time_range: timeRanges[selectedTimeRangeIndex].value,
-      });
-
-    fetch(SPOTIFY_API.TOP_ARTISTS + query, {
-      headers: this.headers,
-    })
-      .then(response => response.json())
-      .then(({ items: artists }: TTopArtistsResponse) =>
-        this.setState({
-          artists: artists.map((artist, i) => ({
-            name: artist.name,
-            link: artist.external_urls.spotify,
-            importance: getArtistImportance(i),
-          })),
-        }),
-      )
-      .catch(e => console.log(e));
+    spotifyApi.setAccessToken(String(parsedUrl.access_token));
+    this.props.getUserDetailsStart();
+    this.props.getTopArtistsStart(ETimeRange.long);
   };
 
   handleLogin = () =>
@@ -95,59 +53,56 @@ class App extends Component<TProps, TState> {
       ? BACKEND_URLS.LOCAL
       : BACKEND_URLS.PROD);
 
-  handleTimeRangeChange = (selectedTimeRangeIndex: number) =>
-    this.setState({ selectedTimeRangeIndex }, this.updateArtists);
-
   render() {
-    const {
-      accessToken,
-      artists,
-      profilePictureUrl,
-      selectedTimeRangeIndex,
-      backgroundColor,
-    } = this.state;
+    const { timeRange, sortCriteria } = this.state;
+    const { user, artists, getTopArtistsStart } = this.props;
 
     return (
       <>
         <GlobalStyle />
-        <div>
-          {!accessToken && (
-            <div
-              style={{
-                width: '100vw',
-                height: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+        {user.value === null ? (
+          <div
+            style={{
+              width: '100vw',
+              height: '100vh',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Button onClick={this.handleLogin} text="Login with Spotify" />
+          </div>
+        ) : (
+          <>
+            <TabBar
+              items={Object.values(ETimeRange)}
+              onChange={(timeRange: any) => {
+                if (!artists[timeRange as ETimeRange].value) getTopArtistsStart(timeRange);
+                this.setState({ timeRange });
               }}
-            >
-              <Button onClick={this.handleLogin} text="Login with Spotify" />
-            </div>
-          )}
-          {artists.length !== 0 && (
-            <div>
-              <TimeRangeSelector
-                timeRanges={timeRanges}
-                handleTimeRangeChange={this.handleTimeRangeChange}
-                selectedTimeRangeIndex={selectedTimeRangeIndex}
-              />
-              <ColorSelector
-                backgroundColors={backgroundColors}
-                selectedColor={backgroundColor}
-                onButtonClick={(backgroundColor: string) => this.setState({ backgroundColor })}
-              />
-              <Poster
-                backgroundColor={backgroundColor}
-                profilePictureUrl={profilePictureUrl}
-                artists={artists}
-              />
-              <Footer color={backgroundColor} />
-            </div>
-          )}
-        </div>
+              initialValue={timeRange}
+            />
+            <TabBar
+              items={Object.values(ESortCriteria)}
+              onChange={(sortCriteria: any) => this.setState({ sortCriteria })}
+              initialValue={sortCriteria}
+            />
+
+            <Poster
+              username={idx(user, _ => _.value.display_name)}
+              artists={artists[timeRange]}
+              sortCriteria={sortCriteria}
+              timeRange={timeRange}
+            />
+            <Footer />
+          </>
+        )}
       </>
     );
   }
 }
 
-export default App;
+export default connect(
+  ({ user, artists }: IState) => ({ user, artists }),
+  { getUserDetailsStart, getTopArtistsStart },
+)(App);

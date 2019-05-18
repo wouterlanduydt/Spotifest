@@ -1,117 +1,55 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { constants } from 'styles/branding';
-
-const getWrapperCss = (importance: number) => {
-  switch (importance) {
-    case 1:
-      return css`
-        :not(:last-child) {
-          margin-right: 8px;
-          @media (min-width: 460px) {
-            margin-right: 16px;
-          }
-        }
-      `;
-    case 2:
-      return css`
-        margin: 2px 0;
-        :not(:last-child) {
-          margin-right: 6px;
-          @media (min-width: 460px) {
-            margin-right: 8px;
-          }
-        }
-      `;
-    case 3:
-      return css`
-        margin: 2px 0;
-        :not(:last-child) {
-          margin-right: 4px;
-          @media (min-width: 460px) {
-            margin-right: 6px;
-          }
-        }
-      `;
-    default:
-      return css`
-        margin: 2px 0;
-        :not(:last-child) {
-          margin-right: 4px;
-          @media (min-width: 460px) {
-            margin-right: 6px;
-          }
-        }
-      `;
-  }
-};
-
-const getArtistLinkCss = (importance: number) => {
-  switch (importance) {
-    case 1:
-      return css`
-        font-size: 7vw;
-        font-weight: 900;
-        @media (min-width: ${constants.posterWidth}) {
-          font-size: 4.2em;
-        }
-      `;
-    case 2:
-      return css`
-        font-size: 4.2vw;
-        font-weight: 700;
-        @media (min-width: ${constants.posterWidth}) {
-          font-size: 2.4em;
-        }
-      `;
-    case 3:
-      return css`
-        font-size: 3vw;
-        font-weight: 500;
-        @media (min-width: ${constants.posterWidth}) {
-          font-size: 1.6em;
-        }
-      `;
-    default:
-      return css`
-        font-size: 3vw;
-        font-weight: 500;
-        @media (min-width: ${constants.posterWidth}) {
-          font-size: 1.6em;
-        }
-      `;
-  }
-};
-
-const Wrapper = styled.li<{ importance: number }>`
-  ${({ importance }) => getWrapperCss(importance)};
-`;
-
-const ArtistLink = styled.a<{ importance: number }>`
-  color: white;
-  text-shadow: rgba(0, 0, 0, 0.2) 0px 0 24px;
-  text-decoration: none;
-  ${({ importance }) => getArtistLinkCss(importance)};
-
-  &:hover,
-  &:focus {
-    outline: none;
-    text-decoration: underline;
-  }
-`;
+import styled, { css, keyframes } from 'styled-components';
+import { isTopArtist, isMidArtist } from 'lib';
+import { ESortCriteria } from 'types/general';
 
 type TProps = {
-  name: string;
-  link: string;
-  importance: number;
+  artist: SpotifyApi.ArtistObjectFull;
+  position: number;
 };
 
-const ArtistItem = ({ name, link, importance }: TProps) => (
-  <Wrapper importance={importance}>
-    <ArtistLink importance={importance} href={link} rel="noopener noreferrer">
+const getFontSize = (pos: number, total: number) => {
+  if (isTopArtist(pos, total)) return '4.4vw';
+  if (isMidArtist(pos, total)) return '3.8vw';
+  return '3.4vw';
+};
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const Wrap = styled.li<{ position: number }>`
+  margin: 0.6vw 1vw;
+  font-size: ${({ position }) => getFontSize(position, 50)};
+  font-weight: ${({ position }) => (position % 2 === 0 ? 800 : 500)};
+  text-transform: uppercase;
+  opacity: 0;
+
+  animation-fill-mode: forwards;
+  animation-name: ${fadeIn};
+  animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
+  animation-delay: ${({ position }) => position * 5}ms;
+`;
+
+const Text = styled.a`
+  text-decoration: none;
+  color: white;
+`;
+
+const ArtistItem = ({ artist: { name, external_urls, id }, position }: TProps) => (
+  <Wrap position={position}>
+    <Text href={external_urls.spotify} rel="noopener noreferrer">
       {name}
-    </ArtistLink>
-  </Wrapper>
+    </Text>
+  </Wrap>
 );
 
 export default ArtistItem;
