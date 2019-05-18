@@ -8,10 +8,11 @@ type TProps = {
   position: number;
 };
 
-const getFontSize = (pos: number, total: number) => {
-  if (isTopArtist(pos, total)) return '4.4vw';
-  if (isMidArtist(pos, total)) return '3.8vw';
-  return '3.4vw';
+const getFontSize = (pos: number, total: number, isMobile: boolean) => {
+  if (isTopArtist(pos, total)) return isMobile ? '4.4vw' : '28px';
+
+  if (isMidArtist(pos, total)) return isMobile ? '3.8vw' : '24px';
+  return isMobile ? '3.4vw' : '22px';
 };
 
 const fadeIn = keyframes`
@@ -27,7 +28,7 @@ const fadeIn = keyframes`
 
 const Wrap = styled.li<{ position: number }>`
   margin: 0.6vw 1vw;
-  font-size: ${({ position }) => getFontSize(position, 50)};
+  font-size: ${({ position }) => getFontSize(position, 50, true)};
   font-weight: ${({ position }) => (position % 2 === 0 ? 800 : 500)};
   text-transform: uppercase;
   opacity: 0;
@@ -37,6 +38,11 @@ const Wrap = styled.li<{ position: number }>`
   animation-duration: 200ms;
   animation-timing-function: ease-in-out;
   animation-delay: ${({ position }) => position * 5}ms;
+
+  @media (min-width: ${({ theme }) => theme.maxPoster}px) {
+    margin: 4px 6px;
+    font-size: ${({ position }) => getFontSize(position, 50, false)};
+  }
 `;
 
 const Text = styled.a`

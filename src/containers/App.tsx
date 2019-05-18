@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import reset from 'styled-reset';
 import queryString from 'query-string';
 import { BACKEND_URLS } from '../config/constants';
@@ -14,6 +14,7 @@ import { getUserDetailsStart, getTopArtistsStart } from 'redux/actions';
 import { IState } from 'redux/reducers';
 import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
+import branding from 'styles/branding';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -58,46 +59,48 @@ class App extends Component<TProps, TState> {
     const { user, artists, getTopArtistsStart } = this.props;
 
     return (
-      <>
-        <GlobalStyle />
-        {user.value === null ? (
-          <div
-            style={{
-              width: '100vw',
-              height: '100vh',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Button onClick={this.handleLogin} text="Login with Spotify" />
-          </div>
-        ) : (
-          <>
-            <TabBar
-              items={Object.values(ETimeRange)}
-              onChange={(timeRange: any) => {
-                if (!artists[timeRange as ETimeRange].value) getTopArtistsStart(timeRange);
-                this.setState({ timeRange });
+      <ThemeProvider theme={branding}>
+        <>
+          <GlobalStyle />
+          {user.value === null ? (
+            <div
+              style={{
+                width: '100vw',
+                height: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
-              initialValue={timeRange}
-            />
-            <TabBar
-              items={Object.values(ESortCriteria)}
-              onChange={(sortCriteria: any) => this.setState({ sortCriteria })}
-              initialValue={sortCriteria}
-            />
+            >
+              <Button onClick={this.handleLogin} text="Login with Spotify" />
+            </div>
+          ) : (
+            <>
+              <TabBar
+                items={Object.values(ETimeRange)}
+                onChange={(timeRange: any) => {
+                  if (!artists[timeRange as ETimeRange].value) getTopArtistsStart(timeRange);
+                  this.setState({ timeRange });
+                }}
+                initialValue={timeRange}
+              />
+              <TabBar
+                items={Object.values(ESortCriteria)}
+                onChange={(sortCriteria: any) => this.setState({ sortCriteria })}
+                initialValue={sortCriteria}
+              />
 
-            <Poster
-              username={idx(user, _ => _.value.display_name)}
-              artists={artists[timeRange]}
-              sortCriteria={sortCriteria}
-              timeRange={timeRange}
-            />
-            <Footer />
-          </>
-        )}
-      </>
+              <Poster
+                username={idx(user, _ => _.value.display_name)}
+                artists={artists[timeRange]}
+                sortCriteria={sortCriteria}
+                timeRange={timeRange}
+              />
+              <Footer />
+            </>
+          )}
+        </>
+      </ThemeProvider>
     );
   }
 }
