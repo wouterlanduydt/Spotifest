@@ -1,41 +1,37 @@
 import React from 'react';
 import styled from 'styled-components';
-import { constants } from 'styles/branding';
-
-const Wrapper = styled.header`
-  position: relative;
-  z-index: 99;
-  margin: 8px 0 16px;
-
-  @media (min-width: 460px) {
-    margin: 24px 0 24px;
-  }
-`;
-
-const StyledTitle = styled.h1`
-  padding: 10px 16px;
-  font-size: 3.6vw;
-  font-weight: 600;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  display: inline-block;
-  border: 2px solid white;
-  color: white;
-
-  @media (min-width: ${constants.posterWidth}) {
-    padding: 12px 24px;
-    font-size: 2em;
-  }
-`;
 
 type TProps = {
   title: string;
+  username: string | undefined | null;
 };
 
-const Title = ({ title }: TProps) => (
-  <Wrapper>
+const Wrap = styled.header`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-transform: uppercase;
+  margin: 4vw 0;
+`;
+
+const SubTitle = styled.span`
+  font-size: 2.4vw;
+  color: white;
+  z-index: 1;
+  font-weight: 600;
+`;
+
+const StyledTitle = styled.h1`
+  font-size: 6vw;
+  color: white;
+  font-weight: 900;
+`;
+
+const Title = ({ title, username }: TProps) => (
+  <Wrap>
+    {username && <SubTitle>{username}'s</SubTitle>}
     <StyledTitle>{title}</StyledTitle>
-  </Wrapper>
+  </Wrap>
 );
 
 export default Title;

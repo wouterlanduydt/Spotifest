@@ -3,12 +3,6 @@ export const BACKEND_URLS = {
   LOCAL: 'http://localhost:8888/login',
 };
 
-export const timeRanges = [
-  { value: 'short_term', label: 'Short term' },
-  { value: 'medium_term', label: 'Medium term' },
-  { value: 'long_term', label: 'Long term' },
-];
-
 export const DEFAULT_BG = 'https://lorempixel.com/480/640/nightlife';
 
 export const SPOTIFY_API = {
