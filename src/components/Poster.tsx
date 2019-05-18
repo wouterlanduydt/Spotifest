@@ -4,8 +4,10 @@ import SpotifyLogo from '../assets/svg/spotify.svg';
 import { ESortCriteria } from 'types/general';
 import { TTopArtists } from 'redux/reducers';
 import ArtistItem from './ArtistItem';
-import { getSortedArtists } from 'lib';
+import { getSortedArtists, getHeadlinerAmt } from 'lib';
 import styled from 'styled-components';
+// @ts-ignore
+import { Textfit } from 'react-textfit';
 
 type TProps = {
   username: string | undefined | null;
@@ -14,17 +16,21 @@ type TProps = {
 };
 
 const Wrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 96vw;
-  max-width: 600px;
-  min-height: 400px;
+  height: 135vw;
+  max-width: 640px;
+  max-height: 900px;
   margin: 0 auto;
-  border: 2px solid black;
-  padding: 16px;
+  padding: 8px;
+  background: linear-gradient(45deg, #536976, #292e49);
 `;
 
 const ArtistsWrap = styled.ol`
   display: flex;
-  width: 90%;
+  /* width: 100%; */
   margin: 0 auto;
   flex-wrap: wrap;
   justify-content: center;
@@ -36,9 +42,18 @@ const Poster = ({ artists, sortCriteria, username }: TProps) => {
       <Title title={`${username}'s Spotifest`} />
       <ArtistsWrap>
         {artists.value &&
-          getSortedArtists(artists.value, sortCriteria).map((artist, i) => (
-            <ArtistItem key={artist.id} artist={artist} position={i} />
-          ))}
+          getSortedArtists(artists.value, sortCriteria).map((artist, i) => {
+            const [topArtists, midArtists] = getHeadlinerAmt(artists.value!.length);
+
+            return (
+              <React.Fragment key={artist.id}>
+                <ArtistItem artist={artist} position={i} />
+                {(i === topArtists || i === midArtists) && (
+                  <div style={{ width: '100%', height: '2vw' }} />
+                )}
+              </React.Fragment>
+            );
+          })}
       </ArtistsWrap>
 
       {/* <div>
