@@ -26,6 +26,7 @@ const Wrap = styled.div`
   padding: 8px;
   background: linear-gradient(45deg, #536976, #292e49);
   margin-top: 16px;
+  border: 4px solid white;
 `;
 
 const ArtistsWrap = styled.ol`
@@ -44,42 +45,40 @@ const Separator = styled.div`
   }
 `;
 
-const Poster = ({ artists, sortCriteria, timeRange, username }: TProps) => {
-  return (
-    <Wrap>
-      <Title title="Spotifest" username={username} />
-      {artists.isLoading && (
-        <img
-          src={require('../assets/svg/loading-indicator.svg')}
-          width={24}
-          style={{ marginTop: 24 }}
-        />
-      )}
-      <ArtistsWrap>
-        {artists.value &&
-          getSortedArtists(artists.value, sortCriteria).map((artist, i) => {
-            const [topArtists, midArtists] = getHeadlinerAmt(artists.value!.length);
+const Poster = ({ artists, sortCriteria, timeRange, username }: TProps) => (
+  <Wrap>
+    <Title title="Spotifest" username={username} />
+    {artists.isLoading && (
+      <img
+        src={require('../assets/svg/loading-indicator.svg')}
+        width={24}
+        style={{ marginTop: 24 }}
+      />
+    )}
+    <ArtistsWrap>
+      {artists.value &&
+        getSortedArtists(artists.value, sortCriteria).map((artist, i) => {
+          const [topArtists, midArtists] = getHeadlinerAmt(artists.value!.length);
 
-            return (
-              <React.Fragment key={artist.id}>
-                <ArtistItem
-                  artist={artist}
-                  position={i}
-                  key={`${artist.id}-${i}-${sortCriteria}-${timeRange}`}
-                />
-                {(i === topArtists || i === midArtists) && <Separator />}
-              </React.Fragment>
-            );
-          })}
-      </ArtistsWrap>
+          return (
+            <React.Fragment key={artist.id}>
+              <ArtistItem
+                artist={artist}
+                position={i}
+                key={`${artist.id}-${i}-${sortCriteria}-${timeRange}`}
+              />
+              {(i === topArtists || i === midArtists) && <Separator />}
+            </React.Fragment>
+          );
+        })}
+    </ArtistsWrap>
 
-      {/* <div>
+    {/* <div>
         <a href="https://www.spotify.com" rel="noopener noreferrer">
           <img src={SpotifyLogo} alt="" />
         </a>
       </div> */}
-    </Wrap>
-  );
-};
+  </Wrap>
+);
 
 export default React.memo(Poster);
