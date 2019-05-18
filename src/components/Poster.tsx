@@ -6,8 +6,6 @@ import { TTopArtists } from 'redux/reducers';
 import ArtistItem from './ArtistItem';
 import { getSortedArtists, getHeadlinerAmt } from 'lib';
 import styled from 'styled-components';
-// @ts-ignore
-import { Textfit } from 'react-textfit';
 
 type TProps = {
   username: string | undefined | null;
@@ -39,7 +37,7 @@ const ArtistsWrap = styled.ol`
 const Poster = ({ artists, sortCriteria, username }: TProps) => {
   return (
     <Wrap>
-      <Title title={`${username}'s Spotifest`} />
+      <Title title="Spotifest" username={username} />
       <ArtistsWrap>
         {artists.value &&
           getSortedArtists(artists.value, sortCriteria).map((artist, i) => {
