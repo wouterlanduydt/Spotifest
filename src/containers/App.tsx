@@ -15,7 +15,7 @@ import { IState } from 'redux/reducers';
 import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
 import branding from 'styles/branding';
-import { LoginWrap, Filters } from './App.styled';
+import { LoginWrap, Filters, Actions } from './App.styled';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -65,7 +65,9 @@ class App extends Component<TProps, TState> {
           <GlobalStyle />
           {user.value === null ? (
             <LoginWrap>
-              <Button onClick={this.handleLogin} text="Login with Spotify" />
+              <Button onClick={this.handleLogin} buttonStyle="spotify">
+                Login with Spotify
+              </Button>
             </LoginWrap>
           ) : (
             <>
@@ -96,6 +98,14 @@ class App extends Component<TProps, TState> {
                 sortCriteria={sortCriteria}
                 timeRange={timeRange}
               />
+              <Actions>
+                <Button onClick={() => true} buttonStyle="normal">
+                  Generate Playlist
+                </Button>
+                {/* <Button onClick={() => window.alert('Coming soon')} buttonStyle="normal">
+                  Save as image
+                </Button> */}
+              </Actions>
               <Footer />
             </>
           )}

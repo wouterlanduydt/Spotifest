@@ -1,25 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<{ buttonStyle: TProps['buttonStyle'] }>`
   border: none;
   border-radius: 4px;
   padding: 8px 16px;
-  background-color: #1fc14a;
-  color: white;
-  font-size: 1.8em;
+  background-color: ${({ buttonStyle }) => (buttonStyle === 'spotify' ? '#1fc14a' : 'white')};
+  color: ${({ buttonStyle }) => (buttonStyle === 'spotify' ? 'white' : '#292e49')};
+  font-size: 16px;
   font-weight: 600;
-
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 `;
 
 type TProps = {
   onClick: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
-  text: string;
+  children: string;
+  buttonStyle?: 'spotify' | 'normal';
 };
 
-const Button = ({ onClick, text }: TProps) => <StyledButton onClick={onClick}>{text}</StyledButton>;
+const Button = ({ onClick, children, buttonStyle = 'normal' }: TProps) => (
+  <StyledButton onClick={onClick} buttonStyle={buttonStyle}>
+    {children}
+  </StyledButton>
+);
 
 export default Button;
