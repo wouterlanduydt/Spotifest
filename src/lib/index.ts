@@ -1,5 +1,7 @@
 import { ESortCriteria } from 'types/general';
 
+export const isRunningLocally = window.location.href.includes('localhost');
+
 export const getSortedArtists = (
   artistsValue: SpotifyApi.ArtistObjectFull[],
   sortCriteria: ESortCriteria,
