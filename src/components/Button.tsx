@@ -14,6 +14,7 @@ const StyledButton = styled.button<{
   font-weight: 600;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ disabled }) => (disabled ? 0.4 : 1)};
+  transition: opacity 200ms;
 `;
 
 type TProps = {

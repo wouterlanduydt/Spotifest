@@ -23,6 +23,8 @@ function* getUserDetailsFlow() {
     const userDetails = yield call(spotifyApi.fetchUserDetails);
     yield put(actions.getUserDetailsSuccess(userDetails));
   } catch (e) {
+    // @ts-ignore
+    window.location = '/';
     yield put(actions.getUserDetailsFail(e));
   }
 }
