@@ -8,7 +8,7 @@ import Button from '../components/Button';
 import Poster from '../components/Poster';
 import TabBar from '../components/TabBar';
 import Footer from '../components/Footer';
-import { ETimeRange, ESortCriteria } from 'types/general';
+import { ETimeRange, ESortCriteria, timeRanges } from 'types/general';
 import { connect } from 'react-redux';
 import { getUserDetailsStart, getTopArtistsStart } from 'redux/actions';
 import { IState } from 'redux/reducers';
@@ -77,17 +77,19 @@ class App extends Component<TProps, TState> {
           ) : (
             <>
               <TabBar
-                items={Object.values(ETimeRange)}
-                onChange={(timeRange: any) => {
-                  if (!artists[timeRange as ETimeRange].value) getTopArtistsStart(timeRange);
-                  this.setState({ timeRange });
+                items={timeRanges}
+                onChange={timeRange => {
+                  if (!artists[timeRange as ETimeRange].value)
+                    getTopArtistsStart(timeRange as ETimeRange);
+                  this.setState({ timeRange: timeRange as ETimeRange });
                 }}
-                initialValue={timeRange}
               />
+
               <TabBar
-                items={Object.values(ESortCriteria)}
-                onChange={(sortCriteria: any) => this.setState({ sortCriteria })}
-                initialValue={sortCriteria}
+                items={Object.values(ESortCriteria).map(i => ({ value: i, label: i }))}
+                onChange={sortCriteria =>
+                  this.setState({ sortCriteria: sortCriteria as ESortCriteria })
+                }
               />
 
               <Poster
