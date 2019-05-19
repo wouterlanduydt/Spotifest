@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "BROWSER=none react-scripts start",
-    "build": "react-scripts build",
+    "build": "REACT_APP_URL=\"$URL\" react-scripts build",
     "eject": "react-scripts eject",
     "prettier": "prettier 'src/**/*.{ts,tsx}' --write"
   },

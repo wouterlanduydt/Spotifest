@@ -7,7 +7,7 @@ export const spotifyApi = new SpotifyWebApi();
 export const authorizeSpotifyApi = () => {
   const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 
-  const redirectUri = isRunningLocally ? 'http://localhost:3000' : process.env.URL;
+  const redirectUri = isRunningLocally ? 'http://localhost:3000' : process.env.REACT_APP_URL;
   const scope =
     'user-read-private user-read-email user-top-read playlist-modify-private playlist-modify-public';
 
