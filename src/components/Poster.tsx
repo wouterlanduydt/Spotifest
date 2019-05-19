@@ -1,6 +1,6 @@
 import React from 'react';
 import Title from './Title';
-import SpotifyLogo from '../assets/svg/spotify.svg';
+// import SpotifyLogo from '../assets/svg/spotify.svg';
 import { ESortCriteria, ETimeRange } from 'types/general';
 import { TTopArtists } from 'redux/reducers';
 import ArtistItem from './ArtistItem';
@@ -53,6 +53,7 @@ const Poster = ({ artists, sortCriteria, timeRange, username }: TProps) => (
         src={require('../assets/svg/loading-indicator.svg')}
         width={24}
         style={{ marginTop: 24 }}
+        alt=""
       />
     )}
     <ArtistsWrap>

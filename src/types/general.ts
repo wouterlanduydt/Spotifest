@@ -8,9 +8,6 @@ export enum ETimeRange {
   short = 'short_term',
   medium = 'medium_term',
   long = 'long_term',
-  // short = 'Last 4 Weeks',
-  // medium = 'Last 6 Months',
-  // long = 'All Time',
 }
 
 export enum ESortCriteria {
@@ -19,3 +16,18 @@ export enum ESortCriteria {
   followers = 'Followers',
   alphabetically = 'Alphabetically',
 }
+
+export const timeRanges = [
+  {
+    value: ETimeRange.long,
+    label: 'All Time',
+  },
+  {
+    value: ETimeRange.medium,
+    label: 'Last 6 Months',
+  },
+  {
+    value: ETimeRange.short,
+    label: 'Last 4 Weeks',
+  },
+];

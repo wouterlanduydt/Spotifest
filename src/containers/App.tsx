@@ -6,15 +6,16 @@ import { BACKEND_URLS } from '../config/constants';
 import global from '../styles/global';
 import Button from '../components/Button';
 import Poster from '../components/Poster';
-import TabBar from '../components/TabBar';
+import Select from '../components/Select';
 import Footer from '../components/Footer';
-import { ETimeRange, ESortCriteria } from 'types/general';
+import { ETimeRange, ESortCriteria, timeRanges } from 'types/general';
 import { connect } from 'react-redux';
 import { getUserDetailsStart, getTopArtistsStart } from 'redux/actions';
 import { IState } from 'redux/reducers';
 import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
 import branding from 'styles/branding';
+import { LoginWrap, Filters } from './App.styled';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -63,32 +64,28 @@ class App extends Component<TProps, TState> {
         <>
           <GlobalStyle />
           {user.value === null ? (
-            <div
-              style={{
-                width: '100vw',
-                height: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+            <LoginWrap>
               <Button onClick={this.handleLogin} text="Login with Spotify" />
-            </div>
+            </LoginWrap>
           ) : (
             <>
-              <TabBar
-                items={Object.values(ETimeRange)}
-                onChange={(timeRange: any) => {
-                  if (!artists[timeRange as ETimeRange].value) getTopArtistsStart(timeRange);
-                  this.setState({ timeRange });
-                }}
-                initialValue={timeRange}
-              />
-              <TabBar
-                items={Object.values(ESortCriteria)}
-                onChange={(sortCriteria: any) => this.setState({ sortCriteria })}
-                initialValue={sortCriteria}
-              />
+              <Filters>
+                <Select
+                  items={timeRanges}
+                  onChange={timeRange => {
+                    if (!artists[timeRange as ETimeRange].value)
+                      getTopArtistsStart(timeRange as ETimeRange);
+                    this.setState({ timeRange: timeRange as ETimeRange });
+                  }}
+                />
+
+                <Select
+                  items={Object.values(ESortCriteria).map(i => ({ value: i, label: i }))}
+                  onChange={sortCriteria =>
+                    this.setState({ sortCriteria: sortCriteria as ESortCriteria })
+                  }
+                />
+              </Filters>
 
               <Poster
                 username={idx(user, _ => _.value.display_name)}
