@@ -38,7 +38,7 @@ class App extends Component<TProps, TState> {
   constructor(props: TProps) {
     super(props);
     this.state = {
-      timeRange: ETimeRange.long,
+      timeRange: ETimeRange.medium,
       sortCriteria: ESortCriteria.calculated,
     };
   }
@@ -47,7 +47,7 @@ class App extends Component<TProps, TState> {
     const parsedUrl = queryString.parse(window.location.search);
     spotifyApi.setAccessToken(String(parsedUrl.access_token));
     this.props.getUserDetailsStart();
-    this.props.getTopArtistsStart(ETimeRange.long);
+    this.props.getTopArtistsStart(this.state.timeRange);
   };
 
   handleLogin = () =>
@@ -71,15 +71,18 @@ class App extends Component<TProps, TState> {
             <>
               <Filters>
                 <Select
+                  label="Time Range"
                   items={timeRanges}
                   onChange={timeRange => {
                     if (!artists[timeRange as ETimeRange].value)
                       getTopArtistsStart(timeRange as ETimeRange);
                     this.setState({ timeRange: timeRange as ETimeRange });
                   }}
+                  initialIndex={1}
                 />
 
                 <Select
+                  label="Sort By"
                   items={Object.values(ESortCriteria).map(i => ({ value: i, label: i }))}
                   onChange={sortCriteria =>
                     this.setState({ sortCriteria: sortCriteria as ESortCriteria })
