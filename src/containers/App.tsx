@@ -50,6 +50,7 @@ class App extends Component<TProps, TState> {
   }
 
   componentDidMount = () => {
+    console.log(process.env);
     const parsedUrl = queryString.parse(window.location.hash);
 
     spotifyApi.setAccessToken(String(parsedUrl.access_token));
