@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import reset from 'styled-reset';
 import queryString from 'query-string';
-import { BACKEND_URLS } from '../config/constants';
 import global from '../styles/global';
 import Button from '../components/Button';
 import Poster from '../components/Poster';
@@ -10,7 +9,12 @@ import Select from '../components/Select';
 import Footer from '../components/Footer';
 import { ETimeRange, ESortCriteria, timeRanges } from 'types/general';
 import { connect } from 'react-redux';
-import { getUserDetailsStart, getTopArtistsStart } from 'redux/actions';
+import {
+  getUserDetailsStart,
+  getTopArtistsStart,
+  createPlaylistStart,
+  getAccessToken,
+} from 'redux/actions';
 import { IState } from 'redux/reducers';
 import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
@@ -24,6 +28,8 @@ const GlobalStyle = createGlobalStyle`
 
 type TProps = {
   getUserDetailsStart: () => void;
+  getAccessToken: () => void;
+  createPlaylistStart: (artists: SpotifyApi.ArtistObjectFull[]) => void;
   getTopArtistsStart: (timeRange: ETimeRange) => void;
   user: IState['user'];
   artists: IState['artists'];
@@ -44,20 +50,19 @@ class App extends Component<TProps, TState> {
   }
 
   componentDidMount = () => {
-    const parsedUrl = queryString.parse(window.location.search);
-    spotifyApi.setAccessToken(String(parsedUrl.access_token));
-    this.props.getUserDetailsStart();
-    this.props.getTopArtistsStart(this.state.timeRange);
-  };
+    const parsedUrl = queryString.parse(window.location.hash);
 
-  handleLogin = () =>
-    ((window.location as any) = window.location.href.includes('localhost')
-      ? BACKEND_URLS.LOCAL
-      : BACKEND_URLS.PROD);
+    spotifyApi.setAccessToken(String(parsedUrl.access_token));
+
+    if (!!parsedUrl.access_token) {
+      this.props.getUserDetailsStart();
+      this.props.getTopArtistsStart(this.state.timeRange);
+    }
+  };
 
   render() {
     const { timeRange, sortCriteria } = this.state;
-    const { user, artists, getTopArtistsStart } = this.props;
+    const { user, artists, getTopArtistsStart, createPlaylistStart, getAccessToken } = this.props;
 
     return (
       <ThemeProvider theme={branding}>
@@ -65,7 +70,7 @@ class App extends Component<TProps, TState> {
           <GlobalStyle />
           {user.value === null ? (
             <LoginWrap>
-              <Button onClick={this.handleLogin} buttonStyle="spotify">
+              <Button onClick={() => getAccessToken()} buttonStyle="spotify">
                 Login with Spotify
               </Button>
             </LoginWrap>
@@ -99,7 +104,14 @@ class App extends Component<TProps, TState> {
                 timeRange={timeRange}
               />
               <Actions>
-                <Button onClick={() => true} buttonStyle="normal">
+                <Button
+                  onClick={() =>
+                    !!artists[timeRange].value && createPlaylistStart(artists[timeRange].value!)
+                  }
+                  buttonStyle="normal"
+                  disabled={!artists[timeRange].value}
+                  title="Create a playlist containing recommendations based on your top artists."
+                >
                   Generate Playlist
                 </Button>
                 {/* <Button onClick={() => window.alert('Coming soon')} buttonStyle="normal">
@@ -117,5 +129,5 @@ class App extends Component<TProps, TState> {
 
 export default connect(
   ({ user, artists }: IState) => ({ user, artists }),
-  { getUserDetailsStart, getTopArtistsStart },
+  { getUserDetailsStart, getTopArtistsStart, createPlaylistStart, getAccessToken },
 )(App);

@@ -9,8 +9,7 @@
     "url": "https://wouterlanduydt.be"
   },
   "scripts": {
-    "start": "concurrently \"yarn start:server\" \"wait-on http://localhost:8888/login && react-scripts start\"",
-    "start:server": "node ./server/index.js",
+    "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "prettier": "prettier 'src/**/*.{ts,tsx}' --write"
@@ -18,7 +17,6 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-plugin-idx": "^2.4.0",
-    "dotenv": "^6.0.0",
     "express": "^4.15.4",
     "idx": "^2.5.6",
     "query-string": "6.5.0",
