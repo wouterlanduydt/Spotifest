@@ -19,15 +19,15 @@ export enum ESortCriteria {
 
 export const timeRanges = [
   {
-    value: ETimeRange.short,
-    label: 'Last 4 Weeks',
+    value: ETimeRange.long,
+    label: 'All Time',
   },
   {
     value: ETimeRange.medium,
     label: 'Last 6 Months',
   },
   {
-    value: ETimeRange.long,
-    label: 'All Time',
+    value: ETimeRange.short,
+    label: 'Last 4 Weeks',
   },
 ];

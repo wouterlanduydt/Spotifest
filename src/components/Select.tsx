@@ -1,22 +1,24 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { ETimeRange, ESortCriteria } from 'types/general';
 import Select from 'react-select';
-import { GroupType, ValueType } from 'react-select/lib/types';
 
 type TProps = {
   items: { value: string; label: string }[];
   onChange: (value: string) => void;
 };
 
-const TabBar = ({ items, onChange }: TProps) => (
+const SelectComponent = ({ items, onChange }: TProps) => (
   <Select
     options={items}
     defaultValue={items[0]}
     // @ts-ignore
     onChange={val => onChange(val.value)}
     isSearchable={false}
+    className="react-select"
+    theme={theme => ({
+      ...theme,
+      borderRadius: 0,
+    })}
   />
 );
 
-export default React.memo(TabBar);
+export default React.memo(SelectComponent);

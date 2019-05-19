@@ -1,7 +1,6 @@
 import React from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { isTopArtist, isMidArtist } from 'lib';
-import { ESortCriteria } from 'types/general';
 
 type TProps = {
   artist: SpotifyApi.ArtistObjectFull;

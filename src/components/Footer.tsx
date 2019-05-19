@@ -4,7 +4,7 @@ import { author, repository, version } from '../../package.json';
 
 const StyledFooter = styled.footer`
   font-size: 1.2em;
-  margin: 8px auto 0;
+  margin: 8px auto 32px;
   width: 100%;
   text-align: center;
   color: white;
@@ -16,9 +16,7 @@ const Link = styled.a`
   text-decoration: underline;
 `;
 
-type TProps = {};
-
-const Footer = ({  }: TProps) => {
+const Footer = () => {
   const link = (text: string, url: string) => (
     <Link href={url} rel="noopener noreferrer">
       {text}
