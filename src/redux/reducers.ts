@@ -6,6 +6,9 @@ import {
   getTopArtistsStart,
   getTopArtistsSuccess,
   getTopArtistsFail,
+  createPlaylistStart,
+  createPlaylistSuccess,
+  createPlaylistFail,
 } from './actions';
 import { ETimeRange } from 'types/general';
 
@@ -25,6 +28,11 @@ export interface IState {
     [ETimeRange.short]: TTopArtists;
     [ETimeRange.medium]: TTopArtists;
     [ETimeRange.long]: TTopArtists;
+  };
+  createPlaylist: {
+    value: any;
+    isLoading: boolean;
+    error: Error | null;
   };
 }
 
@@ -50,6 +58,11 @@ const initialState = {
       isLoading: false,
       error: null,
     },
+  },
+  createPlaylist: {
+    value: null,
+    isLoading: false,
+    error: null,
   },
 };
 
@@ -121,6 +134,36 @@ reducer.on(getTopArtistsFail, (state, { timeRange, error }) => ({
       isLoading: false,
       error,
     },
+  },
+}));
+
+/**
+ * create playlist
+ */
+reducer.on(createPlaylistStart, (state, timeRange) => ({
+  ...state,
+  createPlaylist: {
+    value: null,
+    isLoading: true,
+    error: null,
+  },
+}));
+
+reducer.on(createPlaylistSuccess, state => ({
+  ...state,
+  createPlaylist: {
+    value: null,
+    isLoading: false,
+    error: null,
+  },
+}));
+
+reducer.on(createPlaylistFail, (state, error) => ({
+  ...state,
+  createPlaylist: {
+    value: null,
+    isLoading: false,
+    error,
   },
 }));
 
