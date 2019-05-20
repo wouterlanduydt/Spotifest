@@ -1,4 +1,4 @@
-# Spotifest
+# Spotifest [![Netlify Status](https://api.netlify.com/api/v1/badges/052d51b1-f32b-4589-a8a3-07f5948efae3/deploy-status)](https://app.netlify.com/sites/spotifest/deploys)
 
 [Spotifest](https://spotifest.netlify.com) is a web application that uses **Spotify data to generate your ideal festival poster**. After the user successfully logged in with his Spotify cridentials it shows a poster with his top artists.
 
