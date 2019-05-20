@@ -20,6 +20,7 @@ import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
 import branding from 'styles/branding';
 import { LoginWrap, Filters, Actions } from './App.styled';
+import Overlay from 'components/Overlay';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -33,6 +34,7 @@ type TProps = {
   getTopArtistsStart: (timeRange: ETimeRange) => void;
   user: IState['user'];
   artists: IState['artists'];
+  createPlaylistState: IState['createPlaylist'];
 };
 
 type TState = {
@@ -51,7 +53,6 @@ class App extends Component<TProps, TState> {
 
   componentDidMount = () => {
     const parsedUrl = queryString.parse(window.location.hash);
-
     spotifyApi.setAccessToken(String(parsedUrl.access_token));
 
     if (!!parsedUrl.access_token) {
@@ -62,7 +63,14 @@ class App extends Component<TProps, TState> {
 
   render() {
     const { timeRange, sortCriteria } = this.state;
-    const { user, artists, getTopArtistsStart, createPlaylistStart, getAccessToken } = this.props;
+    const {
+      user,
+      artists,
+      getTopArtistsStart,
+      createPlaylistStart,
+      getAccessToken,
+      createPlaylistState,
+    } = this.props;
 
     return (
       <ThemeProvider theme={branding}>
@@ -103,6 +111,7 @@ class App extends Component<TProps, TState> {
                 sortCriteria={sortCriteria}
                 timeRange={timeRange}
               />
+              {createPlaylistState.isLoading && <Overlay text="Creating Playlist..." />}
               <Actions>
                 <Button
                   onClick={() =>
@@ -128,6 +137,10 @@ class App extends Component<TProps, TState> {
 }
 
 export default connect(
-  ({ user, artists }: IState) => ({ user, artists }),
+  ({ user, artists, createPlaylist: createPlaylistState }: IState) => ({
+    user,
+    artists,
+    createPlaylistState,
+  }),
   { getUserDetailsStart, getTopArtistsStart, createPlaylistStart, getAccessToken },
 )(App);
