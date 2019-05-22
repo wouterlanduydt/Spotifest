@@ -23,3 +23,11 @@ export const createPlaylistStart = createAction<SpotifyApi.ArtistObjectFull[]>(
 );
 export const createPlaylistSuccess = createAction('CREATE_PLAYLIST_SUCCESS');
 export const createPlaylistFail = createAction<Error>('CREATE_PLAYLIST_FAIL');
+
+export const getArtistConcertsStart = createAction<string>('GET_ARTIST_CONCERTS_START');
+export const getArtistConcertsSuccess = createAction<{ artist: string; value: any }>(
+  'GET_ARTIST_CONCERTS_SUCCESS',
+);
+export const getArtistConcertsFail = createAction<{ artist: string; error: Error }>(
+  'GET_ARTIST_CONCERTS_FAIL',
+);

@@ -1,8 +1,9 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
+import { call, put, takeLatest, select, takeEvery, all } from 'redux-saga/effects';
 import * as actions from './actions';
 import * as spotifyApi from 'api/spotify.api';
 import { ETimeRange } from 'types/general';
 import { IState } from './reducers';
+import * as songkickApi from 'api/songkick.api';
 
 type TAction<T = void> = {
   type: string;
@@ -31,10 +32,27 @@ function* getUserDetailsFlow() {
 
 function* getTopArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
   try {
-    const { items: value } = yield call(spotifyApi.fetchTopArtists, timeRange);
+    const { items: value }: { items: SpotifyApi.ArtistObjectFull[] } = yield call(
+      spotifyApi.fetchTopArtists,
+      timeRange,
+    );
+
+    yield all(value.map(artist => put(actions.getArtistConcertsStart(artist.name))));
+
     yield put(actions.getTopArtistsSuccess({ timeRange, value }));
   } catch (error) {
     yield put(actions.getTopArtistsFail({ timeRange, error }));
+  }
+}
+
+function* getArtistConcertsFlow({ payload: artist }: TAction<string>) {
+  try {
+    const value = yield call(songkickApi.getEventsByArtist, artist);
+    value.results.event.map((event: any) => console.log(artist.toUpperCase(), event.displayName));
+
+    yield put(actions.getArtistConcertsSuccess({ artist, value }));
+  } catch (error) {
+    yield put(actions.getArtistConcertsFail({ artist, error }));
   }
 }
 
@@ -76,6 +94,7 @@ function* saga() {
   yield takeLatest(actions.getUserDetailsStart, getUserDetailsFlow);
   yield takeLatest(actions.getTopArtistsStart, getTopArtistsFlow);
   yield takeLatest(actions.createPlaylistStart, createPlaylistFlow);
+  yield takeEvery(actions.getArtistConcertsStart, getArtistConcertsFlow);
 }
 
 export default saga;
