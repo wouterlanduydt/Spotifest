@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { author, repository, version } from '../../package.json';
+import { author, version } from '../../package.json';
 
 const StyledFooter = styled.footer`
   font-size: 1.2em;
@@ -16,18 +16,14 @@ const Link = styled.a`
   text-decoration: underline;
 `;
 
-const Footer = () => {
-  const link = (text: string, url: string) => (
-    <Link href={url} rel="noopener noreferrer">
-      {text}
-    </Link>
-  );
-
-  return (
-    <StyledFooter>
-      Made by {link(author.name, author.url)} - {link('view source', repository)} - {version}
-    </StyledFooter>
-  );
-};
+const Footer = () => (
+  <StyledFooter>
+    Made by{' '}
+    <Link href={author.url} rel="noopener noreferrer">
+      {author.name}
+    </Link>{' '}
+    - v{version}
+  </StyledFooter>
+);
 
 export default React.memo(Footer);
