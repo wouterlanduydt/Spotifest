@@ -47,10 +47,9 @@ function* getTopArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
 
 function* getArtistConcertsFlow({ payload: artist }: TAction<string>) {
   try {
-    const value = yield call(songkickApi.getEventsByArtist, artist);
-    value.results.event.map((event: any) => console.log(artist.toUpperCase(), event.displayName));
+    const { results } = yield call(songkickApi.getEventsByArtist, artist);
 
-    yield put(songkickActions.getArtistConcertsSuccess({ artist, value }));
+    yield put(songkickActions.getArtistConcertsSuccess({ artist, value: results.event || null }));
   } catch (error) {
     yield put(songkickActions.getArtistConcertsFail({ artist, error }));
   }

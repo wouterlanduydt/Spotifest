@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import { spotifyActions } from './actions';
+import { spotifyActions, songkickActions } from './actions';
 import { ETimeRange } from 'types/general';
 
 export type TTopArtists = {
@@ -23,6 +23,13 @@ export interface IState {
     value: any;
     isLoading: boolean;
     error: Error | null;
+  };
+  concerts: {
+    [artist: string]: {
+      value: any;
+      isLoading: boolean;
+      error: Error | null;
+    };
   };
 }
 
@@ -49,6 +56,7 @@ const initialState = {
       error: null,
     },
   },
+  concerts: {},
   createPlaylist: {
     value: null,
     isLoading: false,
@@ -128,9 +136,48 @@ reducer.on(spotifyActions.getTopArtistsFail, (state, { timeRange, error }) => ({
 }));
 
 /**
+ * concert data
+ */
+reducer.on(songkickActions.getArtistConcertsStart, (state, artist) => ({
+  ...state,
+  concerts: {
+    ...state.concerts,
+    [artist]: {
+      value: null,
+      isLoading: true,
+      error: null,
+    },
+  },
+}));
+
+reducer.on(songkickActions.getArtistConcertsSuccess, (state, { artist, value }) => ({
+  ...state,
+  concerts: {
+    ...state.concerts,
+    [artist]: {
+      value,
+      isLoading: false,
+      error: null,
+    },
+  },
+}));
+
+reducer.on(songkickActions.getArtistConcertsFail, (state, { artist, error }) => ({
+  ...state,
+  concerts: {
+    ...state.concerts,
+    [artist]: {
+      value: null,
+      isLoading: false,
+      error,
+    },
+  },
+}));
+
+/**
  * create playlist
  */
-reducer.on(spotifyActions.createPlaylistStart, (state, timeRange) => ({
+reducer.on(spotifyActions.createPlaylistStart, state => ({
   ...state,
   createPlaylist: {
     value: null,
