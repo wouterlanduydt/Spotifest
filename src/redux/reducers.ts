@@ -1,15 +1,5 @@
 import { createReducer } from 'redux-act';
-import {
-  getUserDetailsStart,
-  getUserDetailsSuccess,
-  getUserDetailsFail,
-  getTopArtistsStart,
-  getTopArtistsSuccess,
-  getTopArtistsFail,
-  createPlaylistStart,
-  createPlaylistSuccess,
-  createPlaylistFail,
-} from './actions';
+import { spotifyActions } from './actions';
 import { ETimeRange } from 'types/general';
 
 export type TTopArtists = {
@@ -71,7 +61,7 @@ const reducer = createReducer<IState>({}, initialState);
 /**
  * user details
  */
-reducer.on(getUserDetailsStart, state => ({
+reducer.on(spotifyActions.getUserDetailsStart, state => ({
   ...state,
   user: {
     value: null,
@@ -80,7 +70,7 @@ reducer.on(getUserDetailsStart, state => ({
   },
 }));
 
-reducer.on(getUserDetailsSuccess, (state, value) => ({
+reducer.on(spotifyActions.getUserDetailsSuccess, (state, value) => ({
   ...state,
   user: {
     value,
@@ -89,7 +79,7 @@ reducer.on(getUserDetailsSuccess, (state, value) => ({
   },
 }));
 
-reducer.on(getUserDetailsFail, (state, error) => ({
+reducer.on(spotifyActions.getUserDetailsFail, (state, error) => ({
   ...state,
   user: {
     value: null,
@@ -101,7 +91,7 @@ reducer.on(getUserDetailsFail, (state, error) => ({
 /**
  * top artists
  */
-reducer.on(getTopArtistsStart, (state, timeRange) => ({
+reducer.on(spotifyActions.getTopArtistsStart, (state, timeRange) => ({
   ...state,
   artists: {
     ...state.artists,
@@ -113,7 +103,7 @@ reducer.on(getTopArtistsStart, (state, timeRange) => ({
   },
 }));
 
-reducer.on(getTopArtistsSuccess, (state, { timeRange, value }) => ({
+reducer.on(spotifyActions.getTopArtistsSuccess, (state, { timeRange, value }) => ({
   ...state,
   artists: {
     ...state.artists,
@@ -125,7 +115,7 @@ reducer.on(getTopArtistsSuccess, (state, { timeRange, value }) => ({
   },
 }));
 
-reducer.on(getTopArtistsFail, (state, { timeRange, error }) => ({
+reducer.on(spotifyActions.getTopArtistsFail, (state, { timeRange, error }) => ({
   ...state,
   artists: {
     ...state.artists,
@@ -140,7 +130,7 @@ reducer.on(getTopArtistsFail, (state, { timeRange, error }) => ({
 /**
  * create playlist
  */
-reducer.on(createPlaylistStart, (state, timeRange) => ({
+reducer.on(spotifyActions.createPlaylistStart, (state, timeRange) => ({
   ...state,
   createPlaylist: {
     value: null,
@@ -149,7 +139,7 @@ reducer.on(createPlaylistStart, (state, timeRange) => ({
   },
 }));
 
-reducer.on(createPlaylistSuccess, state => ({
+reducer.on(spotifyActions.createPlaylistSuccess, state => ({
   ...state,
   createPlaylist: {
     value: null,
@@ -158,7 +148,7 @@ reducer.on(createPlaylistSuccess, state => ({
   },
 }));
 
-reducer.on(createPlaylistFail, (state, error) => ({
+reducer.on(spotifyActions.createPlaylistFail, (state, error) => ({
   ...state,
   createPlaylist: {
     value: null,

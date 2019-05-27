@@ -1,33 +1,29 @@
 import { createAction } from 'redux-act';
 import { ETimeRange } from 'types/general';
 
-export const getAccessToken = createAction('GET_ACCESS_TOKEN');
+export const spotifyActions = {
+  getAccessToken: createAction('GET_ACCESS_TOKEN'),
 
-export const getUserDetailsStart = createAction('GET_USER_DETAILS_START');
-export const getUserDetailsSuccess = createAction<SpotifyApi.UserObjectPrivate>(
-  'GET_USER_DETAILS_SUCCESS',
-);
-export const getUserDetailsFail = createAction<Error>('GET_USER_DETAILS_FAIL');
+  getUserDetailsStart: createAction('GET_USER_DETAILS_START'),
+  getUserDetailsSuccess: createAction<SpotifyApi.UserObjectPrivate>('GET_USER_DETAILS_SUCCESS'),
+  getUserDetailsFail: createAction<Error>('GET_USER_DETAILS_FAIL'),
 
-export const getTopArtistsStart = createAction<ETimeRange>('GET_TOP_ARTISTS_START');
-export const getTopArtistsSuccess = createAction<{
-  timeRange: ETimeRange;
-  value: SpotifyApi.ArtistObjectFull[];
-}>('GET_TOP_ARTISTS_SUCCESS');
-export const getTopArtistsFail = createAction<{ timeRange: ETimeRange; error: Error }>(
-  'GET_TOP_ARTISTS_FAIL',
-);
+  getTopArtistsStart: createAction<ETimeRange>('GET_TOP_ARTISTS_START'),
+  getTopArtistsSuccess: createAction<{
+    timeRange: ETimeRange;
+    value: SpotifyApi.ArtistObjectFull[];
+  }>('GET_TOP_ARTISTS_SUCCESS'),
+  getTopArtistsFail: createAction<{ timeRange: ETimeRange; error: Error }>('GET_TOP_ARTISTS_FAIL'),
 
-export const createPlaylistStart = createAction<SpotifyApi.ArtistObjectFull[]>(
-  'CREATE_PLAYLIST_START',
-);
-export const createPlaylistSuccess = createAction('CREATE_PLAYLIST_SUCCESS');
-export const createPlaylistFail = createAction<Error>('CREATE_PLAYLIST_FAIL');
+  createPlaylistStart: createAction<SpotifyApi.ArtistObjectFull[]>('CREATE_PLAYLIST_START'),
+  createPlaylistSuccess: createAction('CREATE_PLAYLIST_SUCCESS'),
+  createPlaylistFail: createAction<Error>('CREATE_PLAYLIST_FAIL'),
+};
 
-export const getArtistConcertsStart = createAction<string>('GET_ARTIST_CONCERTS_START');
-export const getArtistConcertsSuccess = createAction<{ artist: string; value: any }>(
-  'GET_ARTIST_CONCERTS_SUCCESS',
-);
-export const getArtistConcertsFail = createAction<{ artist: string; error: Error }>(
-  'GET_ARTIST_CONCERTS_FAIL',
-);
+export const songkickActions = {
+  getArtistConcertsStart: createAction<string>('GET_ARTIST_CONCERTS_START'),
+  getArtistConcertsSuccess: createAction<{ artist: string; value: any }>(
+    'GET_ARTIST_CONCERTS_SUCCESS',
+  ),
+  getArtistConcertsFail: createAction<{ artist: string; error: Error }>('GET_ARTIST_CONCERTS_FAIL'),
+};

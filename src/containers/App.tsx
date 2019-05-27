@@ -9,12 +9,7 @@ import Select from '../components/Select';
 import Footer from '../components/Footer';
 import { ETimeRange, ESortCriteria, timeRanges } from 'types/general';
 import { connect } from 'react-redux';
-import {
-  getUserDetailsStart,
-  getTopArtistsStart,
-  createPlaylistStart,
-  getAccessToken,
-} from 'redux/actions';
+import { spotifyActions } from 'redux/actions';
 import { IState } from 'redux/reducers';
 import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
@@ -142,5 +137,10 @@ export default connect(
     artists,
     createPlaylistState,
   }),
-  { getUserDetailsStart, getTopArtistsStart, createPlaylistStart, getAccessToken },
+  {
+    getUserDetailsStart: spotifyActions.getUserDetailsStart,
+    getTopArtistsStart: spotifyActions.getTopArtistsStart,
+    createPlaylistStart: spotifyActions.createPlaylistStart,
+    getAccessToken: spotifyActions.getAccessToken,
+  },
 )(App);

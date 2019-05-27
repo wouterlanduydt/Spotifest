@@ -1,5 +1,5 @@
 import { call, put, takeLatest, select, takeEvery, all } from 'redux-saga/effects';
-import * as actions from './actions';
+import { spotifyActions, songkickActions } from './actions';
 import * as spotifyApi from 'api/spotify.api';
 import { ETimeRange } from 'types/general';
 import { IState } from './reducers';
@@ -22,11 +22,11 @@ function* getAccessTokenFlow() {
 function* getUserDetailsFlow() {
   try {
     const userDetails = yield call(spotifyApi.fetchUserDetails);
-    yield put(actions.getUserDetailsSuccess(userDetails));
+    yield put(spotifyActions.getUserDetailsSuccess(userDetails));
   } catch (e) {
     // @ts-ignore
     window.location = '/';
-    yield put(actions.getUserDetailsFail(e));
+    yield put(spotifyActions.getUserDetailsFail(e));
   }
 }
 
@@ -37,11 +37,11 @@ function* getTopArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
       timeRange,
     );
 
-    yield all(value.map(artist => put(actions.getArtistConcertsStart(artist.name))));
+    yield all(value.map(artist => put(songkickActions.getArtistConcertsStart(artist.name))));
 
-    yield put(actions.getTopArtistsSuccess({ timeRange, value }));
+    yield put(spotifyActions.getTopArtistsSuccess({ timeRange, value }));
   } catch (error) {
-    yield put(actions.getTopArtistsFail({ timeRange, error }));
+    yield put(spotifyActions.getTopArtistsFail({ timeRange, error }));
   }
 }
 
@@ -50,9 +50,9 @@ function* getArtistConcertsFlow({ payload: artist }: TAction<string>) {
     const value = yield call(songkickApi.getEventsByArtist, artist);
     value.results.event.map((event: any) => console.log(artist.toUpperCase(), event.displayName));
 
-    yield put(actions.getArtistConcertsSuccess({ artist, value }));
+    yield put(songkickActions.getArtistConcertsSuccess({ artist, value }));
   } catch (error) {
-    yield put(actions.getArtistConcertsFail({ artist, error }));
+    yield put(songkickActions.getArtistConcertsFail({ artist, error }));
   }
 }
 
@@ -82,19 +82,19 @@ function* createPlaylistFlow({ payload: artists }: TAction<SpotifyApi.ArtistObje
       yield call(spotifyApi.postAddTracksToPlaylist, playlistId, tracks.map(track => track.uri));
     }
 
-    yield put(actions.createPlaylistSuccess());
+    yield put(spotifyActions.createPlaylistSuccess());
   } catch (error) {
     console.log(error);
-    yield put(actions.createPlaylistFail(error));
+    yield put(spotifyActions.createPlaylistFail(error));
   }
 }
 
 function* saga() {
-  yield takeLatest(actions.getAccessToken, getAccessTokenFlow);
-  yield takeLatest(actions.getUserDetailsStart, getUserDetailsFlow);
-  yield takeLatest(actions.getTopArtistsStart, getTopArtistsFlow);
-  yield takeLatest(actions.createPlaylistStart, createPlaylistFlow);
-  yield takeEvery(actions.getArtistConcertsStart, getArtistConcertsFlow);
+  yield takeLatest(spotifyActions.getAccessToken, getAccessTokenFlow);
+  yield takeLatest(spotifyActions.getUserDetailsStart, getUserDetailsFlow);
+  yield takeLatest(spotifyActions.getTopArtistsStart, getTopArtistsFlow);
+  yield takeLatest(spotifyActions.createPlaylistStart, createPlaylistFlow);
+  yield takeEvery(songkickActions.getArtistConcertsStart, getArtistConcertsFlow);
 }
 
 export default saga;
