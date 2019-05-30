@@ -21,9 +21,7 @@ export const spotifyActions = {
 };
 
 export const songkickActions = {
-  getArtistConcertsStart: createAction<string>('GET_ARTIST_CONCERTS_START'),
-  getArtistConcertsSuccess: createAction<{ artist: string; value: any }>(
-    'GET_ARTIST_CONCERTS_SUCCESS',
-  ),
-  getArtistConcertsFail: createAction<{ artist: string; error: Error }>('GET_ARTIST_CONCERTS_FAIL'),
+  getConcertsStart: createAction('GET_CONCERTS_START'),
+  getConcertsSuccess: createAction<any>('GET_CONCERTS_SUCCESS'),
+  getConcertsFail: createAction<Error>('GET_CONCERTS_FAIL'),
 };

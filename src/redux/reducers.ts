@@ -3,7 +3,7 @@ import { spotifyActions, songkickActions } from './actions';
 import { ETimeRange } from 'types/general';
 
 export type TTopArtists = {
-  value: SpotifyApi.ArtistObjectFull[] | null;
+  value: SpotifyApi.ArtistObjectFull[];
   isLoading: boolean;
   error: Error | null;
 };
@@ -25,11 +25,9 @@ export interface IState {
     error: Error | null;
   };
   concerts: {
-    [artist: string]: {
-      value: any;
-      isLoading: boolean;
-      error: Error | null;
-    };
+    value: { [name: string]: any } | null;
+    isLoading: boolean;
+    error: Error | null;
   };
 }
 
@@ -41,22 +39,26 @@ const initialState = {
   },
   artists: {
     [ETimeRange.short]: {
-      value: null,
+      value: [],
       isLoading: false,
       error: null,
     },
     [ETimeRange.medium]: {
-      value: null,
+      value: [],
       isLoading: false,
       error: null,
     },
     [ETimeRange.long]: {
-      value: null,
+      value: [],
       isLoading: false,
       error: null,
     },
   },
-  concerts: {},
+  concerts: {
+    value: null,
+    isLoading: false,
+    error: null,
+  },
   createPlaylist: {
     value: null,
     isLoading: false,
@@ -138,39 +140,30 @@ reducer.on(spotifyActions.getTopArtistsFail, (state, { timeRange, error }) => ({
 /**
  * concert data
  */
-reducer.on(songkickActions.getArtistConcertsStart, (state, artist) => ({
+reducer.on(songkickActions.getConcertsStart, state => ({
   ...state,
   concerts: {
-    ...state.concerts,
-    [artist]: {
-      value: null,
-      isLoading: true,
-      error: null,
-    },
+    value: null,
+    isLoading: true,
+    error: null,
   },
 }));
 
-reducer.on(songkickActions.getArtistConcertsSuccess, (state, { artist, value }) => ({
+reducer.on(songkickActions.getConcertsSuccess, (state, value) => ({
   ...state,
   concerts: {
-    ...state.concerts,
-    [artist]: {
-      value,
-      isLoading: false,
-      error: null,
-    },
+    value,
+    isLoading: false,
+    error: null,
   },
 }));
 
-reducer.on(songkickActions.getArtistConcertsFail, (state, { artist, error }) => ({
+reducer.on(songkickActions.getConcertsFail, (state, error) => ({
   ...state,
   concerts: {
-    ...state.concerts,
-    [artist]: {
-      value: null,
-      isLoading: false,
-      error,
-    },
+    value: null,
+    isLoading: false,
+    error,
   },
 }));
 

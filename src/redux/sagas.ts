@@ -37,21 +37,29 @@ function* getTopArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
       timeRange,
     );
 
-    yield all(value.map(artist => put(songkickActions.getArtistConcertsStart(artist.name))));
-
     yield put(spotifyActions.getTopArtistsSuccess({ timeRange, value }));
   } catch (error) {
     yield put(spotifyActions.getTopArtistsFail({ timeRange, error }));
   }
 }
 
-function* getArtistConcertsFlow({ payload: artist }: TAction<string>) {
+function* getArtistConcertsFlow() {
   try {
-    const { results } = yield call(songkickApi.getEventsByArtist, artist);
+    const artists: IState['artists'][ETimeRange.medium]['value'] = yield select(
+      (state: IState) => state.artists[ETimeRange.medium].value,
+    );
 
-    yield put(songkickActions.getArtistConcertsSuccess({ artist, value: results.event || null }));
+    const concerts: { [name: string]: any } = {};
+
+    if (artists) {
+      for (let { name } of artists) {
+        const { results } = yield call(songkickApi.getEventsByArtist, name);
+        concerts[name] = results.event || [];
+      }
+    }
+    yield put(songkickActions.getConcertsSuccess(concerts));
   } catch (error) {
-    yield put(songkickActions.getArtistConcertsFail({ artist, error }));
+    yield put(songkickActions.getConcertsFail(error));
   }
 }
 
@@ -93,7 +101,7 @@ function* saga() {
   yield takeLatest(spotifyActions.getUserDetailsStart, getUserDetailsFlow);
   yield takeLatest(spotifyActions.getTopArtistsStart, getTopArtistsFlow);
   yield takeLatest(spotifyActions.createPlaylistStart, createPlaylistFlow);
-  yield takeEvery(songkickActions.getArtistConcertsStart, getArtistConcertsFlow);
+  yield takeEvery(songkickActions.getConcertsStart, getArtistConcertsFlow);
 }
 
 export default saga;

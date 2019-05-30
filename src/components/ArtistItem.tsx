@@ -59,12 +59,13 @@ const ArtistItem = ({
   artist: { name, external_urls },
   position,
   concerts,
-}: TProps & { concerts: IState['concerts'][''] }) => {
-  const hasConcerts = concerts.value !== null || concerts.isLoading;
+}: TProps & { concerts: IState['concerts']['value'] }) => {
+  // const hasConcerts = concerts.value !== null || concerts.isLoading;
+  console.log(concerts);
 
   return (
     <Wrap position={position}>
-      <Text href={external_urls.spotify} rel="noopener noreferrer" hasConcerts={hasConcerts}>
+      <Text href={external_urls.spotify} rel="noopener noreferrer" hasConcerts={true}>
         {name}
       </Text>
     </Wrap>

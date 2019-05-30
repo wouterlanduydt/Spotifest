@@ -9,7 +9,7 @@ import Select from '../components/Select';
 import Footer from '../components/Footer';
 import { ETimeRange, ESortCriteria, timeRanges } from 'types/general';
 import { connect } from 'react-redux';
-import { spotifyActions } from 'redux/actions';
+import { spotifyActions, songkickActions } from 'redux/actions';
 import { IState } from 'redux/reducers';
 import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
@@ -27,6 +27,7 @@ type TProps = {
   getAccessToken: () => void;
   createPlaylistStart: (artists: SpotifyApi.ArtistObjectFull[]) => void;
   getTopArtistsStart: (timeRange: ETimeRange) => void;
+  getConcertsStart: () => void;
   user: IState['user'];
   artists: IState['artists'];
   createPlaylistState: IState['createPlaylist'];
@@ -65,6 +66,7 @@ class App extends Component<TProps, TState> {
       createPlaylistStart,
       getAccessToken,
       createPlaylistState,
+      getConcertsStart,
     } = this.props;
 
     return (
@@ -98,6 +100,7 @@ class App extends Component<TProps, TState> {
                     this.setState({ sortCriteria: sortCriteria as ESortCriteria })
                   }
                 />
+                <button onClick={() => getConcertsStart()}>turn off dream mode</button>
               </Filters>
 
               <Poster
@@ -140,6 +143,7 @@ export default connect(
   {
     getUserDetailsStart: spotifyActions.getUserDetailsStart,
     getTopArtistsStart: spotifyActions.getTopArtistsStart,
+    getConcertsStart: songkickActions.getConcertsStart,
     createPlaylistStart: spotifyActions.createPlaylistStart,
     getAccessToken: spotifyActions.getAccessToken,
   },
