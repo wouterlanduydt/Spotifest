@@ -7,7 +7,7 @@ import Button from '../components/Button';
 import Poster from '../components/Poster';
 import Select from '../components/Select';
 import Footer from '../components/Footer';
-import { ETimeRange, ESortCriteria, timeRanges } from 'types/general';
+import { ETimeRange, timeRanges } from 'types/general';
 import { connect } from 'react-redux';
 import { spotifyActions, songkickActions } from 'redux/actions';
 import { IState } from 'redux/reducers';
@@ -27,7 +27,7 @@ type TProps = {
   getAccessToken: () => void;
   createPlaylistStart: (artists: SpotifyApi.ArtistObjectFull[]) => void;
   getTopArtistsStart: (timeRange: ETimeRange) => void;
-  getConcertsStart: () => void;
+  getConcertsStart: (timeRange: ETimeRange) => void;
   user: IState['user'];
   artists: IState['artists'];
   createPlaylistState: IState['createPlaylist'];
@@ -35,7 +35,6 @@ type TProps = {
 
 type TState = {
   timeRange: ETimeRange;
-  sortCriteria: ESortCriteria;
 };
 
 class App extends Component<TProps, TState> {
@@ -43,7 +42,6 @@ class App extends Component<TProps, TState> {
     super(props);
     this.state = {
       timeRange: ETimeRange.medium,
-      sortCriteria: ESortCriteria.calculated,
     };
   }
 
@@ -58,7 +56,7 @@ class App extends Component<TProps, TState> {
   };
 
   render() {
-    const { timeRange, sortCriteria } = this.state;
+    const { timeRange } = this.state;
     const {
       user,
       artists,
@@ -68,6 +66,8 @@ class App extends Component<TProps, TState> {
       createPlaylistState,
       getConcertsStart,
     } = this.props;
+
+    console.log(timeRange);
 
     return (
       <ThemeProvider theme={branding}>
@@ -86,27 +86,19 @@ class App extends Component<TProps, TState> {
                   label="Time Range"
                   items={timeRanges}
                   onChange={timeRange => {
-                    if (!artists[timeRange as ETimeRange].value)
+                    if (artists[timeRange as ETimeRange].value.length === 0)
                       getTopArtistsStart(timeRange as ETimeRange);
                     this.setState({ timeRange: timeRange as ETimeRange });
                   }}
                   initialIndex={1}
                 />
 
-                <Select
-                  label="Sort By"
-                  items={Object.values(ESortCriteria).map(i => ({ value: i, label: i }))}
-                  onChange={sortCriteria =>
-                    this.setState({ sortCriteria: sortCriteria as ESortCriteria })
-                  }
-                />
-                <button onClick={() => getConcertsStart()}>turn off dream mode</button>
+                <button onClick={() => getConcertsStart(timeRange)}>turn off dream mode</button>
               </Filters>
 
               <Poster
                 username={idx(user, _ => _.value.display_name)}
                 artists={artists[timeRange]}
-                sortCriteria={sortCriteria}
                 timeRange={timeRange}
               />
               {createPlaylistState.isLoading && <Overlay text="Creating Playlist..." />}

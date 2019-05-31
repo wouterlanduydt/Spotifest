@@ -16,12 +16,12 @@ export const spotifyActions = {
   getTopArtistsFail: createAction<{ timeRange: ETimeRange; error: Error }>('GET_TOP_ARTISTS_FAIL'),
 
   createPlaylistStart: createAction<SpotifyApi.ArtistObjectFull[]>('CREATE_PLAYLIST_START'),
-  createPlaylistSuccess: createAction('CREATE_PLAYLIST_SUCCESS'),
+  createPlaylistSuccess: createAction<SpotifyApi.CreatePlaylistResponse>('CREATE_PLAYLIST_SUCCESS'),
   createPlaylistFail: createAction<Error>('CREATE_PLAYLIST_FAIL'),
 };
 
 export const songkickActions = {
-  getConcertsStart: createAction('GET_CONCERTS_START'),
+  getConcertsStart: createAction<ETimeRange>('GET_CONCERTS_START'),
   getConcertsSuccess: createAction<any>('GET_CONCERTS_SUCCESS'),
   getConcertsFail: createAction<Error>('GET_CONCERTS_FAIL'),
 };

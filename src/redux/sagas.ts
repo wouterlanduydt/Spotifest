@@ -1,4 +1,4 @@
-import { call, put, takeLatest, select, takeEvery, all } from 'redux-saga/effects';
+import { call, put, takeLatest, select, takeEvery } from 'redux-saga/effects';
 import { spotifyActions, songkickActions } from './actions';
 import * as spotifyApi from 'api/spotify.api';
 import { ETimeRange } from 'types/general';
@@ -43,10 +43,10 @@ function* getTopArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
   }
 }
 
-function* getArtistConcertsFlow() {
+function* getArtistConcertsFlow({ payload: timeRange }: TAction<ETimeRange>) {
   try {
-    const artists: IState['artists'][ETimeRange.medium]['value'] = yield select(
-      (state: IState) => state.artists[ETimeRange.medium].value,
+    const artists: IState['artists'][ETimeRange]['value'] = yield select(
+      (state: IState) => state.artists[timeRange].value,
     );
 
     const concerts: { [name: string]: any } = {};
@@ -85,13 +85,11 @@ function* createPlaylistFlow({ payload: artists }: TAction<SpotifyApi.ArtistObje
         } by Spotifest app.`,
       };
 
-      const { id: playlistId } = yield call(spotifyApi.postCreatePlaylist, user.id, playlistInfo);
-      yield call(spotifyApi.postAddTracksToPlaylist, playlistId, tracks.map(track => track.uri));
+      const playlist = yield call(spotifyApi.postCreatePlaylist, user.id, playlistInfo);
+      yield call(spotifyApi.postAddTracksToPlaylist, playlist.id, tracks.map(track => track.uri));
+      yield put(spotifyActions.createPlaylistSuccess(playlist));
     }
-
-    yield put(spotifyActions.createPlaylistSuccess());
   } catch (error) {
-    console.log(error);
     yield put(spotifyActions.createPlaylistFail(error));
   }
 }

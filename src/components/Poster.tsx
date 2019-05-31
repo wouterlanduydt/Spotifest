@@ -1,16 +1,15 @@
 import React from 'react';
 import Title from './Title';
 // import SpotifyLogo from '../assets/svg/spotify.svg';
-import { ESortCriteria, ETimeRange } from 'types/general';
+import { ETimeRange } from 'types/general';
 import { TTopArtists } from 'redux/reducers';
 import ArtistItem from './ArtistItem';
-import { getSortedArtists, getHeadlinerAmt } from 'lib';
+import { getHeadlinerAmt } from 'lib';
 import styled from 'styled-components';
 
 type TProps = {
   username: string | undefined | null;
   artists: TTopArtists;
-  sortCriteria: ESortCriteria;
   timeRange: ETimeRange;
 };
 
@@ -45,7 +44,7 @@ const Separator = styled.div`
   }
 `;
 
-const Poster = ({ artists, sortCriteria, timeRange, username }: TProps) => (
+const Poster = ({ artists, timeRange, username }: TProps) => (
   <Wrap>
     <Title title="Spotifest" username={username} />
     {artists.isLoading && (
@@ -58,16 +57,12 @@ const Poster = ({ artists, sortCriteria, timeRange, username }: TProps) => (
     )}
     <ArtistsWrap>
       {artists.value &&
-        getSortedArtists(artists.value, sortCriteria).map((artist, i) => {
+        artists.value.map((artist, i) => {
           const [topArtists, midArtists] = getHeadlinerAmt(artists.value!.length);
 
           return (
             <React.Fragment key={artist.id}>
-              <ArtistItem
-                artist={artist}
-                position={i}
-                key={`${artist.id}-${i}-${sortCriteria}-${timeRange}`}
-              />
+              <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}-${timeRange}`} />
               {(i === topArtists || i === midArtists) && <Separator />}
             </React.Fragment>
           );

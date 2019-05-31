@@ -179,10 +179,10 @@ reducer.on(spotifyActions.createPlaylistStart, state => ({
   },
 }));
 
-reducer.on(spotifyActions.createPlaylistSuccess, state => ({
+reducer.on(spotifyActions.createPlaylistSuccess, (state, value) => ({
   ...state,
   createPlaylist: {
-    value: null,
+    value,
     isLoading: false,
     error: null,
   },

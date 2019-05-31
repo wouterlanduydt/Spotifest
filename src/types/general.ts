@@ -10,13 +10,6 @@ export enum ETimeRange {
   long = 'long_term',
 }
 
-export enum ESortCriteria {
-  calculated = 'Personal Taste',
-  popularity = 'Popularity',
-  followers = 'Followers',
-  alphabetically = 'Alphabetically',
-}
-
 export const timeRanges = [
   {
     value: ETimeRange.short,
