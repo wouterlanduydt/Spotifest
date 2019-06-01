@@ -3,10 +3,7 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import reset from 'styled-reset';
 import queryString from 'query-string';
 import global from '../styles/global';
-import Button from '../components/Button';
-import Poster from '../components/Poster';
-import Select from '../components/Select';
-import Footer from '../components/Footer';
+import { Button, Poster, Select, Footer, Overlay, ConcertList } from '../components';
 import { ETimeRange, timeRanges } from 'types/general';
 import { connect } from 'react-redux';
 import { spotifyActions, songkickActions } from 'redux/actions';
@@ -15,7 +12,7 @@ import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
 import branding from 'styles/branding';
 import { LoginWrap, Filters, Actions } from './App.styled';
-import Overlay from 'components/Overlay';
+import { getUserLocation, filterConcertsByDistance } from 'lib';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -30,11 +27,15 @@ type TProps = {
   getConcertsStart: (timeRange: ETimeRange) => void;
   user: IState['user'];
   artists: IState['artists'];
+  concerts: IState['concerts'];
   createPlaylistState: IState['createPlaylist'];
 };
 
 type TState = {
   timeRange: ETimeRange;
+  concertMode: boolean;
+  userCoords: Position['coords'] | undefined;
+  concertRange: number;
 };
 
 class App extends Component<TProps, TState> {
@@ -42,32 +43,56 @@ class App extends Component<TProps, TState> {
     super(props);
     this.state = {
       timeRange: ETimeRange.medium,
+      concertMode: false,
+      userCoords: undefined,
+      concertRange: 100,
     };
   }
 
   componentDidMount = () => {
+    const { getUserDetailsStart, getTopArtistsStart } = this.props;
+
     const parsedUrl = queryString.parse(window.location.hash);
     spotifyApi.setAccessToken(String(parsedUrl.access_token));
 
     if (!!parsedUrl.access_token) {
-      this.props.getUserDetailsStart();
-      this.props.getTopArtistsStart(this.state.timeRange);
+      getUserDetailsStart();
+      getTopArtistsStart(this.state.timeRange);
     }
   };
 
+  onChangeTimeRange = (timeRange: string) => {
+    const { artists, getTopArtistsStart } = this.props;
+
+    if (artists[timeRange as ETimeRange].value.length === 0)
+      getTopArtistsStart(timeRange as ETimeRange);
+    this.setState({ timeRange: timeRange as ETimeRange });
+  };
+
+  toggleConcertMode = () => {
+    const { timeRange, concertMode, userCoords } = this.state;
+
+    if (!userCoords) {
+      getUserLocation()
+        .then(({ coords: userCoords }) => this.setState({ userCoords }))
+        .catch(e => console.log(e));
+    }
+    if (!concertMode) this.props.getConcertsStart(timeRange);
+    this.setState({ concertMode: !concertMode });
+  };
+
   render() {
-    const { timeRange } = this.state;
+    const { timeRange, concertMode, userCoords, concertRange } = this.state;
     const {
       user,
       artists,
-      getTopArtistsStart,
+      concerts,
       createPlaylistStart,
       getAccessToken,
       createPlaylistState,
-      getConcertsStart,
     } = this.props;
 
-    console.log(timeRange);
+    const nearbyConcerts = filterConcertsByDistance(concerts, userCoords, concertRange);
 
     return (
       <ThemeProvider theme={branding}>
@@ -82,26 +107,39 @@ class App extends Component<TProps, TState> {
           ) : (
             <>
               <Filters>
-                <Select
-                  label="Time Range"
-                  items={timeRanges}
-                  onChange={timeRange => {
-                    if (artists[timeRange as ETimeRange].value.length === 0)
-                      getTopArtistsStart(timeRange as ETimeRange);
-                    this.setState({ timeRange: timeRange as ETimeRange });
-                  }}
-                  initialIndex={1}
-                />
-
-                <button onClick={() => getConcertsStart(timeRange)}>turn off dream mode</button>
+                <div className="filter-main-btns">
+                  <Select
+                    label="Time Range"
+                    items={timeRanges}
+                    onChange={this.onChangeTimeRange}
+                    initialIndex={1}
+                  />
+                  <button onClick={this.toggleConcertMode}>
+                    turn {concertMode ? 'off' : 'on'} concertMode
+                  </button>
+                </div>
+                {concertMode && (
+                  <div className="filter-concert-ranges">
+                    <button onClick={() => this.setState({ concertRange: 50 })}>50km </button>
+                    <button onClick={() => this.setState({ concertRange: 100 })}>100km </button>
+                    <button onClick={() => this.setState({ concertRange: 250 })}>250km </button>
+                    <button onClick={() => this.setState({ concertRange: 500 })}>500km </button>
+                    <button onClick={() => this.setState({ concertRange: 99999999 })}>
+                      Everywhere
+                    </button>
+                  </div>
+                )}
               </Filters>
 
               <Poster
                 username={idx(user, _ => _.value.display_name)}
                 artists={artists[timeRange]}
                 timeRange={timeRange}
+                concertMode={concertMode}
+                concerts={nearbyConcerts}
               />
               {createPlaylistState.isLoading && <Overlay text="Creating Playlist..." />}
+
               <Actions>
                 <Button
                   onClick={() =>
@@ -111,12 +149,13 @@ class App extends Component<TProps, TState> {
                   disabled={!artists[timeRange].value}
                   title="Create a playlist containing recommendations based on your top artists."
                 >
-                  Generate Playlist
+                  Generate Recommendations Playlist
                 </Button>
                 {/* <Button onClick={() => window.alert('Coming soon')} buttonStyle="normal">
                   Save as image
                 </Button> */}
               </Actions>
+              {concertMode && <ConcertList nearbyConcerts={nearbyConcerts} />}
               <Footer />
             </>
           )}
@@ -127,10 +166,11 @@ class App extends Component<TProps, TState> {
 }
 
 export default connect(
-  ({ user, artists, createPlaylist: createPlaylistState }: IState) => ({
+  ({ user, artists, createPlaylist: createPlaylistState, concerts }: IState) => ({
     user,
     artists,
     createPlaylistState,
+    concerts,
   }),
   {
     getUserDetailsStart: spotifyActions.getUserDetailsStart,

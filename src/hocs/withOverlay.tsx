@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Overlay from 'components/Overlay';
+import { Overlay } from 'components';
 
 export type TWithOverlayProps = {
   showOverlay: (options?: TOverlayOptions) => void;

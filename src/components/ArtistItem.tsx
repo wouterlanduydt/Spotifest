@@ -1,13 +1,11 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { isTopArtist, isMidArtist } from 'lib';
-import { connect } from 'react-redux';
-import { getArtistConcerts } from 'redux/selectors';
-import { IState } from 'redux/reducers';
 
 type TProps = {
   artist: SpotifyApi.ArtistObjectFull;
   position: number;
+  isHighlighted: boolean;
 };
 
 const getFontSize = (pos: number, total: number, isMobile: boolean) => {
@@ -47,31 +45,22 @@ const Wrap = styled.li<{ position: number }>`
   }
 `;
 
-const Text = styled.a<{ hasConcerts: boolean }>`
+const Text = styled.a<{ isHighlighted: boolean }>`
   display: inline-block;
-  text-decoration: ${({ hasConcerts }) => (hasConcerts ? 'none' : 'line-through')};
-  opacity: ${({ hasConcerts }) => (hasConcerts ? 1 : 0.4)};
+  text-decoration: ${({ isHighlighted }) => (isHighlighted ? 'none' : 'line-through')};
+  opacity: ${({ isHighlighted }) => (isHighlighted ? 1 : 0.4)};
   transition: opacity 400ms ease-in-out;
   color: white;
 `;
 
-const ArtistItem = ({
-  artist: { name, external_urls },
-  position,
-  concerts,
-}: TProps & { concerts: IState['concerts']['value'] }) => {
-  // const hasConcerts = concerts.value !== null || concerts.isLoading;
-  console.log(concerts);
-
+const ArtistItem = ({ artist: { name, external_urls }, position, isHighlighted }: TProps) => {
   return (
     <Wrap position={position}>
-      <Text href={external_urls.spotify} rel="noopener noreferrer" hasConcerts={true}>
+      <Text href={external_urls.spotify} rel="noopener noreferrer" isHighlighted={isHighlighted}>
         {name}
       </Text>
     </Wrap>
   );
 };
 
-export default connect((state: IState, { artist }: TProps) => ({
-  concerts: getArtistConcerts(state, artist.name),
-}))(ArtistItem);
+export default ArtistItem;

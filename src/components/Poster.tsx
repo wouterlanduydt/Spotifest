@@ -2,18 +2,21 @@ import React from 'react';
 import Title from './Title';
 // import SpotifyLogo from '../assets/svg/spotify.svg';
 import { ETimeRange } from 'types/general';
-import { TTopArtists } from 'redux/reducers';
+import { TTopArtists, IState } from 'redux/reducers';
 import ArtistItem from './ArtistItem';
 import { getHeadlinerAmt } from 'lib';
 import styled from 'styled-components';
+import { LoadingIndicator } from 'components';
 
 type TProps = {
   username: string | undefined | null;
   artists: TTopArtists;
   timeRange: ETimeRange;
+  concertMode: boolean;
+  concerts: IState['concerts'];
 };
 
-const Wrap = styled.div`
+const Wrap = styled.div<{ concertMode: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,7 +26,10 @@ const Wrap = styled.div`
   max-height: 900px;
   margin: 0 auto;
   padding: 8px;
-  background: linear-gradient(45deg, #536976, #292e49);
+  background: ${({ concertMode }) =>
+    concertMode
+      ? 'linear-gradient(to bottom, #1d2b64, #f8cdda)'
+      : 'linear-gradient(45deg, #536976, #292e49)'};
   margin-top: 16px;
   border: 4px solid white;
 `;
@@ -44,25 +50,29 @@ const Separator = styled.div`
   }
 `;
 
-const Poster = ({ artists, timeRange, username }: TProps) => (
-  <Wrap>
+const Poster = ({ artists, timeRange, username, concertMode, concerts }: TProps) => (
+  <Wrap concertMode={concertMode}>
     <Title title="Spotifest" username={username} />
-    {artists.isLoading && (
-      <img
-        src={require('../assets/svg/loading-indicator.svg')}
-        width={24}
-        style={{ marginTop: 24 }}
-        alt=""
-      />
-    )}
+    {artists.isLoading && <LoadingIndicator style={{ marginTop: 24 }} />}
     <ArtistsWrap>
       {artists.value &&
         artists.value.map((artist, i) => {
           const [topArtists, midArtists] = getHeadlinerAmt(artists.value!.length);
+          const isHighlighted = concertMode
+            ? (concerts.value &&
+                concerts.value[artist.name] &&
+                concerts.value[artist.name].length > 0) ||
+              false
+            : true;
 
           return (
             <React.Fragment key={artist.id}>
-              <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}-${timeRange}`} />
+              <ArtistItem
+                artist={artist}
+                position={i}
+                key={`${artist.id}-${i}-${timeRange}`}
+                isHighlighted={isHighlighted}
+              />
               {(i === topArtists || i === midArtists) && <Separator />}
             </React.Fragment>
           );

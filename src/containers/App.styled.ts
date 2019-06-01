@@ -10,14 +10,19 @@ export const LoginWrap = styled.div`
 
 export const Filters = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   max-width: 500px;
   margin: 0 auto;
   width: 96vw;
   margin-top: 16px;
 
+  .filter-main-btns {
+    display: flex;
+    justify-content: center;
+  }
+
   .react-select {
-    width: 40%;
+    width: 50%;
     z-index: 2;
   }
 
