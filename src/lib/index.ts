@@ -40,7 +40,7 @@ export const filterConcertsByDistance = (
     const newVal: IState['concerts']['value'] = {};
 
     Object.keys(concerts.value).forEach(artist => {
-      newVal[artist] = concerts.value![artist].filter((concert: any) => {
+      newVal[artist] = concerts.value![artist].filter(concert => {
         const ky = 40000 / 360;
         const kx = Math.cos((Math.PI * userCoords.latitude) / 180.0) * ky;
         const dx = Math.abs(userCoords.longitude - concert.location.lng) * kx;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
-import { Button, Poster, Select, Footer, Overlay, ConcertList } from '../../components';
+import { Button, Poster, Select, Footer, Overlay } from '../../components';
 import { ETimeRange, timeRanges } from 'types/general';
 import { connect } from 'react-redux';
 import { spotifyActions } from 'redux/actions';
@@ -83,7 +83,7 @@ class Home extends Component<TProps, TState> {
             Generate Playlist
           </Button>
           <Button onClick={() => window.alert('Coming soon')}>Save as image</Button>
-          <Button to="/concerts">See Concerts</Button>
+          <Button to={`/concerts?timeRange=${timeRange}`}>See Concerts</Button>
         </Actions>
         <Footer />
       </>

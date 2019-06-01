@@ -1,6 +1,7 @@
 import { createReducer } from 'redux-act';
 import { spotifyActions, songkickActions } from './actions';
 import { ETimeRange } from 'types/general';
+import { Event } from 'types/songkick';
 
 export type TTopArtists = {
   value: SpotifyApi.ArtistObjectFull[];
@@ -20,12 +21,12 @@ export interface IState {
     [ETimeRange.long]: TTopArtists;
   };
   createPlaylist: {
-    value: any;
+    value: SpotifyApi.CreatePlaylistResponse | null;
     isLoading: boolean;
     error: Error | null;
   };
   concerts: {
-    value: { [name: string]: any } | null;
+    value: { [name: string]: Event[] } | null;
     isLoading: boolean;
     error: Error | null;
   };

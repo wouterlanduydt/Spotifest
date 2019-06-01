@@ -1,5 +1,6 @@
 import { createAction } from 'redux-act';
 import { ETimeRange } from 'types/general';
+import { Event } from 'types/songkick';
 
 export const spotifyActions = {
   getUserDetailsStart: createAction('GET_USER_DETAILS_START'),
@@ -20,6 +21,6 @@ export const spotifyActions = {
 
 export const songkickActions = {
   getConcertsStart: createAction<ETimeRange>('GET_CONCERTS_START'),
-  getConcertsSuccess: createAction<any>('GET_CONCERTS_SUCCESS'),
+  getConcertsSuccess: createAction<{ [name: string]: Event[] }>('GET_CONCERTS_SUCCESS'),
   getConcertsFail: createAction<Error>('GET_CONCERTS_FAIL'),
 };

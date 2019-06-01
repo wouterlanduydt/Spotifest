@@ -4,6 +4,7 @@ import * as spotifyApi from 'api/spotify.api';
 import { ETimeRange } from 'types/general';
 import { IState } from './reducers';
 import * as songkickApi from 'api/songkick.api';
+import { Event } from 'types/songkick';
 
 type TAction<T = void> = {
   type: string;
@@ -40,7 +41,7 @@ function* getArtistConcertsFlow({ payload: timeRange }: TAction<ETimeRange>) {
       (state: IState) => state.artists[timeRange].value,
     );
 
-    const concerts: { [name: string]: any } = {};
+    const concerts: { [name: string]: Event[] } = {};
 
     if (artists) {
       for (let { name } of artists) {
