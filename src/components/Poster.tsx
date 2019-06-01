@@ -12,11 +12,9 @@ type TProps = {
   username: string | undefined | null;
   artists: TTopArtists;
   timeRange: ETimeRange;
-  concertMode: boolean;
-  concerts: IState['concerts'];
 };
 
-const Wrap = styled.div<{ concertMode: boolean }>`
+const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,10 +24,7 @@ const Wrap = styled.div<{ concertMode: boolean }>`
   max-height: 900px;
   margin: 0 auto;
   padding: 8px;
-  background: ${({ concertMode }) =>
-    concertMode
-      ? 'linear-gradient(to bottom, #1d2b64, #f8cdda)'
-      : 'linear-gradient(45deg, #536976, #292e49)'};
+  background: linear-gradient(45deg, #536976, #292e49);
   margin-top: 16px;
   border: 4px solid white;
 `;
@@ -50,29 +45,18 @@ const Separator = styled.div`
   }
 `;
 
-const Poster = ({ artists, timeRange, username, concertMode, concerts }: TProps) => (
-  <Wrap concertMode={concertMode}>
+const Poster = ({ artists, timeRange, username }: TProps) => (
+  <Wrap>
     <Title title="Spotifest" username={username} />
     {artists.isLoading && <LoadingIndicator style={{ marginTop: 24 }} />}
     <ArtistsWrap>
       {artists.value &&
         artists.value.map((artist, i) => {
           const [topArtists, midArtists] = getHeadlinerAmt(artists.value!.length);
-          const isHighlighted = concertMode
-            ? (concerts.value &&
-                concerts.value[artist.name] &&
-                concerts.value[artist.name].length > 0) ||
-              false
-            : true;
 
           return (
             <React.Fragment key={artist.id}>
-              <ArtistItem
-                artist={artist}
-                position={i}
-                key={`${artist.id}-${i}-${timeRange}`}
-                isHighlighted={isHighlighted}
-              />
+              <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}-${timeRange}`} />
               {(i === topArtists || i === midArtists) && <Separator />}
             </React.Fragment>
           );

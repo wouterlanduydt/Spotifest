@@ -10,15 +10,6 @@ type TAction<T = void> = {
   payload: T;
 };
 
-function* getAccessTokenFlow() {
-  try {
-    const value = yield call(spotifyApi.authorizeSpotifyApi);
-    console.log(value);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 function* getUserDetailsFlow() {
   try {
     const userDetails = yield call(spotifyApi.fetchUserDetails);
@@ -95,7 +86,6 @@ function* createPlaylistFlow({ payload: artists }: TAction<SpotifyApi.ArtistObje
 }
 
 function* saga() {
-  yield takeLatest(spotifyActions.getAccessToken, getAccessTokenFlow);
   yield takeLatest(spotifyActions.getUserDetailsStart, getUserDetailsFlow);
   yield takeLatest(spotifyActions.getTopArtistsStart, getTopArtistsFlow);
   yield takeLatest(spotifyActions.createPlaylistStart, createPlaylistFlow);

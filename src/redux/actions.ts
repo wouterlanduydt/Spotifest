@@ -2,8 +2,6 @@ import { createAction } from 'redux-act';
 import { ETimeRange } from 'types/general';
 
 export const spotifyActions = {
-  getAccessToken: createAction('GET_ACCESS_TOKEN'),
-
   getUserDetailsStart: createAction('GET_USER_DETAILS_START'),
   getUserDetailsSuccess: createAction<SpotifyApi.UserObjectPrivate>('GET_USER_DETAILS_SUCCESS'),
   getUserDetailsFail: createAction<Error>('GET_USER_DETAILS_FAIL'),

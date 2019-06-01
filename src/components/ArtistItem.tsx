@@ -5,7 +5,6 @@ import { isTopArtist, isMidArtist } from 'lib';
 type TProps = {
   artist: SpotifyApi.ArtistObjectFull;
   position: number;
-  isHighlighted: boolean;
 };
 
 const getFontSize = (pos: number, total: number, isMobile: boolean) => {
@@ -45,18 +44,16 @@ const Wrap = styled.li<{ position: number }>`
   }
 `;
 
-const Text = styled.a<{ isHighlighted: boolean }>`
+const Text = styled.a`
   display: inline-block;
-  text-decoration: ${({ isHighlighted }) => (isHighlighted ? 'none' : 'line-through')};
-  opacity: ${({ isHighlighted }) => (isHighlighted ? 1 : 0.4)};
-  transition: opacity 400ms ease-in-out;
+  text-decoration: none;
   color: white;
 `;
 
-const ArtistItem = ({ artist: { name, external_urls }, position, isHighlighted }: TProps) => {
+const ArtistItem = ({ artist: { name, external_urls }, position }: TProps) => {
   return (
     <Wrap position={position}>
-      <Text href={external_urls.spotify} rel="noopener noreferrer" isHighlighted={isHighlighted}>
+      <Text href={external_urls.spotify} rel="noopener noreferrer">
         {name}
       </Text>
     </Wrap>
