@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { isTopArtist, isMidArtist } from 'lib';
+import { fadeIn } from 'styles/animations';
 
 type TProps = {
   artist: SpotifyApi.ArtistObjectFull;
@@ -13,17 +14,6 @@ const getFontSize = (pos: number, total: number, isMobile: boolean) => {
   if (isMidArtist(pos, total)) return isMobile ? '3.8vw' : '24px';
   return isMobile ? '3.4vw' : '22px';
 };
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
 
 const Wrap = styled.li<{ position: number }>`
   margin: 0.6vw 1vw;
@@ -45,11 +35,12 @@ const Wrap = styled.li<{ position: number }>`
 `;
 
 const Text = styled.a`
+  display: inline-block;
   text-decoration: none;
   color: white;
 `;
 
-const ArtistItem = ({ artist: { name, external_urls, id }, position }: TProps) => (
+const ArtistItem = ({ artist: { name, external_urls }, position }: TProps) => (
   <Wrap position={position}>
     <Text href={external_urls.spotify} rel="noopener noreferrer">
       {name}
@@ -57,4 +48,4 @@ const ArtistItem = ({ artist: { name, external_urls, id }, position }: TProps) =
   </Wrap>
 );
 
-export default ArtistItem;
+export default React.memo(ArtistItem);

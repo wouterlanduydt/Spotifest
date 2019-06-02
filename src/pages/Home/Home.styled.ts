@@ -1,13 +1,5 @@
 import styled from 'styled-components';
 
-export const LoginWrap = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 export const Filters = styled.div`
   display: flex;
   justify-content: center;
@@ -17,7 +9,7 @@ export const Filters = styled.div`
   margin-top: 16px;
 
   .react-select {
-    width: 40%;
+    width: 50%;
     z-index: 2;
   }
 
@@ -28,12 +20,17 @@ export const Filters = styled.div`
 
 export const Actions = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   max-width: 500px;
   margin: 16px auto;
   width: 96vw;
 
-  button:not(:last-child) {
-    margin-right: 8px;
+  > * {
+    margin-bottom: 8px;
+
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 `;

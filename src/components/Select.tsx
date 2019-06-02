@@ -16,7 +16,7 @@ const Label = styled.label`
 
 type TProps = {
   label: string;
-  items: { value: string; label: string }[];
+  items: { value: string | number; label: string }[];
   onChange: (value: string) => void;
   initialIndex?: number;
 };

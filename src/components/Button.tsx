@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link, LinkProps } from 'react-router-dom';
 
 const StyledButton = styled.button<{
   buttonStyle: TProps['buttonStyle'];
@@ -18,17 +19,27 @@ const StyledButton = styled.button<{
 `;
 
 type TProps = {
-  onClick: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
+  onClick?: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined;
   children: string;
   buttonStyle?: 'spotify' | 'normal';
   disabled?: boolean;
   title?: string;
+  to?: string;
 };
 
-const Button = ({ onClick, children, buttonStyle = 'normal', disabled = false, title }: TProps) => (
-  <StyledButton onClick={onClick} buttonStyle={buttonStyle} disabled={disabled} title={title}>
-    {children}
-  </StyledButton>
+const Button = ({
+  onClick,
+  children,
+  buttonStyle = 'normal',
+  disabled = false,
+  title,
+  to,
+}: TProps) => (
+  <Link to={to || ''}>
+    <StyledButton onClick={onClick} buttonStyle={buttonStyle} disabled={disabled} title={title}>
+      {children}
+    </StyledButton>
+  </Link>
 );
 
-export default Button;
+export default React.memo(Button);

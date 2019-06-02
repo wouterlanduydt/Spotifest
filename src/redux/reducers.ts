@@ -1,19 +1,10 @@
 import { createReducer } from 'redux-act';
-import {
-  getUserDetailsStart,
-  getUserDetailsSuccess,
-  getUserDetailsFail,
-  getTopArtistsStart,
-  getTopArtistsSuccess,
-  getTopArtistsFail,
-  createPlaylistStart,
-  createPlaylistSuccess,
-  createPlaylistFail,
-} from './actions';
+import { spotifyActions, songkickActions } from './actions';
 import { ETimeRange } from 'types/general';
+import { Event } from 'types/songkick';
 
 export type TTopArtists = {
-  value: SpotifyApi.ArtistObjectFull[] | null;
+  value: SpotifyApi.ArtistObjectFull[];
   isLoading: boolean;
   error: Error | null;
 };
@@ -30,7 +21,12 @@ export interface IState {
     [ETimeRange.long]: TTopArtists;
   };
   createPlaylist: {
-    value: any;
+    value: SpotifyApi.CreatePlaylistResponse | null;
+    isLoading: boolean;
+    error: Error | null;
+  };
+  concerts: {
+    value: { [name: string]: Event[] } | null;
     isLoading: boolean;
     error: Error | null;
   };
@@ -44,20 +40,25 @@ const initialState = {
   },
   artists: {
     [ETimeRange.short]: {
-      value: null,
+      value: [],
       isLoading: false,
       error: null,
     },
     [ETimeRange.medium]: {
-      value: null,
+      value: [],
       isLoading: false,
       error: null,
     },
     [ETimeRange.long]: {
-      value: null,
+      value: [],
       isLoading: false,
       error: null,
     },
+  },
+  concerts: {
+    value: null,
+    isLoading: false,
+    error: null,
   },
   createPlaylist: {
     value: null,
@@ -71,7 +72,7 @@ const reducer = createReducer<IState>({}, initialState);
 /**
  * user details
  */
-reducer.on(getUserDetailsStart, state => ({
+reducer.on(spotifyActions.getUserDetailsStart, state => ({
   ...state,
   user: {
     value: null,
@@ -80,7 +81,7 @@ reducer.on(getUserDetailsStart, state => ({
   },
 }));
 
-reducer.on(getUserDetailsSuccess, (state, value) => ({
+reducer.on(spotifyActions.getUserDetailsSuccess, (state, value) => ({
   ...state,
   user: {
     value,
@@ -89,7 +90,7 @@ reducer.on(getUserDetailsSuccess, (state, value) => ({
   },
 }));
 
-reducer.on(getUserDetailsFail, (state, error) => ({
+reducer.on(spotifyActions.getUserDetailsFail, (state, error) => ({
   ...state,
   user: {
     value: null,
@@ -101,7 +102,7 @@ reducer.on(getUserDetailsFail, (state, error) => ({
 /**
  * top artists
  */
-reducer.on(getTopArtistsStart, (state, timeRange) => ({
+reducer.on(spotifyActions.getTopArtistsStart, (state, timeRange) => ({
   ...state,
   artists: {
     ...state.artists,
@@ -113,7 +114,7 @@ reducer.on(getTopArtistsStart, (state, timeRange) => ({
   },
 }));
 
-reducer.on(getTopArtistsSuccess, (state, { timeRange, value }) => ({
+reducer.on(spotifyActions.getTopArtistsSuccess, (state, { timeRange, value }) => ({
   ...state,
   artists: {
     ...state.artists,
@@ -125,7 +126,7 @@ reducer.on(getTopArtistsSuccess, (state, { timeRange, value }) => ({
   },
 }));
 
-reducer.on(getTopArtistsFail, (state, { timeRange, error }) => ({
+reducer.on(spotifyActions.getTopArtistsFail, (state, { timeRange, error }) => ({
   ...state,
   artists: {
     ...state.artists,
@@ -138,9 +139,39 @@ reducer.on(getTopArtistsFail, (state, { timeRange, error }) => ({
 }));
 
 /**
+ * concert data
+ */
+reducer.on(songkickActions.getConcertsStart, state => ({
+  ...state,
+  concerts: {
+    value: null,
+    isLoading: true,
+    error: null,
+  },
+}));
+
+reducer.on(songkickActions.getConcertsSuccess, (state, value) => ({
+  ...state,
+  concerts: {
+    value,
+    isLoading: false,
+    error: null,
+  },
+}));
+
+reducer.on(songkickActions.getConcertsFail, (state, error) => ({
+  ...state,
+  concerts: {
+    value: null,
+    isLoading: false,
+    error,
+  },
+}));
+
+/**
  * create playlist
  */
-reducer.on(createPlaylistStart, (state, timeRange) => ({
+reducer.on(spotifyActions.createPlaylistStart, state => ({
   ...state,
   createPlaylist: {
     value: null,
@@ -149,16 +180,16 @@ reducer.on(createPlaylistStart, (state, timeRange) => ({
   },
 }));
 
-reducer.on(createPlaylistSuccess, state => ({
+reducer.on(spotifyActions.createPlaylistSuccess, (state, value) => ({
   ...state,
   createPlaylist: {
-    value: null,
+    value,
     isLoading: false,
     error: null,
   },
 }));
 
-reducer.on(createPlaylistFail, (state, error) => ({
+reducer.on(spotifyActions.createPlaylistFail, (state, error) => ({
   ...state,
   createPlaylist: {
     value: null,
