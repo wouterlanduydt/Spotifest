@@ -73,7 +73,7 @@ class Home extends Component<TProps, TState> {
           >
             Generate Playlist
           </Button>
-          {/* <Button onClick={() => window.alert('Coming soon')}>Save as image</Button> */}
+          <Button onClick={() => window.alert('Coming soon')}>Save as image</Button>
           <Button to={`/concerts`}>See Concerts</Button>
         </Actions>
         <Footer />
