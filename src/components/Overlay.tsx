@@ -33,4 +33,4 @@ const Overlay = ({ text }: TProps) => (
   </Wrap>
 );
 
-export default Overlay;
+export default React.memo(Overlay);

@@ -87,8 +87,13 @@ class Concerts extends Component<TProps, TState> {
           {nearbyConcerts.isLoading && <LoadingIndicator />}
           {!!allConcerts && (
             <ol>
-              {allConcerts.map(concert => (
-                <EventItem key={concert.id} event={concert} names={getNames(concert)} />
+              {allConcerts.map((concert, i) => (
+                <EventItem
+                  key={`${concert.id}-${i}-${range}`}
+                  event={concert}
+                  names={getNames(concert)}
+                  position={i}
+                />
               ))}
             </ol>
           )}

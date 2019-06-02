@@ -3,14 +3,23 @@ import styled from 'styled-components';
 import { Event } from 'types/songkick';
 import { format as formatDate, parse as parseDate } from 'date-fns';
 import { SONGKICK_DATE_FORMAT } from 'api/songkick.api';
+import { fadeIn } from 'styles/animations';
 
 type TProps = {
   event: Event;
+  position: number;
   names: string[];
 };
 
-const ListItem = styled.li`
+const ListItem = styled.li<{ position: number }>`
   width: 100%;
+  opacity: 0;
+
+  animation-fill-mode: forwards;
+  animation-name: ${fadeIn};
+  animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
+  animation-delay: ${({ position }) => position * 5}ms;
 
   :not(:last-child) {
     margin-bottom: 8px;
@@ -69,12 +78,12 @@ const ContentWrap = styled.div`
   }
 `;
 
-const EventItem = ({ event: { displayName, start, uri }, names }: TProps) => {
+const EventItem = ({ event: { displayName, start, uri }, names, position }: TProps) => {
   const formatSongkickDate = (date: string, format: string) =>
     formatDate(parseDate(date, SONGKICK_DATE_FORMAT, new Date()), format);
 
   return (
-    <ListItem>
+    <ListItem position={position}>
       <Wrap target="_blank" href={uri}>
         <DateWrap>
           <span className="day">{formatSongkickDate(start.date, 'd')}</span>
@@ -92,4 +101,4 @@ const EventItem = ({ event: { displayName, start, uri }, names }: TProps) => {
   );
 };
 
-export default EventItem;
+export default React.memo(EventItem);

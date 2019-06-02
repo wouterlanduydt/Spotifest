@@ -46,4 +46,4 @@ const Title = ({ title, username }: TProps) => (
   </Wrap>
 );
 
-export default Title;
+export default React.memo(Title);

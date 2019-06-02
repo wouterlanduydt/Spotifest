@@ -42,4 +42,4 @@ const Button = ({
   </Link>
 );
 
-export default Button;
+export default React.memo(Button);
