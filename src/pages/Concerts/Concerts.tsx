@@ -8,13 +8,11 @@ import { IState } from 'redux/reducers';
 import { ETimeRange, distances } from 'types/general';
 import { SONGKICK_DATE_FORMAT } from 'api/songkick.api';
 import { RouteComponentProps } from 'react-router';
-import queryString from 'query-string';
-import idx from 'idx';
 import { Event } from 'types/songkick';
 import { Wrap, Filters, Title, ContentWrap } from './Concerts.styled';
 
 type TProps = {
-  getConcertsStart: (timeRange: ETimeRange) => void;
+  getConcertsStart: () => void;
   concerts: IState['concerts'];
 } & RouteComponentProps;
 
@@ -33,17 +31,14 @@ class Concerts extends Component<TProps, TState> {
   }
 
   componentDidMount = () => {
-    const { location, getConcertsStart } = this.props;
+    const { getConcertsStart } = this.props;
 
     if (!this.state.userCoords)
       getUserLocation()
         .then(({ coords: userCoords }) => this.setState({ userCoords }))
         .catch(e => console.log(e));
 
-    const timeRange = queryString.parse((idx(location, _ => _.search) || '').toString())
-      .timeRange as ETimeRange;
-
-    getConcertsStart(timeRange ? timeRange : ETimeRange.medium);
+    getConcertsStart();
   };
 
   render() {

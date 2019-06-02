@@ -20,7 +20,7 @@ export const spotifyActions = {
 };
 
 export const songkickActions = {
-  getConcertsStart: createAction<ETimeRange>('GET_CONCERTS_START'),
+  getConcertsStart: createAction('GET_CONCERTS_START'),
   getConcertsSuccess: createAction<{ [name: string]: Event[] }>('GET_CONCERTS_SUCCESS'),
   getConcertsFail: createAction<Error>('GET_CONCERTS_FAIL'),
 };

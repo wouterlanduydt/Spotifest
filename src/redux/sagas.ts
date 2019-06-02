@@ -6,6 +6,7 @@ import { IState } from './reducers';
 import * as songkickApi from 'api/songkick.api';
 import { Event } from 'types/songkick';
 import queryString from 'query-string';
+import { union } from 'lodash';
 
 type TAction<T = void> = {
   type: string;
@@ -45,18 +46,26 @@ function* getTopArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
   }
 }
 
-function* getArtistConcertsFlow({ payload: timeRange }: TAction<ETimeRange>) {
+function* getConcertsFlow() {
   try {
-    const artists: IState['artists'][ETimeRange]['value'] = yield select(
-      (state: IState) => state.artists[timeRange].value,
-    );
+    const _artists: string[][] = [];
+
+    for (let timeRange in ETimeRange) {
+      const { items: artistsForTimeRange }: SpotifyApi.UsersTopArtistsResponse = yield call(
+        spotifyApi.fetchTopArtists,
+        ETimeRange[timeRange] as ETimeRange,
+      );
+      _artists.push(artistsForTimeRange.map(artist => artist.name));
+    }
+
+    const artists: string[] = union(..._artists);
 
     const concerts: { [name: string]: Event[] } = {};
 
     if (artists) {
-      for (let { name } of artists) {
-        const { results } = yield call(songkickApi.getEventsByArtist, name);
-        concerts[name] = results.event || [];
+      for (let artist of artists) {
+        const { results } = yield call(songkickApi.getEventsByArtist, artist);
+        concerts[artist] = results.event || [];
       }
     }
     yield put(songkickActions.getConcertsSuccess(concerts));
@@ -101,7 +110,7 @@ function* saga() {
     appReadyFlow(),
     takeLatest(spotifyActions.getTopArtistsStart, getTopArtistsFlow),
     takeLatest(spotifyActions.createPlaylistStart, createPlaylistFlow),
-    takeEvery(songkickActions.getConcertsStart, getArtistConcertsFlow),
+    takeEvery(songkickActions.getConcertsStart, getConcertsFlow),
   ]);
 }
 
