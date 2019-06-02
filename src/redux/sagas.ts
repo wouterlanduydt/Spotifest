@@ -1,23 +1,33 @@
-import { call, put, takeLatest, select, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest, select, takeEvery, all } from 'redux-saga/effects';
 import { spotifyActions, songkickActions } from './actions';
 import * as spotifyApi from 'api/spotify.api';
 import { ETimeRange } from 'types/general';
 import { IState } from './reducers';
 import * as songkickApi from 'api/songkick.api';
 import { Event } from 'types/songkick';
+import queryString from 'query-string';
 
 type TAction<T = void> = {
   type: string;
   payload: T;
 };
 
-function* getUserDetailsFlow() {
+export function* appReadyFlow() {
   try {
+    const accessTokenFromUrl = yield queryString.parse(window.location.hash).access_token;
+    const tokenFromStorage = yield localStorage.getItem('spotify_token');
+
+    if (accessTokenFromUrl) {
+      yield localStorage.setItem('spotify_token', String(accessTokenFromUrl));
+      yield spotifyApi.spotifyApi.setAccessToken(String(accessTokenFromUrl));
+    } else if (!!tokenFromStorage && tokenFromStorage !== 'undefined') {
+      yield spotifyApi.spotifyApi.setAccessToken(tokenFromStorage);
+    }
     const userDetails = yield call(spotifyApi.fetchUserDetails);
     yield put(spotifyActions.getUserDetailsSuccess(userDetails));
   } catch (e) {
-    // @ts-ignore
-    window.location = '/';
+    localStorage.clear();
+    spotifyApi.authorizeSpotifyApi();
     yield put(spotifyActions.getUserDetailsFail(e));
   }
 }
@@ -87,10 +97,12 @@ function* createPlaylistFlow({ payload: artists }: TAction<SpotifyApi.ArtistObje
 }
 
 function* saga() {
-  yield takeLatest(spotifyActions.getUserDetailsStart, getUserDetailsFlow);
-  yield takeLatest(spotifyActions.getTopArtistsStart, getTopArtistsFlow);
-  yield takeLatest(spotifyActions.createPlaylistStart, createPlaylistFlow);
-  yield takeEvery(songkickActions.getConcertsStart, getArtistConcertsFlow);
+  yield all([
+    appReadyFlow(),
+    takeLatest(spotifyActions.getTopArtistsStart, getTopArtistsFlow),
+    takeLatest(spotifyActions.createPlaylistStart, createPlaylistFlow),
+    takeEvery(songkickActions.getConcertsStart, getArtistConcertsFlow),
+  ]);
 }
 
 export default saga;

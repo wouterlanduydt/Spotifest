@@ -8,6 +8,7 @@ import { IState } from 'redux/reducers';
 import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
 import { Filters, Actions } from './Home.styled';
+import { RouteComponentProps } from 'react-router';
 
 type TProps = {
   getUserDetailsStart: () => void;
@@ -16,7 +17,7 @@ type TProps = {
   user: IState['user'];
   artists: IState['artists'];
   createPlaylistState: IState['createPlaylist'];
-};
+} & RouteComponentProps;
 
 type TState = {
   timeRange: ETimeRange;
@@ -31,15 +32,7 @@ class Home extends Component<TProps, TState> {
   }
 
   componentDidMount = () => {
-    const { getUserDetailsStart, getTopArtistsStart } = this.props;
-
-    const parsedUrl = queryString.parse(window.location.hash);
-    spotifyApi.setAccessToken(String(parsedUrl.access_token));
-
-    if (!!parsedUrl.access_token) {
-      getUserDetailsStart();
-      getTopArtistsStart(this.state.timeRange);
-    }
+    this.props.getTopArtistsStart(this.state.timeRange);
   };
 
   onChangeTimeRange = (timeRange: string) => {
@@ -98,7 +91,6 @@ export default connect(
     createPlaylistState,
   }),
   {
-    getUserDetailsStart: spotifyActions.getUserDetailsStart,
     getTopArtistsStart: spotifyActions.getTopArtistsStart,
     createPlaylistStart: spotifyActions.createPlaylistStart,
   },

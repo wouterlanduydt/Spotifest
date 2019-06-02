@@ -17,6 +17,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-plugin-idx": "^2.4.0",
+    "connected-react-router": "^6.4.0",
     "date-fns": "^2.0.0-alpha.27",
     "express": "^4.15.4",
     "idx": "^2.5.6",
