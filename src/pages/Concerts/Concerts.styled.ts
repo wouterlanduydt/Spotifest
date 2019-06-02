@@ -8,6 +8,10 @@ export const Wrap = styled.div`
 
 export const Filters = styled.div`
   margin: 32px 0;
+
+  .react-select {
+    width: 40%;
+  }
 `;
 
 export const ContentWrap = styled.div`

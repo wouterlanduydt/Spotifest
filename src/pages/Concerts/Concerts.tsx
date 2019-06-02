@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { LoadingIndicator, EventItem } from 'components';
+import { LoadingIndicator, EventItem, Select } from 'components';
 import { filterConcertsByDistance, getUserLocation, getUnique } from 'lib';
 import { songkickActions } from 'redux/actions';
 import { parse as parseDate } from 'date-fns';
@@ -70,16 +70,18 @@ class Concerts extends Component<TProps, TState> {
     return (
       <Wrap>
         <Filters>
-          {Object.values(distances).map(distance => (
-            <button
-              key={distance.label}
-              onClick={() => this.setState({ range: distance.value })}
-              disabled={!userCoords}
-            >
-              {distance.label}
-            </button>
-          ))}
-          <button onClick={() => this.setState({ range: 9999999999999999 })}>everywhere</button>
+          <Select
+            label="Distance"
+            items={[
+              ...distances,
+              {
+                value: 9999999999,
+                label: 'everywhere',
+              },
+            ]}
+            onChange={range => this.setState({ range: parseInt(range, 10) })}
+            initialIndex={1}
+          />
         </Filters>
         <ContentWrap>
           {nearbyConcerts.value && <Title>{allConcerts.length} events found</Title>}

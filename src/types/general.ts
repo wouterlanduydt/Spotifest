@@ -19,25 +19,25 @@ export const timeRanges = [
   },
 ];
 
-export const distances = {
-  50: {
+export const distances = [
+  {
     value: 50,
-    label: 'around the corner',
+    label: '50km',
   },
-  100: {
+  {
     value: 100,
     label: '100km',
   },
-  250: {
+  {
     value: 250,
     label: '250km',
   },
-  500: {
+  {
     value: 500,
     label: '500km',
   },
-  1000: {
+  {
     value: 1000,
     label: '1000km',
   },
-};
+];
