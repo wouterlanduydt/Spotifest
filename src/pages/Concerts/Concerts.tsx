@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { LoadingIndicator } from 'components';
+import { LoadingIndicator, EventItem } from 'components';
 import { filterConcertsByDistance, getUserLocation, getUnique } from 'lib';
 import { songkickActions } from 'redux/actions';
 import { parse as parseDate } from 'date-fns';
@@ -11,6 +11,7 @@ import { RouteComponentProps } from 'react-router';
 import queryString from 'query-string';
 import idx from 'idx';
 import { Event } from 'types/songkick';
+import { Wrap, Filters, Title, ContentWrap } from './Concerts.styled';
 
 type TProps = {
   getConcertsStart: (timeRange: ETimeRange) => void;
@@ -64,8 +65,6 @@ class Concerts extends Component<TProps, TState> {
         parseDate(b.start.date, SONGKICK_DATE_FORMAT, new Date()).getTime(),
     );
 
-    console.log(allConcerts);
-
     const getNames = (concert: Event): string[] =>
       concert.performance
         .filter(({ displayName }) =>
@@ -74,8 +73,8 @@ class Concerts extends Component<TProps, TState> {
         .map(performance => performance.displayName);
 
     return (
-      <>
-        <div>
+      <Wrap>
+        <Filters>
           {Object.values(distances).map(distance => (
             <button
               key={distance.label}
@@ -86,34 +85,20 @@ class Concerts extends Component<TProps, TState> {
             </button>
           ))}
           <button onClick={() => this.setState({ range: 9999999999999999 })}>everywhere</button>
-        </div>
-        <>
-          <h2 style={{ color: 'white' }}>{allConcerts.length} events found</h2>
+        </Filters>
+        <ContentWrap>
+          {nearbyConcerts.value && <Title>{allConcerts.length} events found</Title>}
+
           {nearbyConcerts.isLoading && <LoadingIndicator />}
           {!!allConcerts && (
             <ol>
-              {allConcerts.map(concert => {
-                const names = getNames(concert);
-
-                return (
-                  <li key={concert.id} style={{ color: 'white' }}>
-                    {concert.displayName.toUpperCase()}
-                    <br />
-                    {names.length > 1 && (
-                      <ul>
-                        {names.map(name => (
-                          <li key={name}>{name}</li>
-                        ))}
-                      </ul>
-                    )}
-                    <br />
-                  </li>
-                );
-              })}
+              {allConcerts.map(concert => (
+                <EventItem key={concert.id} event={concert} names={getNames(concert)} />
+              ))}
             </ol>
           )}
-        </>
-      </>
+        </ContentWrap>
+      </Wrap>
     );
   }
 }

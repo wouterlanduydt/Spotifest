@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import queryString from 'query-string';
-import { Button, Poster, Select, Footer, Overlay } from '../../components';
+import { Button, Poster, Select, Footer, Overlay, EventItem } from '../../components';
 import { ETimeRange, timeRanges } from 'types/general';
 import { connect } from 'react-redux';
 import { spotifyActions } from 'redux/actions';
 import { IState } from 'redux/reducers';
-import { spotifyApi } from 'api/spotify.api';
 import idx from 'idx';
 import { Filters, Actions } from './Home.styled';
 import { RouteComponentProps } from 'react-router';

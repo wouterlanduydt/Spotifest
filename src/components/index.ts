@@ -6,3 +6,4 @@ export { default as Footer } from './Footer';
 export { default as Button } from './Button';
 export { default as ArtistItem } from './ArtistItem';
 export { default as LoadingIndicator } from './LoadingIndicator';
+export { default as EventItem } from './EventItem';
