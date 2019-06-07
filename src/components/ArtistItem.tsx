@@ -1,10 +1,11 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { isTopArtist, isMidArtist } from 'lib';
 import { fadeIn } from 'styles/animations';
+import { TExtendedArtist } from 'types/general';
 
 type TProps = {
-  artist: SpotifyApi.ArtistObjectFull;
+  artist: TExtendedArtist;
   position: number;
 };
 

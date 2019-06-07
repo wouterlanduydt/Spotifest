@@ -5,7 +5,7 @@ import { filterConcertsByDistance, getUserLocation, getUnique } from 'lib';
 import { songkickActions } from 'redux/actions';
 import { parse as parseDate } from 'date-fns';
 import { IState } from 'redux/reducers';
-import { ETimeRange, distances } from 'types/general';
+import { distances } from 'types/general';
 import { SONGKICK_DATE_FORMAT } from 'api/songkick.api';
 import { RouteComponentProps } from 'react-router';
 import { Event } from 'types/songkick';

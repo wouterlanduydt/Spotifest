@@ -1,17 +1,15 @@
 import React from 'react';
 import Title from './Title';
 // import SpotifyLogo from '../assets/svg/spotify.svg';
-import { ETimeRange } from 'types/general';
-import { TTopArtists, IState } from 'redux/reducers';
 import ArtistItem from './ArtistItem';
 import { getHeadlinerAmt } from 'lib';
 import styled from 'styled-components';
 import { LoadingIndicator } from 'components';
+import { IState } from 'redux/reducers';
 
 type TProps = {
   username: string | undefined | null;
-  artists: TTopArtists;
-  timeRange: ETimeRange;
+  artists: IState['artists'];
 };
 
 const Wrap = styled.div`
@@ -45,7 +43,7 @@ const Separator = styled.div`
   }
 `;
 
-const Poster = ({ artists, timeRange, username }: TProps) => (
+const Poster = ({ artists, username }: TProps) => (
   <Wrap>
     <Title title="Spotifest" username={username} />
     {artists.isLoading && <LoadingIndicator style={{ marginTop: 24 }} />}
@@ -56,7 +54,7 @@ const Poster = ({ artists, timeRange, username }: TProps) => (
 
           return (
             <React.Fragment key={artist.id}>
-              <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}-${timeRange}`} />
+              <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
               {(i === topArtists || i === midArtists) && <Separator />}
             </React.Fragment>
           );

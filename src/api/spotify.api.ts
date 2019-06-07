@@ -17,8 +17,8 @@ export const authorizeSpotifyApi = () => {
 
 export const fetchUserDetails = () => spotifyApi.getMe();
 
-export const fetchTopArtists = (time_range: ETimeRange) =>
-  spotifyApi.getMyTopArtists({ limit: 50, time_range });
+export const fetchTopArtists = (options: { time_range: ETimeRange; [key: string]: string }) =>
+  spotifyApi.getMyTopArtists({ limit: 50, ...options });
 
 export const fetchRecommendations = (options: SpotifyApi.RecommendationsOptionsObject) =>
   spotifyApi.getRecommendations({ ...options, limit: 100 });

@@ -1,5 +1,4 @@
 import React from 'react';
-import { IState } from 'redux/reducers';
 
 type TProps = {
   size?: number;

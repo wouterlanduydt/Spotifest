@@ -1,23 +1,10 @@
 export enum ETimeRange {
-  short = 'short_term',
-  medium = 'medium_term',
   long = 'long_term',
+  medium = 'medium_term',
+  short = 'short_term',
 }
 
-export const timeRanges = [
-  {
-    value: ETimeRange.short,
-    label: 'Short Term',
-  },
-  {
-    value: ETimeRange.medium,
-    label: 'Medium Term',
-  },
-  {
-    value: ETimeRange.long,
-    label: 'Long Term',
-  },
-];
+export type TExtendedArtist = SpotifyApi.ArtistObjectFull & { time_range: ETimeRange };
 
 export const distances = [
   {

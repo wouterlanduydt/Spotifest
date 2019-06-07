@@ -1,13 +1,7 @@
 import { createReducer } from 'redux-act';
 import { spotifyActions, songkickActions } from './actions';
-import { ETimeRange } from 'types/general';
 import { Event } from 'types/songkick';
-
-export type TTopArtists = {
-  value: SpotifyApi.ArtistObjectFull[];
-  isLoading: boolean;
-  error: Error | null;
-};
+import { TExtendedArtist } from 'types/general';
 
 export interface IState {
   user: {
@@ -16,9 +10,9 @@ export interface IState {
     error: Error | null;
   };
   artists: {
-    [ETimeRange.short]: TTopArtists;
-    [ETimeRange.medium]: TTopArtists;
-    [ETimeRange.long]: TTopArtists;
+    value: TExtendedArtist[];
+    isLoading: boolean;
+    error: Error | null;
   };
   createPlaylist: {
     value: SpotifyApi.CreatePlaylistResponse | null;
@@ -39,21 +33,9 @@ const initialState = {
     error: null,
   },
   artists: {
-    [ETimeRange.short]: {
-      value: [],
-      isLoading: false,
-      error: null,
-    },
-    [ETimeRange.medium]: {
-      value: [],
-      isLoading: false,
-      error: null,
-    },
-    [ETimeRange.long]: {
-      value: [],
-      isLoading: false,
-      error: null,
-    },
+    value: [],
+    isLoading: false,
+    error: null,
   },
   concerts: {
     value: null,
@@ -102,39 +84,30 @@ reducer.on(spotifyActions.getUserDetailsFail, (state, error) => ({
 /**
  * top artists
  */
-reducer.on(spotifyActions.getTopArtistsStart, (state, timeRange) => ({
+reducer.on(spotifyActions.getTopArtistsStart, state => ({
   ...state,
   artists: {
-    ...state.artists,
-    [timeRange]: {
-      value: null,
-      isLoading: true,
-      error: null,
-    },
+    value: [],
+    isLoading: true,
+    error: null,
   },
 }));
 
-reducer.on(spotifyActions.getTopArtistsSuccess, (state, { timeRange, value }) => ({
+reducer.on(spotifyActions.getTopArtistsSuccess, (state, value) => ({
   ...state,
   artists: {
-    ...state.artists,
-    [timeRange]: {
-      value,
-      isLoading: false,
-      error: null,
-    },
+    value,
+    isLoading: false,
+    error: null,
   },
 }));
 
-reducer.on(spotifyActions.getTopArtistsFail, (state, { timeRange, error }) => ({
+reducer.on(spotifyActions.getTopArtistsFail, (state, error) => ({
   ...state,
   artists: {
-    ...state.artists,
-    [timeRange]: {
-      value: null,
-      isLoading: false,
-      error,
-    },
+    value: [],
+    isLoading: false,
+    error,
   },
 }));
 
