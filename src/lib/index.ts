@@ -1,4 +1,5 @@
 import { IState } from 'redux/reducers';
+import { TExtendedArtist, ETimeRange } from 'types/general';
 
 export const isRunningLocally = window.location.href.includes('localhost');
 
@@ -9,21 +10,14 @@ export const getUnique = (arr: any[], comp: string) =>
     .filter(e => arr[e as number])
     .map(e => arr[e as number]);
 
-export const getHeadlinerAmt = (total: number) => {
-  const topArtists = Math.round((total / 100) * 20);
-  const midArtists = Math.round((total / 100) * 40) + topArtists;
+export const getSeparatorIndexes = (artists: TExtendedArtist[]) => {
+  const getLastItemForRange = (time_range: ETimeRange) =>
+    artists.filter(artist => artist.time_range === time_range).length;
 
-  return [topArtists, midArtists];
-};
+  const long = getLastItemForRange(ETimeRange.long);
+  const medium = getLastItemForRange(ETimeRange.medium) + long;
 
-export const isMidArtist = (pos: number, total: number) => {
-  const [topArtists, midArtists] = getHeadlinerAmt(total);
-  return pos > topArtists && pos <= midArtists;
-};
-
-export const isTopArtist = (pos: number, total: number) => {
-  const [topArtists] = getHeadlinerAmt(total);
-  return pos <= topArtists;
+  return [long, medium];
 };
 
 export const getUserLocation = (options?: PositionOptions): Promise<Position> =>

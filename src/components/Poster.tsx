@@ -2,10 +2,11 @@ import React from 'react';
 import Title from './Title';
 // import SpotifyLogo from '../assets/svg/spotify.svg';
 import ArtistItem from './ArtistItem';
-import { getHeadlinerAmt } from 'lib';
+import { getSeparatorIndexes } from 'lib';
 import styled from 'styled-components';
 import { LoadingIndicator } from 'components';
 import { IState } from 'redux/reducers';
+import { fadeIn } from 'styles/animations';
 
 type TProps = {
   username: string | undefined | null;
@@ -34,39 +35,81 @@ const ArtistsWrap = styled.ol`
   flex-wrap: wrap;
 `;
 
-const Separator = styled.div`
+const Separator = styled.div<{ total: number }>`
   width: 100%;
-  height: 2vw;
+  margin: 1.6vw 0 1.2vw;
+  text-align: center;
+  position: relative;
+  opacity: 0;
+
+  animation-fill-mode: forwards;
+  animation-name: ${fadeIn};
+  animation-duration: 400ms;
+  animation-timing-function: ease-in-out;
+  animation-delay: ${({ total }) => total * 5}ms;
+
+  span {
+    color: white;
+    text-transform: uppercase;
+    font-size: 2vw;
+
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    &:before,
+    &:after {
+      content: '';
+      border-top: 1px solid;
+      margin: 0 8px 0 0;
+      flex: 1 0 8px;
+    }
+
+    &:after {
+      margin: 0 0 0 8px;
+    }
+  }
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
-    height: 12px;
+    margin: 12px 0 8px;
+
+    span {
+      font-size: 12px;
+    }
   }
 `;
 
-const Poster = ({ artists, username }: TProps) => (
-  <Wrap>
-    <Title title="Spotifest" username={username} />
-    {artists.isLoading && <LoadingIndicator style={{ marginTop: 24 }} />}
-    <ArtistsWrap>
-      {artists.value &&
-        artists.value.map((artist, i) => {
-          const [topArtists, midArtists] = getHeadlinerAmt(artists.value!.length);
+const Poster = ({ artists, username }: TProps) => {
+  const [long, medium] = getSeparatorIndexes(artists.value);
 
-          return (
+  return (
+    <Wrap>
+      <Title title="Spotifest" username={username} />
+      {artists.isLoading && <LoadingIndicator style={{ marginTop: 24 }} />}
+      <ArtistsWrap>
+        {artists.value &&
+          artists.value.map((artist, i) => (
             <React.Fragment key={artist.id}>
+              {(i === 0 || i === long || i === medium) && (
+                <Separator total={artists.value.length}>
+                  <span>{i === 0 ? 'long term' : i === long ? 'medium term' : 'short term'}</span>
+                </Separator>
+              )}
               <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
-              {(i === topArtists || i === midArtists) && <Separator />}
             </React.Fragment>
-          );
-        })}
-    </ArtistsWrap>
+          ))}
+      </ArtistsWrap>
 
-    {/* <div>
+      {/* <div>
         <a href="https://www.spotify.com" rel="noopener noreferrer">
-          <img src={SpotifyLogo} alt="" />
+        <img src={SpotifyLogo} alt="" />
         </a>
       </div> */}
-  </Wrap>
-);
+    </Wrap>
+  );
+};
 
 export default React.memo(Poster);

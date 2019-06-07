@@ -1,24 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
-import { isTopArtist, isMidArtist } from 'lib';
 import { fadeIn } from 'styles/animations';
-import { TExtendedArtist } from 'types/general';
+import { TExtendedArtist, ETimeRange } from 'types/general';
 
 type TProps = {
   artist: TExtendedArtist;
   position: number;
 };
 
-const getFontSize = (pos: number, total: number, isMobile: boolean) => {
-  if (isTopArtist(pos, total)) return isMobile ? '4.4vw' : '28px';
+const getFontSize = (time_range: ETimeRange, isMobile: boolean) => {
+  if (time_range === ETimeRange.long) return isMobile ? '3.2vw' : '20px';
 
-  if (isMidArtist(pos, total)) return isMobile ? '3.8vw' : '24px';
-  return isMobile ? '3.4vw' : '22px';
+  if (time_range === ETimeRange.medium) return isMobile ? '3vw' : '19px';
+  return isMobile ? '2.8vw' : '18px';
 };
 
-const Wrap = styled.li<{ position: number }>`
-  margin: 0.6vw 1vw;
-  font-size: ${({ position }) => getFontSize(position, 50, true)};
+const Wrap = styled.li<{ position: number; time_range: ETimeRange }>`
+  margin: 0.4vw 0.8vw;
+  font-size: ${({ time_range }) => getFontSize(time_range, true)};
   font-weight: ${({ position }) => (position % 2 === 0 ? 800 : 500)};
   text-transform: uppercase;
   opacity: 0;
@@ -31,7 +30,7 @@ const Wrap = styled.li<{ position: number }>`
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
     margin: 4px 6px;
-    font-size: ${({ position }) => getFontSize(position, 50, false)};
+    font-size: ${({ time_range }) => getFontSize(time_range, false)};
   }
 `;
 
@@ -41,8 +40,8 @@ const Text = styled.a`
   color: white;
 `;
 
-const ArtistItem = ({ artist: { name, external_urls }, position }: TProps) => (
-  <Wrap position={position}>
+const ArtistItem = ({ artist: { name, external_urls, time_range }, position }: TProps) => (
+  <Wrap position={position} time_range={time_range}>
     <Text href={external_urls.spotify} rel="noopener noreferrer">
       {name}
     </Text>
