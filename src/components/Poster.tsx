@@ -4,7 +4,6 @@ import Title from './Title';
 import ArtistItem from './ArtistItem';
 import { getSeparatorIndexes } from 'lib';
 import styled from 'styled-components';
-import { LoadingIndicator } from 'components';
 import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
 import Overlay from './Overlay';
@@ -15,6 +14,7 @@ type TProps = {
 };
 
 const Wrap = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,7 +24,6 @@ const Wrap = styled.div`
   max-height: 900px;
   margin: 0 auto;
   padding: 8px;
-  background: linear-gradient(45deg, #536976, #292e49);
   margin-top: 16px;
 `;
 
@@ -81,37 +80,92 @@ const Separator = styled.div`
   }
 `;
 
-const Poster = ({ artists, username }: TProps) => {
-  const [long, medium] = getSeparatorIndexes(artists.value);
+const Background = styled.canvas`
+  position: absolute;
+  z-index: -1;
+  width: 96vw;
+  height: 135vw;
+  max-width: ${({ theme }) => theme.maxPoster}px;
+  max-height: 900px;
+`;
 
-  return artists.isLoading ? (
-    <Overlay text="Generating Poster..." />
-  ) : (
-    <AnimationWrap className="ignore-save-img">
-      <Wrap id="poster">
-        <Title title="Spotifest" username={username} />
-        <ArtistsWrap>
-          {artists.value &&
-            artists.value.map((artist, i) => (
-              <React.Fragment key={artist.id}>
-                {(i === 0 || i === long || i === medium) && (
-                  <Separator>
-                    <span>{i === 0 ? 'long term' : i === long ? 'medium term' : 'short term'}</span>
-                  </Separator>
-                )}
-                <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
-              </React.Fragment>
-            ))}
-        </ArtistsWrap>
+class Poster extends React.PureComponent<TProps> {
+  canvasRef: React.RefObject<HTMLCanvasElement>;
 
-        {/* <div>
+  constructor(props: TProps) {
+    super(props);
+    this.canvasRef = React.createRef<HTMLCanvasElement>();
+  }
+
+  componentDidUpdate = ({ artists: prevArtists }: TProps) => {
+    const { artists } = this.props;
+    const canvas = this.canvasRef.current;
+    const ctx = canvas ? canvas.getContext('2d') : undefined;
+
+    if (artists.value.length !== prevArtists.value.length) {
+      if (ctx && canvas) {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        artists.value.forEach((artist, i) => {
+          const img = this.refs[artist.id] as HTMLImageElement;
+
+          const width = img.width / 6;
+          const height = img.height / 6;
+
+          const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
+          const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
+
+          img.onload = () => {
+            ctx.drawImage(img, xPos, yPos, width, height);
+            if (i === artists.value.length - 1) {
+              // apply styles after last image here
+            }
+          };
+        });
+      }
+    }
+  };
+
+  render() {
+    const { artists, username } = this.props;
+    const [long, medium] = getSeparatorIndexes(artists.value);
+
+    return artists.isLoading ? (
+      <Overlay text="Generating Poster..." />
+    ) : (
+      <AnimationWrap className="ignore-save-img">
+        <Wrap id="poster">
+          <Background width={640} height={900} ref={this.canvasRef} />
+          <Title title="Spotifest" username={username} />
+          <ArtistsWrap>
+            {artists.value &&
+              artists.value.map((artist, i) => (
+                <React.Fragment key={artist.id}>
+                  {(i === 0 || i === long || i === medium) && (
+                    <Separator>
+                      <span>
+                        {i === 0 ? 'long term' : i === long ? 'medium term' : 'short term'}
+                      </span>
+                    </Separator>
+                  )}
+                  <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
+                </React.Fragment>
+              ))}
+          </ArtistsWrap>
+
+          {/* <div>
         <a href="https://www.spotify.com" rel="noopener noreferrer">
         <img src={SpotifyLogo} alt="" />
         </a>
       </div> */}
-      </Wrap>
-    </AnimationWrap>
-  );
-};
+        </Wrap>
+        {artists.value.map(artist => (
+          <img src={artist.images[0].url} ref={artist.id} className="hide" key={artist.id} />
+        ))}
+      </AnimationWrap>
+    );
+  }
+}
 
-export default React.memo(Poster);
+export default Poster;

@@ -17,4 +17,8 @@ export default css`
     background: linear-gradient(45deg, #232526, #181818);
     min-height: 100vh;
   }
+
+  .hide {
+    display: none;
+  }
 `;
