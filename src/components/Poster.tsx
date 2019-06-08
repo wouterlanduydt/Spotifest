@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
 import Overlay from './Overlay';
+import { convertToDueTone } from 'styles/utils';
 
 type TProps = {
   username: string | undefined | null;
@@ -110,16 +111,39 @@ class Poster extends React.PureComponent<TProps> {
         artists.value.forEach((artist, i) => {
           const img = this.refs[artist.id] as HTMLImageElement;
 
-          const width = img.width / 6;
-          const height = img.height / 6;
-
-          const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
-          const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
-
           img.onload = () => {
+            const rescaleFactor = 6;
+
+            const width = img.width / rescaleFactor;
+            const height = img.height / rescaleFactor;
+
+            const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
+            const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
             ctx.drawImage(img, xPos, yPos, width, height);
+
             if (i === artists.value.length - 1) {
-              // apply styles after last image here
+              setTimeout(() => {
+                var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                var pixelCount = canvas.width * canvas.height;
+
+                var dueToneData = convertToDueTone(
+                  canvasData,
+                  pixelCount,
+                  [170, 13, 37],
+                  [15, 22, 45],
+                );
+
+                var imageData = new ImageData(
+                  new Uint8ClampedArray(dueToneData),
+                  canvas.width,
+                  canvas.height,
+                );
+
+                ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
+
+                // apply styles after last image here
+              }, 200);
             }
           };
         });
@@ -161,7 +185,13 @@ class Poster extends React.PureComponent<TProps> {
       </div> */}
         </Wrap>
         {artists.value.map(artist => (
-          <img src={artist.images[0].url} ref={artist.id} className="hide" key={artist.id} />
+          <img
+            src={artist.images[0].url}
+            ref={artist.id}
+            crossOrigin="anonymous"
+            className="hide"
+            key={artist.id}
+          />
         ))}
       </AnimationWrap>
     );
