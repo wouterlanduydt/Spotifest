@@ -123,8 +123,8 @@ class Poster extends React.PureComponent<TProps> {
 
             if (i === artists.value.length - 1) {
               setTimeout(() => {
+                // https://codepen.io/72lions/pen/jPzLJX
                 var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
                 var pixelCount = canvas.width * canvas.height;
 
                 var dueToneData = convertToDueTone(
