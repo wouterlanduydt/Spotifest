@@ -11,10 +11,10 @@ const Wrap = styled.header`
   flex-direction: column;
   align-items: center;
   text-transform: uppercase;
-  margin: 4vw 0;
+  margin: 4vw 0 2vw;
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
-    margin: 32px 0;
+    margin: 32px 0 16px;
   }
 `;
 

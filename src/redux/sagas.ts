@@ -5,9 +5,9 @@ import { IState } from './reducers';
 import * as songkickApi from 'api/songkick.api';
 import { Event } from 'types/songkick';
 import queryString from 'query-string';
-import { union } from 'lodash';
 import { ETimeRange, TExtendedArtist } from 'types/general';
 import { getUnique } from 'lib';
+import { getArtists } from './selectors';
 
 type TAction<T = void> = {
   type: string;
@@ -64,16 +64,14 @@ function* getTopArtistsFlow() {
 
 function* getConcertsFlow() {
   try {
-    // TODO: select artists from state & loop over them
-    const artists: any[] = [];
+    const artists: TExtendedArtist[] = yield select(getArtists);
+    if (artists.length === 0) yield put(spotifyActions.getTopArtistsStart());
 
     const concerts: { [name: string]: Event[] } = {};
 
-    if (artists) {
-      for (let artist of artists) {
-        const { results } = yield call(songkickApi.getEventsByArtist, artist);
-        concerts[artist] = results.event || [];
-      }
+    for (let artist of artists) {
+      const { results } = yield call(songkickApi.getEventsByArtist, artist.name);
+      concerts[artist.name] = results.event || [];
     }
     yield put(songkickActions.getConcertsSuccess(concerts));
   } catch (error) {
@@ -83,8 +81,8 @@ function* getConcertsFlow() {
 
 function* createPlaylistFlow() {
   try {
-    // TODO: select artists from state
-    const artists: any[] = [];
+    const artists: TExtendedArtist[] = yield select(getArtists);
+    if (artists.length === 0) yield put(spotifyActions.getTopArtistsStart());
 
     const user: IState['user']['value'] = yield select((state: IState) => state.user.value);
 
@@ -98,6 +96,7 @@ function* createPlaylistFlow() {
           target_popularity: 50,
         },
       );
+
       const playlistInfo = {
         name: `Spotifest Recommends`,
         description: `A playlist containing recommended tracks based on artists like ${artists

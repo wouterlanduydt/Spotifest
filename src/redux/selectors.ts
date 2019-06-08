@@ -1,4 +1,4 @@
 import { IState } from './reducers';
+import { TExtendedArtist } from 'types/general';
 
-export const getArtistConcerts = (state: IState, artist: string) =>
-  state.concerts.value && state.concerts.value[artist];
+export const getArtists = (state: IState): TExtendedArtist[] => state.artists.value;

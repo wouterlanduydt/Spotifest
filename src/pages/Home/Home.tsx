@@ -17,12 +17,11 @@ type TProps = {
 } & RouteComponentProps;
 
 class Home extends Component<TProps> {
-  componentDidMount = () => {
-    this.props.getTopArtistsStart();
-  };
+  componentDidMount = () => this.props.getTopArtistsStart();
 
   render() {
     const { user, artists, createPlaylistStart, createPlaylistState } = this.props;
+    const hasNoArtists = artists.value.length === 0;
 
     return (
       <>
@@ -32,13 +31,17 @@ class Home extends Component<TProps> {
         <Actions>
           <Button
             onClick={() => createPlaylistStart()}
-            disabled={!artists.value}
+            disabled={hasNoArtists}
             title="Create a playlist containing recommendations based on your top artists."
           >
             Generate Playlist
           </Button>
-          <Button onClick={() => window.alert('Coming soon')}>Save as image</Button>
-          <Button to={`/concerts`}>See Concerts</Button>
+          <Button onClick={() => window.alert('Coming soon')} disabled={hasNoArtists}>
+            Save as image
+          </Button>
+          <Button to={`/concerts`} disabled={hasNoArtists}>
+            See Concerts
+          </Button>
         </Actions>
         <Footer />
       </>
