@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Poster, Select, Footer, Overlay } from '../../components';
+import { Button, Poster, Footer, Overlay } from '../../components';
 import { connect } from 'react-redux';
 import { spotifyActions } from 'redux/actions';
 import { IState } from 'redux/reducers';
 import idx from 'idx';
-import { Filters, Actions } from './Home.styled';
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
+import { Actions } from './Home.styled';
 import { RouteComponentProps } from 'react-router';
 
 type TProps = {
@@ -18,6 +20,20 @@ type TProps = {
 
 class Home extends Component<TProps> {
   componentDidMount = () => this.props.getTopArtistsStart();
+
+  handleSaveImage = () => {
+    let poster = document.getElementById('poster');
+
+    if (poster) {
+      html2canvas(poster, {
+        ignoreElements: item => item.className === 'ignore-save-img',
+      })
+        .then(canvas => canvas.toBlob(blob => blob && saveAs(blob, 'spotifest.png')))
+        .catch(error => console.error(error));
+    }
+
+    if (!poster) console.error('no html element with id "poster" found');
+  };
 
   render() {
     const { user, artists, createPlaylistStart, createPlaylistState } = this.props;
@@ -36,9 +52,11 @@ class Home extends Component<TProps> {
           >
             Generate Playlist
           </Button>
-          <Button onClick={() => window.alert('Coming soon')} disabled={hasNoArtists}>
+
+          <Button onClick={this.handleSaveImage} disabled={hasNoArtists}>
             Save as image
           </Button>
+
           <Button to={`/concerts`} disabled={hasNoArtists}>
             See Concerts
           </Button>

@@ -20,13 +20,6 @@ const Wrap = styled.li<{ position: number; time_range: ETimeRange }>`
   font-size: ${({ time_range }) => getFontSize(time_range, true)};
   font-weight: ${({ position }) => (position % 2 === 0 ? 800 : 500)};
   text-transform: uppercase;
-  opacity: 0;
-
-  animation-fill-mode: forwards;
-  animation-name: ${fadeIn};
-  animation-duration: 200ms;
-  animation-timing-function: ease-in-out;
-  animation-delay: ${({ position }) => position * 5}ms;
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
     margin: 4px 6px;

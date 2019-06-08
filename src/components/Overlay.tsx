@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { LoadingIndicator } from 'components';
 
 const Wrap = styled.div`
   position: fixed;
@@ -28,7 +29,7 @@ type TProps = {
 
 const Overlay = ({ text }: TProps) => (
   <Wrap>
-    <img src={require('../assets/svg/loading-indicator.svg')} width={24} alt="" />
+    <LoadingIndicator />
     {!!text && <Subtitle>{text}</Subtitle>}
   </Wrap>
 );

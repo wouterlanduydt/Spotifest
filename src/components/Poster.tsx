@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { LoadingIndicator } from 'components';
 import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
+import Overlay from './Overlay';
 
 type TProps = {
   username: string | undefined | null;
@@ -25,7 +26,12 @@ const Wrap = styled.div`
   padding: 8px;
   background: linear-gradient(45deg, #536976, #292e49);
   margin-top: 16px;
-  border: 4px solid white;
+`;
+
+const AnimationWrap = styled.div`
+  animation-name: ${fadeIn};
+  animation-duration: 400ms;
+  animation-timing-function: ease-in-out;
 `;
 
 const ArtistsWrap = styled.ol`
@@ -35,18 +41,11 @@ const ArtistsWrap = styled.ol`
   flex-wrap: wrap;
 `;
 
-const Separator = styled.div<{ total: number }>`
+const Separator = styled.div`
   width: 100%;
   margin: 1.6vw 0 1.2vw;
   text-align: center;
   position: relative;
-  opacity: 0;
-
-  animation-fill-mode: forwards;
-  animation-name: ${fadeIn};
-  animation-duration: 400ms;
-  animation-timing-function: ease-in-out;
-  animation-delay: ${({ total }) => total * 5}ms;
 
   span {
     color: white;
@@ -85,30 +84,33 @@ const Separator = styled.div<{ total: number }>`
 const Poster = ({ artists, username }: TProps) => {
   const [long, medium] = getSeparatorIndexes(artists.value);
 
-  return (
-    <Wrap>
-      <Title title="Spotifest" username={username} />
-      {artists.isLoading && <LoadingIndicator style={{ marginTop: 24 }} />}
-      <ArtistsWrap>
-        {artists.value &&
-          artists.value.map((artist, i) => (
-            <React.Fragment key={artist.id}>
-              {(i === 0 || i === long || i === medium) && (
-                <Separator total={artists.value.length}>
-                  <span>{i === 0 ? 'long term' : i === long ? 'medium term' : 'short term'}</span>
-                </Separator>
-              )}
-              <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
-            </React.Fragment>
-          ))}
-      </ArtistsWrap>
+  return artists.isLoading ? (
+    <Overlay text="Generating Poster..." />
+  ) : (
+    <AnimationWrap className="ignore-save-img">
+      <Wrap id="poster">
+        <Title title="Spotifest" username={username} />
+        <ArtistsWrap>
+          {artists.value &&
+            artists.value.map((artist, i) => (
+              <React.Fragment key={artist.id}>
+                {(i === 0 || i === long || i === medium) && (
+                  <Separator>
+                    <span>{i === 0 ? 'long term' : i === long ? 'medium term' : 'short term'}</span>
+                  </Separator>
+                )}
+                <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
+              </React.Fragment>
+            ))}
+        </ArtistsWrap>
 
-      {/* <div>
+        {/* <div>
         <a href="https://www.spotify.com" rel="noopener noreferrer">
         <img src={SpotifyLogo} alt="" />
         </a>
       </div> */}
-    </Wrap>
+      </Wrap>
+    </AnimationWrap>
   );
 };
 
