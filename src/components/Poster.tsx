@@ -8,6 +8,7 @@ import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
 import Overlay from './Overlay';
 import { convertToDueTone } from 'styles/utils';
+import idx from 'idx';
 
 type TProps = {
   username: string | undefined | null;
@@ -109,48 +110,50 @@ class Poster extends React.PureComponent<TProps> {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         artists.value.forEach((artist, i) => {
-          const imageReceived = (e: Event) => {
-            const img = e.target as HTMLImageElement;
+          if (idx(artist, _ => _.images[0].url)) {
+            const imageReceived = (e: Event) => {
+              const img = e.target as HTMLImageElement;
 
-            const rescaleFactor = 6;
+              const rescaleFactor = 6;
 
-            const width = img.width / rescaleFactor;
-            const height = img.height / rescaleFactor;
-            const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
-            const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
+              const width = img.width / rescaleFactor;
+              const height = img.height / rescaleFactor;
+              const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
+              const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
 
-            ctx.drawImage(img, xPos, yPos, width, height);
+              ctx.drawImage(img, xPos, yPos, width, height);
 
-            if (i === artists.value.length - 1) {
-              setTimeout(() => {
-                // https://codepen.io/72lions/pen/jPzLJX
-                var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                var pixelCount = canvas.width * canvas.height;
+              if (i === artists.value.length - 1) {
+                setTimeout(() => {
+                  // https://codepen.io/72lions/pen/jPzLJX
+                  var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                  var pixelCount = canvas.width * canvas.height;
 
-                var dueToneData = convertToDueTone(
-                  canvasData,
-                  pixelCount,
-                  [170, 13, 37],
-                  [15, 22, 45],
-                );
+                  var dueToneData = convertToDueTone(
+                    canvasData,
+                    pixelCount,
+                    [170, 13, 37],
+                    [15, 22, 45],
+                  );
 
-                var imageData = new ImageData(
-                  new Uint8ClampedArray(dueToneData),
-                  canvas.width,
-                  canvas.height,
-                );
+                  var imageData = new ImageData(
+                    new Uint8ClampedArray(dueToneData),
+                    canvas.width,
+                    canvas.height,
+                  );
 
-                ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
+                  ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
 
-                // apply styles after last image here
-              }, 400);
-            }
-          };
-          let downloadedImg;
-          downloadedImg = new Image();
-          downloadedImg.crossOrigin = 'Anonymous';
-          downloadedImg.addEventListener('load', imageReceived, false);
-          downloadedImg.src = artist.images[0].url;
+                  // apply styles after last image here
+                }, 400);
+              }
+            };
+            let downloadedImg;
+            downloadedImg = new Image();
+            downloadedImg.crossOrigin = 'Anonymous';
+            downloadedImg.addEventListener('load', imageReceived, false);
+            downloadedImg.src = artist.images[0].url;
+          }
         });
       }
     }
