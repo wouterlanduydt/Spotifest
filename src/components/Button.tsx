@@ -12,7 +12,8 @@ const StyledButton = styled.button<{
   background-color: ${({ buttonStyle }) => (buttonStyle === 'spotify' ? '#1fc14a' : 'white')};
   color: ${({ buttonStyle }) => (buttonStyle === 'spotify' ? 'white' : '#292e49')};
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ disabled }) => (disabled ? 0.4 : 1)};
   transition: opacity 200ms;

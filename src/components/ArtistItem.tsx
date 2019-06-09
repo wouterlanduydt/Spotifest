@@ -17,7 +17,7 @@ const getFontSize = (time_range: ETimeRange, isMobile: boolean) => {
 const Wrap = styled.li<{ position: number; time_range: ETimeRange }>`
   margin: 0.4vw 0.8vw;
   font-size: ${({ time_range }) => getFontSize(time_range, true)};
-  font-weight: ${({ position }) => (position % 2 === 0 ? 800 : 500)};
+  font-weight: ${({ position }) => (position % 2 === 0 ? 700 : 500)};
   text-transform: uppercase;
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {

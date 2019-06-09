@@ -32,7 +32,7 @@ const SubTitle = styled.span`
 const StyledTitle = styled.h1`
   font-size: 6vw;
   color: white;
-  font-weight: 900;
+  font-weight: 800;
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
     font-size: 50px;
