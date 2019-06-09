@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const StyledButton = styled.button<{
   buttonStyle: TProps['buttonStyle'];
@@ -12,7 +12,8 @@ const StyledButton = styled.button<{
   background-color: ${({ buttonStyle }) => (buttonStyle === 'spotify' ? '#1fc14a' : 'white')};
   color: ${({ buttonStyle }) => (buttonStyle === 'spotify' ? 'white' : '#292e49')};
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ disabled }) => (disabled ? 0.4 : 1)};
   transition: opacity 200ms;

@@ -1,12 +1,13 @@
 import { call, put, takeLatest, select, takeEvery, all } from 'redux-saga/effects';
 import { spotifyActions, songkickActions } from './actions';
 import * as spotifyApi from 'api/spotify.api';
-import { ETimeRange } from 'types/general';
 import { IState } from './reducers';
 import * as songkickApi from 'api/songkick.api';
 import { Event } from 'types/songkick';
 import queryString from 'query-string';
-import { union } from 'lodash';
+import { ETimeRange, TExtendedArtist } from 'types/general';
+import { getUnique } from 'lib';
+import { getArtists } from './selectors';
 
 type TAction<T = void> = {
   type: string;
@@ -33,40 +34,44 @@ export function* appReadyFlow() {
   }
 }
 
-function* getTopArtistsFlow({ payload: timeRange }: TAction<ETimeRange>) {
+function* getTopArtistsFlow() {
   try {
-    const { items: value }: { items: SpotifyApi.ArtistObjectFull[] } = yield call(
-      spotifyApi.fetchTopArtists,
-      timeRange,
-    );
+    let artists: TExtendedArtist[] = [];
 
-    yield put(spotifyActions.getTopArtistsSuccess({ timeRange, value }));
+    for (let range in ETimeRange) {
+      const time_range = ETimeRange[range] as ETimeRange;
+
+      const data: { items: SpotifyApi.ArtistObjectFull[] } = yield call(
+        spotifyApi.fetchTopArtists,
+        { time_range },
+      );
+
+      const extendedArtists = data.items.map(artist => ({
+        ...artist,
+        time_range,
+      }));
+
+      artists.push(...extendedArtists);
+
+      artists = getUnique(artists, 'id');
+    }
+
+    yield put(spotifyActions.getTopArtistsSuccess(artists));
   } catch (error) {
-    yield put(spotifyActions.getTopArtistsFail({ timeRange, error }));
+    yield put(spotifyActions.getTopArtistsFail(error));
   }
 }
 
 function* getConcertsFlow() {
   try {
-    const _artists: string[][] = [];
-
-    for (let timeRange in ETimeRange) {
-      const { items: artistsForTimeRange }: SpotifyApi.UsersTopArtistsResponse = yield call(
-        spotifyApi.fetchTopArtists,
-        ETimeRange[timeRange] as ETimeRange,
-      );
-      _artists.push(artistsForTimeRange.map(artist => artist.name));
-    }
-
-    const artists: string[] = union(..._artists);
+    const artists: TExtendedArtist[] = yield select(getArtists);
+    if (artists.length === 0) yield put(spotifyActions.getTopArtistsStart());
 
     const concerts: { [name: string]: Event[] } = {};
 
-    if (artists) {
-      for (let artist of artists) {
-        const { results } = yield call(songkickApi.getEventsByArtist, artist);
-        concerts[artist] = results.event || [];
-      }
+    for (let artist of artists) {
+      const { results } = yield call(songkickApi.getEventsByArtist, artist.name);
+      concerts[artist.name] = results.event || [];
     }
     yield put(songkickActions.getConcertsSuccess(concerts));
   } catch (error) {
@@ -74,9 +79,13 @@ function* getConcertsFlow() {
   }
 }
 
-function* createPlaylistFlow({ payload: artists }: TAction<SpotifyApi.ArtistObjectFull[]>) {
+function* createPlaylistFlow() {
   try {
+    const artists: TExtendedArtist[] = yield select(getArtists);
+    if (artists.length === 0) yield put(spotifyActions.getTopArtistsStart());
+
     const user: IState['user']['value'] = yield select((state: IState) => state.user.value);
+
     if (user) {
       const seed_artists = artists.slice(0, 5).map(artist => artist.id);
       const { tracks }: SpotifyApi.RecommendationsFromSeedsResponse = yield call(
@@ -87,6 +96,7 @@ function* createPlaylistFlow({ payload: artists }: TAction<SpotifyApi.ArtistObje
           target_popularity: 50,
         },
       );
+
       const playlistInfo = {
         name: `Spotifest Recommends`,
         description: `A playlist containing recommended tracks based on artists like ${artists

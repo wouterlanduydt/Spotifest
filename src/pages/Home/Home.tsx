@@ -1,80 +1,65 @@
 import React, { Component } from 'react';
-import { Button, Poster, Select, Footer, Overlay, EventItem } from '../../components';
-import { ETimeRange, timeRanges } from 'types/general';
+import { Button, Poster, Footer, Overlay } from '../../components';
 import { connect } from 'react-redux';
 import { spotifyActions } from 'redux/actions';
 import { IState } from 'redux/reducers';
 import idx from 'idx';
-import { Filters, Actions } from './Home.styled';
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
+import { Actions } from './Home.styled';
 import { RouteComponentProps } from 'react-router';
 
 type TProps = {
   getUserDetailsStart: () => void;
-  createPlaylistStart: (artists: SpotifyApi.ArtistObjectFull[]) => void;
-  getTopArtistsStart: (timeRange: ETimeRange) => void;
+  createPlaylistStart: () => void;
+  getTopArtistsStart: () => void;
   user: IState['user'];
   artists: IState['artists'];
   createPlaylistState: IState['createPlaylist'];
 } & RouteComponentProps;
 
-type TState = {
-  timeRange: ETimeRange;
-};
+class Home extends Component<TProps> {
+  componentDidMount = () => this.props.getTopArtistsStart();
 
-class Home extends Component<TProps, TState> {
-  constructor(props: TProps) {
-    super(props);
-    this.state = {
-      timeRange: ETimeRange.medium,
-    };
-  }
+  handleSaveImage = () => {
+    let poster = document.getElementById('poster');
 
-  componentDidMount = () => {
-    this.props.getTopArtistsStart(this.state.timeRange);
-  };
+    if (poster) {
+      html2canvas(poster, {
+        ignoreElements: item => item.className === 'ignore-save-img',
+      })
+        .then(canvas => canvas.toBlob(blob => blob && saveAs(blob, 'spotifest.png')))
+        .catch(error => console.error(error));
+    }
 
-  onChangeTimeRange = (timeRange: string) => {
-    const { artists, getTopArtistsStart } = this.props;
-
-    if (artists[timeRange as ETimeRange].value.length === 0)
-      getTopArtistsStart(timeRange as ETimeRange);
-    this.setState({ timeRange: timeRange as ETimeRange });
+    if (!poster) console.error('no html element with id "poster" found');
   };
 
   render() {
-    const { timeRange } = this.state;
     const { user, artists, createPlaylistStart, createPlaylistState } = this.props;
+    const hasNoArtists = artists.value.length === 0;
 
     return (
       <>
-        <Filters>
-          <Select
-            label="Time Range"
-            items={timeRanges}
-            onChange={this.onChangeTimeRange}
-            initialIndex={1}
-          />
-        </Filters>
-
-        <Poster
-          username={idx(user, _ => _.value.display_name)}
-          artists={artists[timeRange]}
-          timeRange={timeRange}
-        />
+        <Poster username={idx(user, _ => _.value.display_name)} artists={artists} />
         {createPlaylistState.isLoading && <Overlay text="Creating Playlist..." />}
 
         <Actions>
           <Button
-            onClick={() =>
-              !!artists[timeRange].value && createPlaylistStart(artists[timeRange].value!)
-            }
-            disabled={!artists[timeRange].value}
+            onClick={() => createPlaylistStart()}
+            disabled={hasNoArtists}
             title="Create a playlist containing recommendations based on your top artists."
           >
             Generate Playlist
           </Button>
-          <Button onClick={() => window.alert('Coming soon')}>Save as image</Button>
-          <Button to={`/concerts`}>See Concerts</Button>
+
+          <Button onClick={this.handleSaveImage} disabled={hasNoArtists}>
+            Save as image
+          </Button>
+
+          <Button to={`/concerts`} disabled={hasNoArtists}>
+            See Concerts
+          </Button>
         </Actions>
         <Footer />
       </>

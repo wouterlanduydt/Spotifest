@@ -11,28 +11,28 @@ const Wrap = styled.header`
   flex-direction: column;
   align-items: center;
   text-transform: uppercase;
-  margin: 4vw 0;
+  margin: 4vw 0 2vw;
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
-    margin: 32px 0;
+    margin: 32px 0 16px;
   }
 `;
 
 const SubTitle = styled.span`
-  font-size: 2.4vw;
+  font-size: 2vw;
   color: white;
   z-index: 1;
   font-weight: 600;
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
-    font-size: 20px;
+    font-size: 16px;
   }
 `;
 
 const StyledTitle = styled.h1`
   font-size: 6vw;
   color: white;
-  font-weight: 900;
+  font-weight: 800;
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
     font-size: 50px;

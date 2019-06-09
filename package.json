@@ -20,6 +20,8 @@
     "connected-react-router": "^6.4.0",
     "date-fns": "^2.0.0-alpha.27",
     "express": "^4.15.4",
+    "file-saver": "^2.0.2",
+    "html2canvas": "^1.0.0-rc.3",
     "idx": "^2.5.6",
     "lodash": "^4.17.11",
     "query-string": "6.5.0",
@@ -41,6 +43,7 @@
     "styled-reset": "^2.0.10"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.1",
     "@types/jest": "^24.0.12",
     "@types/lodash": "^4.14.133",
     "@types/node": "^12.0.0",

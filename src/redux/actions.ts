@@ -1,20 +1,17 @@
 import { createAction } from 'redux-act';
-import { ETimeRange } from 'types/general';
 import { Event } from 'types/songkick';
+import { TExtendedArtist } from 'types/general';
 
 export const spotifyActions = {
   getUserDetailsStart: createAction('GET_USER_DETAILS_START'),
   getUserDetailsSuccess: createAction<SpotifyApi.UserObjectPrivate>('GET_USER_DETAILS_SUCCESS'),
   getUserDetailsFail: createAction<Error>('GET_USER_DETAILS_FAIL'),
 
-  getTopArtistsStart: createAction<ETimeRange>('GET_TOP_ARTISTS_START'),
-  getTopArtistsSuccess: createAction<{
-    timeRange: ETimeRange;
-    value: SpotifyApi.ArtistObjectFull[];
-  }>('GET_TOP_ARTISTS_SUCCESS'),
-  getTopArtistsFail: createAction<{ timeRange: ETimeRange; error: Error }>('GET_TOP_ARTISTS_FAIL'),
+  getTopArtistsStart: createAction('GET_TOP_ARTISTS_START'),
+  getTopArtistsSuccess: createAction<TExtendedArtist[]>('GET_TOP_ARTISTS_SUCCESS'),
+  getTopArtistsFail: createAction<Error>('GET_TOP_ARTISTS_FAIL'),
 
-  createPlaylistStart: createAction<SpotifyApi.ArtistObjectFull[]>('CREATE_PLAYLIST_START'),
+  createPlaylistStart: createAction('CREATE_PLAYLIST_START'),
   createPlaylistSuccess: createAction<SpotifyApi.CreatePlaylistResponse>('CREATE_PLAYLIST_SUCCESS'),
   createPlaylistFail: createAction<Error>('CREATE_PLAYLIST_FAIL'),
 };
