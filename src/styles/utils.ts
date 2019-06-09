@@ -14,7 +14,7 @@ export var rgbToHsl = function(r: number, g: number, b: number) {
     s,
     l = (max + min) / 2;
 
-  if (max == min) {
+  if (max === min) {
     h = s = 0; // achromatic
   } else {
     var d = max - min;
@@ -69,7 +69,12 @@ export function convertToDueTone(
     gradientArray.push([rA, gA, bA]);
   }
 
-  for (var i = 0, offset, r, g, b, a, srcHSL, convertedHSL; i < pixelCount; i++) {
+  for (
+    var i = 0, offset, r, g, b, a;
+    // ,srcHSL, convertedHSL
+    i < pixelCount;
+    i++
+  ) {
     offset = i * 4;
     // Gets every color and the alpha channel (r, g, b, a)
     r = pixels[offset + 0];

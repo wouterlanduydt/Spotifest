@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { fadeIn } from 'styles/animations';
 import { TExtendedArtist, ETimeRange } from 'types/general';
 
 type TProps = {

@@ -143,7 +143,7 @@ class Poster extends React.PureComponent<TProps> {
                 ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
 
                 // apply styles after last image here
-              }, 200);
+              }, 500);
             }
           };
         });
@@ -191,6 +191,7 @@ class Poster extends React.PureComponent<TProps> {
             crossOrigin="anonymous"
             className="hide"
             key={artist.id}
+            alt=""
           />
         ))}
       </AnimationWrap>
