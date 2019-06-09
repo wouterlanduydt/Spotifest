@@ -1,6 +1,6 @@
 import React from 'react';
 import Title from './Title';
-// import SpotifyLogo from '../assets/svg/spotify.svg';
+import SpotifyLogo from '../assets/svg/spotify.svg';
 import ArtistItem from './ArtistItem';
 import { getSeparatorIndexes } from 'lib';
 import styled from 'styled-components';
@@ -27,6 +27,8 @@ const Wrap = styled.div`
   margin: 0 auto;
   padding: 8px;
   margin-top: 16px;
+  user-select: none;
+  overflow-y: hidden;
 `;
 
 const AnimationWrap = styled.div`
@@ -91,6 +93,19 @@ const Background = styled.canvas`
   max-height: 900px;
 `;
 
+const LogoWrap = styled.div`
+  position: absolute;
+  bottom: 8px;
+  width: 6vw;
+  height: auto;
+  max-width: 24px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 class Poster extends React.PureComponent<TProps> {
   canvasRef: React.RefObject<HTMLCanvasElement>;
 
@@ -104,58 +119,56 @@ class Poster extends React.PureComponent<TProps> {
     const canvas = this.canvasRef.current;
     const ctx = canvas ? canvas.getContext('2d') : undefined;
 
-    if (artists.value.length !== prevArtists.value.length) {
-      if (ctx && canvas) {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (artists.value.length !== prevArtists.value.length && (ctx && canvas)) {
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        artists.value.forEach((artist, i) => {
-          if (idx(artist, _ => _.images[0].url)) {
-            const imageReceived = (e: Event) => {
-              const img = e.target as HTMLImageElement;
+      artists.value.forEach((artist, i) => {
+        if (idx(artist, _ => _.images[0].url)) {
+          const imageReceived = (e: Event) => {
+            const img = e.target as HTMLImageElement;
 
-              const rescaleFactor = 6;
+            const rescaleFactor = 6;
 
-              const width = img.width / rescaleFactor;
-              const height = img.height / rescaleFactor;
-              const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
-              const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
+            const width = img.width / rescaleFactor;
+            const height = img.height / rescaleFactor;
+            const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
+            const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
 
-              ctx.drawImage(img, xPos, yPos, width, height);
+            ctx.drawImage(img, xPos, yPos, width, height);
 
-              if (i === artists.value.length - 1) {
-                setTimeout(() => {
-                  // https://codepen.io/72lions/pen/jPzLJX
-                  var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                  var pixelCount = canvas.width * canvas.height;
+            if (i === artists.value.length - 1) {
+              setTimeout(() => {
+                // https://codepen.io/72lions/pen/jPzLJX
+                var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                var pixelCount = canvas.width * canvas.height;
 
-                  var dueToneData = convertToDueTone(
-                    canvasData,
-                    pixelCount,
-                    [170, 13, 37],
-                    [15, 22, 45],
-                  );
+                var dueToneData = convertToDueTone(
+                  canvasData,
+                  pixelCount,
+                  [170, 13, 37],
+                  [15, 22, 45],
+                );
 
-                  var imageData = new ImageData(
-                    new Uint8ClampedArray(dueToneData),
-                    canvas.width,
-                    canvas.height,
-                  );
+                var imageData = new ImageData(
+                  new Uint8ClampedArray(dueToneData),
+                  canvas.width,
+                  canvas.height,
+                );
 
-                  ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
+                ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
 
-                  // apply styles after last image here
-                }, 400);
-              }
-            };
-            let downloadedImg;
-            downloadedImg = new Image();
-            downloadedImg.crossOrigin = 'Anonymous';
-            downloadedImg.addEventListener('load', imageReceived, false);
-            downloadedImg.src = artist.images[0].url;
-          }
-        });
-      }
+                // apply styles after last image here
+              }, 400);
+            }
+          };
+          let downloadedImg;
+          downloadedImg = new Image();
+          downloadedImg.crossOrigin = 'Anonymous';
+          downloadedImg.addEventListener('load', imageReceived, false);
+          downloadedImg.src = artist.images[0].url;
+        }
+      });
     }
   };
 
@@ -186,11 +199,11 @@ class Poster extends React.PureComponent<TProps> {
               ))}
           </ArtistsWrap>
 
-          {/* <div>
-        <a href="https://www.spotify.com" rel="noopener noreferrer">
-        <img src={SpotifyLogo} alt="" />
-        </a>
-      </div> */}
+          <LogoWrap>
+            <a href="https://www.spotify.com" rel="noopener noreferrer">
+              <img src={SpotifyLogo} alt="" />
+            </a>
+          </LogoWrap>
         </Wrap>
       </AnimationWrap>
     );
