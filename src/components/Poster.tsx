@@ -109,16 +109,16 @@ class Poster extends React.PureComponent<TProps> {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         artists.value.forEach((artist, i) => {
-          const img = this.refs[artist.id] as HTMLImageElement;
+          const imageReceived = (e: Event) => {
+            const img = e.target as HTMLImageElement;
 
-          img.onload = () => {
             const rescaleFactor = 6;
 
             const width = img.width / rescaleFactor;
             const height = img.height / rescaleFactor;
-
             const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
             const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
+
             ctx.drawImage(img, xPos, yPos, width, height);
 
             if (i === artists.value.length - 1) {
@@ -143,9 +143,14 @@ class Poster extends React.PureComponent<TProps> {
                 ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
 
                 // apply styles after last image here
-              }, 500);
+              }, 400);
             }
           };
+          let downloadedImg;
+          downloadedImg = new Image();
+          downloadedImg.crossOrigin = 'Anonymous';
+          downloadedImg.addEventListener('load', imageReceived, false);
+          downloadedImg.src = artist.images[0].url;
         });
       }
     }
@@ -184,16 +189,6 @@ class Poster extends React.PureComponent<TProps> {
         </a>
       </div> */}
         </Wrap>
-        {artists.value.map(artist => (
-          <img
-            src={artist.images[0].url}
-            ref={artist.id}
-            crossOrigin="anonymous"
-            className="hide"
-            key={artist.id}
-            alt=""
-          />
-        ))}
       </AnimationWrap>
     );
   }

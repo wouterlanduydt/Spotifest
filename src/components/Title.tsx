@@ -19,13 +19,13 @@ const Wrap = styled.header`
 `;
 
 const SubTitle = styled.span`
-  font-size: 2.4vw;
+  font-size: 2vw;
   color: white;
   z-index: 1;
   font-weight: 600;
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
-    font-size: 20px;
+    font-size: 16px;
   }
 `;
 
