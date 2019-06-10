@@ -20,6 +20,12 @@ export const fetchUserDetails = () => spotifyApi.getMe();
 export const fetchTopArtists = (options: { time_range: ETimeRange; [key: string]: string }) =>
   spotifyApi.getMyTopArtists({ limit: 50, ...options });
 
+export const fetchTopSongs = (options: { time_range: ETimeRange; [key: string]: string }) =>
+  spotifyApi.getMyTopTracks({ limit: 50, ...options });
+
+export const fetchAudioFeatures = (trackIds: string[]) =>
+  spotifyApi.getAudioFeaturesForTracks(trackIds);
+
 export const fetchRecommendations = (options: SpotifyApi.RecommendationsOptionsObject) =>
   spotifyApi.getRecommendations({ ...options, limit: 100 });
 

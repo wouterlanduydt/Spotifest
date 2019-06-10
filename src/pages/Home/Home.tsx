@@ -10,7 +10,7 @@ import { Actions } from './Home.styled';
 import { RouteComponentProps } from 'react-router';
 
 type TProps = {
-  getUserDetailsStart: () => void;
+  getPosterMetaStart: () => void;
   createPlaylistStart: () => void;
   getTopArtistsStart: () => void;
   user: IState['user'];
@@ -19,7 +19,10 @@ type TProps = {
 } & RouteComponentProps;
 
 class Home extends Component<TProps> {
-  componentDidMount = () => this.props.getTopArtistsStart();
+  componentDidMount = () => {
+    this.props.getPosterMetaStart();
+    this.props.getTopArtistsStart();
+  };
 
   handleSaveImage = () => {
     let poster = document.getElementById('poster');
@@ -74,6 +77,7 @@ export default connect(
     createPlaylistState,
   }),
   {
+    getPosterMetaStart: spotifyActions.getPosterMetaStart,
     getTopArtistsStart: spotifyActions.getTopArtistsStart,
     createPlaylistStart: spotifyActions.createPlaylistStart,
   },

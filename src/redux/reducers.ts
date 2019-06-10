@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 import { spotifyActions, songkickActions } from './actions';
 import { Event } from 'types/songkick';
-import { TExtendedArtist } from 'types/general';
+import { TExtendedArtist, TPosterMeta } from 'types/general';
 
 export interface IState {
   user: {
@@ -11,6 +11,11 @@ export interface IState {
   };
   artists: {
     value: TExtendedArtist[];
+    isLoading: boolean;
+    error: Error | null;
+  };
+  posterMeta: {
+    value: TPosterMeta | null;
     isLoading: boolean;
     error: Error | null;
   };
@@ -34,6 +39,11 @@ const initialState = {
   },
   artists: {
     value: [],
+    isLoading: false,
+    error: null,
+  },
+  posterMeta: {
+    value: null,
     isLoading: false,
     error: null,
   },
@@ -106,6 +116,36 @@ reducer.on(spotifyActions.getTopArtistsFail, (state, error) => ({
   ...state,
   artists: {
     value: [],
+    isLoading: false,
+    error,
+  },
+}));
+
+/**
+ * poster meta
+ */
+reducer.on(spotifyActions.getPosterMetaStart, state => ({
+  ...state,
+  posterMeta: {
+    value: null,
+    isLoading: true,
+    error: null,
+  },
+}));
+
+reducer.on(spotifyActions.getPosterMetaSuccess, (state, value) => ({
+  ...state,
+  posterMeta: {
+    value,
+    isLoading: false,
+    error: null,
+  },
+}));
+
+reducer.on(spotifyActions.getPosterMetaFail, (state, error) => ({
+  ...state,
+  posterMeta: {
+    value: null,
     isLoading: false,
     error,
   },

@@ -6,6 +6,20 @@ export enum ETimeRange {
 
 export type TExtendedArtist = SpotifyApi.ArtistObjectFull & { time_range: ETimeRange };
 
+export enum EPosterMeta {
+  danceability = 'danceability',
+  energy = 'energy',
+  key = 'key',
+  tempo = 'tempo',
+}
+
+export type TPosterMeta = {
+  danceability: number;
+  energy: number;
+  key: number;
+  tempo: number;
+};
+
 export const distances = [
   {
     value: 50,
