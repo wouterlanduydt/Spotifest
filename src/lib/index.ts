@@ -1,6 +1,8 @@
 import { IState } from 'redux/reducers';
 import { TExtendedArtist, ETimeRange } from 'types/general';
 
+export * from './music';
+
 export const isRunningLocally = window.location.href.includes('localhost');
 
 export const getUnique = (arr: any[], comp: string) =>
@@ -9,6 +11,17 @@ export const getUnique = (arr: any[], comp: string) =>
     .map((e, i, final) => final.indexOf(e) === i && i)
     .filter(e => arr[e as number])
     .map(e => arr[e as number]);
+
+export const getAverage = (arr: number[]) => arr.reduce((p, c) => p + c, 0) / arr.length;
+
+export const getMedian = (arr: number[]) => {
+  const mid = Math.floor(arr.length / 2);
+  const nums = [...arr].sort((a, b) => a - b);
+  return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+};
+
+export const getRandomNumber = (min: number, max: number) =>
+  Math.floor(min + Math.random() * (max + 1 - min));
 
 export const getSeparatorIndexes = (artists: TExtendedArtist[]) => {
   const getLastItemForRange = (time_range: ETimeRange) =>

@@ -1,8 +1,15 @@
 import React from 'react';
 import Title from './Title';
-// import SpotifyLogo from '../assets/svg/spotify.svg';
+import SpotifyLogo from '../assets/svg/spotify.svg';
 import ArtistItem from './ArtistItem';
-import { getSeparatorIndexes } from 'lib';
+import {
+  getSeparatorIndexes,
+  keys,
+  getRandomNumber,
+  hasHigherThanAverageEnergy,
+  hasHigherThanAverageDanceability,
+  hasHigherThanAverageTempo,
+} from 'lib';
 import styled from 'styled-components';
 import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
@@ -13,6 +20,7 @@ import idx from 'idx';
 type TProps = {
   username: string | undefined | null;
   artists: IState['artists'];
+  posterMeta: IState['posterMeta'];
 };
 
 const Wrap = styled.div`
@@ -27,6 +35,8 @@ const Wrap = styled.div`
   margin: 0 auto;
   padding: 8px;
   margin-top: 16px;
+  user-select: none;
+  overflow-y: hidden;
 `;
 
 const AnimationWrap = styled.div`
@@ -52,6 +62,7 @@ const Separator = styled.div`
     color: white;
     text-transform: uppercase;
     font-size: 2vw;
+    text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 
     display: flex;
     width: 80%;
@@ -91,6 +102,19 @@ const Background = styled.canvas`
   max-height: 900px;
 `;
 
+const LogoWrap = styled.div`
+  position: absolute;
+  bottom: 8px;
+  width: 6vw;
+  height: auto;
+  max-width: 24px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 class Poster extends React.PureComponent<TProps> {
   canvasRef: React.RefObject<HTMLCanvasElement>;
 
@@ -100,62 +124,105 @@ class Poster extends React.PureComponent<TProps> {
   }
 
   componentDidUpdate = ({ artists: prevArtists }: TProps) => {
-    const { artists } = this.props;
+    const {
+      artists,
+      posterMeta: { value: posterMeta },
+    } = this.props;
     const canvas = this.canvasRef.current;
     const ctx = canvas ? canvas.getContext('2d') : undefined;
 
-    if (artists.value.length !== prevArtists.value.length) {
-      if (ctx && canvas) {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (artists.value.length !== prevArtists.value.length && (ctx && canvas) && posterMeta) {
+      const { key, tempo, danceability, energy } = posterMeta;
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        artists.value.forEach((artist, i) => {
-          if (idx(artist, _ => _.images[0].url)) {
-            const imageReceived = (e: Event) => {
-              const img = e.target as HTMLImageElement;
+      artists.value.forEach((artist, i) => {
+        if (idx(artist, _ => _.images[0].url)) {
+          const imageReceived = (e: Event) => {
+            const img = e.target as HTMLImageElement;
 
-              const rescaleFactor = 6;
+            const rescaleFactor = 6;
 
-              const width = img.width / rescaleFactor;
-              const height = img.height / rescaleFactor;
-              const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
-              const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
+            const width = img.width / rescaleFactor;
+            const height = img.height / rescaleFactor;
+            const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
+            const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
 
-              ctx.drawImage(img, xPos, yPos, width, height);
+            ctx.drawImage(img, xPos, yPos, width, height);
 
-              if (i === artists.value.length - 1) {
-                setTimeout(() => {
-                  // https://codepen.io/72lions/pen/jPzLJX
-                  var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                  var pixelCount = canvas.width * canvas.height;
+            if (i === artists.value.length - 1) {
+              setTimeout(() => {
+                /**
+                 * Duotone effect.
+                 * https://codepen.io/72lions/pen/jPzLJX
+                 */
+                var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                var pixelCount = canvas.width * canvas.height;
 
-                  var dueToneData = convertToDueTone(
-                    canvasData,
-                    pixelCount,
-                    [170, 13, 37],
-                    [15, 22, 45],
-                  );
+                const colors = {
+                  light: keys[key].colors[0],
+                  dark: keys[key].colors[1],
+                };
 
-                  var imageData = new ImageData(
-                    new Uint8ClampedArray(dueToneData),
-                    canvas.width,
-                    canvas.height,
-                  );
+                var dueToneData = convertToDueTone(
+                  canvasData,
+                  pixelCount,
+                  colors.light,
+                  colors.dark,
+                );
 
-                  ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
+                var imageData = new ImageData(
+                  new Uint8ClampedArray(dueToneData),
+                  canvas.width,
+                  canvas.height,
+                );
 
-                  // apply styles after last image here
-                }, 400);
-              }
-            };
-            let downloadedImg;
-            downloadedImg = new Image();
-            downloadedImg.crossOrigin = 'Anonymous';
-            downloadedImg.addEventListener('load', imageReceived, false);
-            downloadedImg.src = artist.images[0].url;
-          }
-        });
-      }
+                ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
+
+                /**
+                 * Extra shapes.
+                 */
+                const amtOfShapes = hasHigherThanAverageTempo(tempo) ? 15 : 10;
+                const mainColor = hasHigherThanAverageEnergy(energy) ? colors.light : colors.dark;
+                const minSize = 40;
+                const maxSize = 120;
+
+                for (i = 0; i <= amtOfShapes; i++) {
+                  ctx.fillStyle =
+                    Math.random() >= 0.5
+                      ? `rgba(${mainColor[0]},${mainColor[1]},${mainColor[2]}, 0.5)`
+                      : 'rgba(255,255,255,0.15)';
+
+                  const drawRectangle = () => {
+                    const width = getRandomNumber(minSize, maxSize);
+                    const height = getRandomNumber(minSize, maxSize);
+                    const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
+                    const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
+
+                    ctx.fillRect(xPos, yPos, width, height);
+                  };
+
+                  const drawCircle = () => {
+                    const radius = getRandomNumber(minSize, maxSize) / 2;
+                    const xPos = Math.floor(Math.random() * canvas.width) - radius;
+                    const yPos = Math.floor(Math.random() * canvas.height) - radius;
+                    ctx.beginPath();
+                    ctx.arc(xPos, yPos, radius, 0, 2 * Math.PI, false);
+                    ctx.fill();
+                  };
+
+                  hasHigherThanAverageDanceability(danceability) ? drawCircle() : drawRectangle();
+                }
+              }, 400);
+            }
+          };
+          let downloadedImg;
+          downloadedImg = new Image();
+          downloadedImg.crossOrigin = 'Anonymous';
+          downloadedImg.addEventListener('load', imageReceived, false);
+          downloadedImg.src = artist.images[0].url;
+        }
+      });
     }
   };
 
@@ -186,11 +253,11 @@ class Poster extends React.PureComponent<TProps> {
               ))}
           </ArtistsWrap>
 
-          {/* <div>
-        <a href="https://www.spotify.com" rel="noopener noreferrer">
-        <img src={SpotifyLogo} alt="" />
-        </a>
-      </div> */}
+          <LogoWrap>
+            <a href="https://www.spotify.com" rel="noopener noreferrer">
+              <img src={SpotifyLogo} alt="" />
+            </a>
+          </LogoWrap>
         </Wrap>
       </AnimationWrap>
     );

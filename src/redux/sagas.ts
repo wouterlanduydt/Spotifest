@@ -5,8 +5,8 @@ import { IState } from './reducers';
 import * as songkickApi from 'api/songkick.api';
 import { Event } from 'types/songkick';
 import queryString from 'query-string';
-import { ETimeRange, TExtendedArtist } from 'types/general';
-import { getUnique } from 'lib';
+import { ETimeRange, TExtendedArtist, EPosterMeta, TPosterMeta } from 'types/general';
+import { getUnique, getAverage, getMedian } from 'lib';
 import { getArtists } from './selectors';
 
 type TAction<T = void> = {
@@ -59,6 +59,37 @@ function* getTopArtistsFlow() {
     yield put(spotifyActions.getTopArtistsSuccess(artists));
   } catch (error) {
     yield put(spotifyActions.getTopArtistsFail(error));
+  }
+}
+
+function* getPosterMetaFlow() {
+  try {
+    const { items: topSongs }: SpotifyApi.UsersTopTracksResponse = yield call(
+      spotifyApi.fetchTopSongs,
+      { time_range: ETimeRange.long },
+    );
+    const { audio_features: audioFeatures }: SpotifyApi.MultipleAudioFeaturesResponse = yield call(
+      spotifyApi.fetchAudioFeatures,
+      topSongs.map(({ id }) => id),
+    );
+
+    const getHumanReadableAvg = (type: 'avg' | 'median', field: EPosterMeta, digits?: number) => {
+      const flattenedArr = audioFeatures.map(audioFeature => audioFeature[field]);
+      const value = type === 'median' ? getMedian(flattenedArr) : getAverage(flattenedArr);
+
+      return +value.toFixed(digits);
+    };
+
+    const posterMeta: TPosterMeta = {
+      danceability: getHumanReadableAvg('avg', EPosterMeta.danceability, 2),
+      energy: getHumanReadableAvg('avg', EPosterMeta.energy, 2),
+      key: getHumanReadableAvg('median', EPosterMeta.key),
+      tempo: getHumanReadableAvg('avg', EPosterMeta.tempo),
+    };
+
+    yield put(spotifyActions.getPosterMetaSuccess(posterMeta));
+  } catch (error) {
+    yield put(spotifyActions.getPosterMetaFail(error));
   }
 }
 
@@ -119,6 +150,7 @@ function* saga() {
   yield all([
     appReadyFlow(),
     takeLatest(spotifyActions.getTopArtistsStart, getTopArtistsFlow),
+    takeLatest(spotifyActions.getPosterMetaStart, getPosterMetaFlow),
     takeLatest(spotifyActions.createPlaylistStart, createPlaylistFlow),
     takeEvery(songkickActions.getConcertsStart, getConcertsFlow),
   ]);
