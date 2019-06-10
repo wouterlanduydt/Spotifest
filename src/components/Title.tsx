@@ -23,6 +23,7 @@ const SubTitle = styled.span`
   color: white;
   z-index: 1;
   font-weight: 600;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
     font-size: 16px;
@@ -33,6 +34,7 @@ const StyledTitle = styled.h1`
   font-size: 6vw;
   color: white;
   font-weight: 800;
+  text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
 
   @media (min-width: ${({ theme }) => theme.maxPoster}px) {
     font-size: 50px;

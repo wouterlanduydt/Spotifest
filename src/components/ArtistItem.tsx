@@ -30,6 +30,7 @@ const Text = styled.a`
   display: inline-block;
   text-decoration: none;
   color: white;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 `;
 
 const ArtistItem = ({ artist: { name, external_urls, time_range }, position }: TProps) => (

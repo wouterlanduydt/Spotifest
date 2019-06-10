@@ -20,6 +20,9 @@ export const getMedian = (arr: number[]) => {
   return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
 };
 
+export const getRandomNumber = (min: number, max: number) =>
+  Math.floor(min + Math.random() * (max + 1 - min));
+
 export const getSeparatorIndexes = (artists: TExtendedArtist[]) => {
   const getLastItemForRange = (time_range: ETimeRange) =>
     artists.filter(artist => artist.time_range === time_range).length;

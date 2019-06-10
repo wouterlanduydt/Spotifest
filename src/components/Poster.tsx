@@ -2,7 +2,14 @@ import React from 'react';
 import Title from './Title';
 import SpotifyLogo from '../assets/svg/spotify.svg';
 import ArtistItem from './ArtistItem';
-import { getSeparatorIndexes, keys } from 'lib';
+import {
+  getSeparatorIndexes,
+  keys,
+  getRandomNumber,
+  hasHigherThanAverageEnergy,
+  hasHigherThanAverageDanceability,
+  hasHigherThanAverageTempo,
+} from 'lib';
 import styled from 'styled-components';
 import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
@@ -55,6 +62,7 @@ const Separator = styled.div`
     color: white;
     text-transform: uppercase;
     font-size: 2vw;
+    text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 
     display: flex;
     width: 80%;
@@ -124,6 +132,7 @@ class Poster extends React.PureComponent<TProps> {
     const ctx = canvas ? canvas.getContext('2d') : undefined;
 
     if (artists.value.length !== prevArtists.value.length && (ctx && canvas) && posterMeta) {
+      const { key, tempo, danceability, energy } = posterMeta;
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -143,15 +152,23 @@ class Poster extends React.PureComponent<TProps> {
 
             if (i === artists.value.length - 1) {
               setTimeout(() => {
-                // https://codepen.io/72lions/pen/jPzLJX
+                /**
+                 * Duotone effect.
+                 * https://codepen.io/72lions/pen/jPzLJX
+                 */
                 var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 var pixelCount = canvas.width * canvas.height;
+
+                const colors = {
+                  light: keys[key].colors[0],
+                  dark: keys[key].colors[1],
+                };
 
                 var dueToneData = convertToDueTone(
                   canvasData,
                   pixelCount,
-                  keys[posterMeta.key].colors[0],
-                  keys[posterMeta.key].colors[1],
+                  colors.light,
+                  colors.dark,
                 );
 
                 var imageData = new ImageData(
@@ -162,7 +179,40 @@ class Poster extends React.PureComponent<TProps> {
 
                 ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
 
-                // apply styles after last image here
+                /**
+                 * Extra shapes.
+                 */
+                const amtOfShapes = hasHigherThanAverageTempo(tempo) ? 15 : 10;
+                const mainColor = hasHigherThanAverageEnergy(energy) ? colors.light : colors.dark;
+                const minSize = 40;
+                const maxSize = 120;
+
+                for (i = 0; i <= amtOfShapes; i++) {
+                  ctx.fillStyle =
+                    Math.random() >= 0.5
+                      ? `rgba(${mainColor[0]},${mainColor[1]},${mainColor[2]}, 0.5)`
+                      : 'rgba(255,255,255,0.15)';
+
+                  const drawRectangle = () => {
+                    const width = getRandomNumber(minSize, maxSize);
+                    const height = getRandomNumber(minSize, maxSize);
+                    const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
+                    const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
+
+                    ctx.fillRect(xPos, yPos, width, height);
+                  };
+
+                  const drawCircle = () => {
+                    const radius = getRandomNumber(minSize, maxSize) / 2;
+                    const xPos = Math.floor(Math.random() * canvas.width) - radius;
+                    const yPos = Math.floor(Math.random() * canvas.height) - radius;
+                    ctx.beginPath();
+                    ctx.arc(xPos, yPos, radius, 0, 2 * Math.PI, false);
+                    ctx.fill();
+                  };
+
+                  hasHigherThanAverageDanceability(danceability) ? drawCircle() : drawRectangle();
+                }
               }, 400);
             }
           };
