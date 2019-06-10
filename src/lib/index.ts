@@ -1,6 +1,8 @@
 import { IState } from 'redux/reducers';
 import { TExtendedArtist, ETimeRange } from 'types/general';
 
+export * from './music';
+
 export const isRunningLocally = window.location.href.includes('localhost');
 
 export const getUnique = (arr: any[], comp: string) =>

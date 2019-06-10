@@ -2,7 +2,7 @@ import React from 'react';
 import Title from './Title';
 import SpotifyLogo from '../assets/svg/spotify.svg';
 import ArtistItem from './ArtistItem';
-import { getSeparatorIndexes } from 'lib';
+import { getSeparatorIndexes, keys } from 'lib';
 import styled from 'styled-components';
 import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
@@ -13,6 +13,7 @@ import idx from 'idx';
 type TProps = {
   username: string | undefined | null;
   artists: IState['artists'];
+  posterMeta: IState['posterMeta'];
 };
 
 const Wrap = styled.div`
@@ -115,11 +116,14 @@ class Poster extends React.PureComponent<TProps> {
   }
 
   componentDidUpdate = ({ artists: prevArtists }: TProps) => {
-    const { artists } = this.props;
+    const {
+      artists,
+      posterMeta: { value: posterMeta },
+    } = this.props;
     const canvas = this.canvasRef.current;
     const ctx = canvas ? canvas.getContext('2d') : undefined;
 
-    if (artists.value.length !== prevArtists.value.length && (ctx && canvas)) {
+    if (artists.value.length !== prevArtists.value.length && (ctx && canvas) && posterMeta) {
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -146,8 +150,8 @@ class Poster extends React.PureComponent<TProps> {
                 var dueToneData = convertToDueTone(
                   canvasData,
                   pixelCount,
-                  [170, 13, 37],
-                  [15, 22, 45],
+                  keys[posterMeta.key].colors[0],
+                  keys[posterMeta.key].colors[1],
                 );
 
                 var imageData = new ImageData(
