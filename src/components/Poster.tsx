@@ -2,14 +2,7 @@ import React from 'react';
 import Title from './Title';
 import SpotifyLogo from '../assets/svg/spotify.svg';
 import ArtistItem from './ArtistItem';
-import {
-  getSeparatorIndexes,
-  keys,
-  getRandomNumber,
-  hasHigherThanAverageEnergy,
-  hasHigherThanAverageDanceability,
-  hasHigherThanAverageTempo,
-} from 'lib';
+import { getSeparatorIndexes, getRandomColorDuo, getRandomNumber } from 'lib';
 import styled from 'styled-components';
 import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
@@ -20,7 +13,6 @@ import idx from 'idx';
 type TProps = {
   username: string | undefined | null;
   artists: IState['artists'];
-  posterMeta: IState['posterMeta'];
 };
 
 const Wrap = styled.div`
@@ -124,105 +116,79 @@ class Poster extends React.PureComponent<TProps> {
   }
 
   componentDidUpdate = ({ artists: prevArtists }: TProps) => {
-    const {
-      artists,
-      posterMeta: { value: posterMeta },
-    } = this.props;
+    const { artists } = this.props;
     const canvas = this.canvasRef.current;
     const ctx = canvas ? canvas.getContext('2d') : undefined;
 
-    if (artists.value.length !== prevArtists.value.length && (ctx && canvas) && posterMeta) {
-      const { key, tempo, danceability, energy } = posterMeta;
+    const artistImages: string[] = [];
+    let artistImagesLoaded = 0;
+
+    if (artists.value.length !== prevArtists.value.length && (ctx && canvas)) {
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      artists.value.forEach((artist, i) => {
-        if (idx(artist, _ => _.images[0].url)) {
-          const imageReceived = (e: Event) => {
-            const img = e.target as HTMLImageElement;
+      artists.value.forEach(
+        artist => idx(artist, _ => _.images[0].url) && artistImages.push(artist.images[0].url),
+      );
 
-            const rescaleFactor = 6;
+      const onArtistImageLoad = (e: Event) => {
+        const img = e.target as HTMLImageElement;
 
-            const width = img.width / rescaleFactor;
-            const height = img.height / rescaleFactor;
-            const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
-            const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
+        const rescaleFactor = 6;
 
-            ctx.drawImage(img, xPos, yPos, width, height);
+        const width = img.width / rescaleFactor;
+        const height = img.height / rescaleFactor;
+        const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
+        const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
 
-            if (i === artists.value.length - 1) {
-              setTimeout(() => {
-                /**
-                 * Duotone effect.
-                 * https://codepen.io/72lions/pen/jPzLJX
-                 */
-                var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                var pixelCount = canvas.width * canvas.height;
+        ctx.drawImage(img, xPos, yPos, width, height);
 
-                const colors = {
-                  light: keys[key].colors[0],
-                  dark: keys[key].colors[1],
-                };
+        artistImagesLoaded++;
+        if (artistImagesLoaded === artistImages.length) onAllImagesLoaded();
+      };
 
-                var dueToneData = convertToDueTone(
-                  canvasData,
-                  pixelCount,
-                  colors.light,
-                  colors.dark,
-                );
-
-                var imageData = new ImageData(
-                  new Uint8ClampedArray(dueToneData),
-                  canvas.width,
-                  canvas.height,
-                );
-
-                ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
-
-                /**
-                 * Extra shapes.
-                 */
-                const amtOfShapes = hasHigherThanAverageTempo(tempo) ? 15 : 10;
-                const mainColor = hasHigherThanAverageEnergy(energy) ? colors.light : colors.dark;
-                const minSize = 40;
-                const maxSize = 120;
-
-                for (i = 0; i <= amtOfShapes; i++) {
-                  ctx.fillStyle =
-                    Math.random() >= 0.5
-                      ? `rgba(${mainColor[0]},${mainColor[1]},${mainColor[2]}, 0.5)`
-                      : 'rgba(255,255,255,0.15)';
-
-                  const drawRectangle = () => {
-                    const width = getRandomNumber(minSize, maxSize);
-                    const height = getRandomNumber(minSize, maxSize);
-                    const xPos = Math.floor(Math.random() * canvas.width) - width / 2;
-                    const yPos = Math.floor(Math.random() * canvas.height) - height / 2;
-
-                    ctx.fillRect(xPos, yPos, width, height);
-                  };
-
-                  const drawCircle = () => {
-                    const radius = getRandomNumber(minSize, maxSize) / 2;
-                    const xPos = Math.floor(Math.random() * canvas.width) - radius;
-                    const yPos = Math.floor(Math.random() * canvas.height) - radius;
-                    ctx.beginPath();
-                    ctx.arc(xPos, yPos, radius, 0, 2 * Math.PI, false);
-                    ctx.fill();
-                  };
-
-                  hasHigherThanAverageDanceability(danceability) ? drawCircle() : drawRectangle();
-                }
-              }, 400);
-            }
-          };
-          let downloadedImg;
-          downloadedImg = new Image();
-          downloadedImg.crossOrigin = 'Anonymous';
-          downloadedImg.addEventListener('load', imageReceived, false);
-          downloadedImg.src = artist.images[0].url;
-        }
+      artistImages.forEach(image => {
+        let downloadedImg;
+        downloadedImg = new Image();
+        downloadedImg.crossOrigin = 'Anonymous';
+        downloadedImg.addEventListener('load', onArtistImageLoad, false);
+        downloadedImg.src = image;
       });
+
+      const onAllImagesLoaded = () => {
+        /**
+         * Duotone effect.
+         * https://codepen.io/72lions/pen/jPzLJX
+         */
+        const canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixelCount = canvas.width * canvas.height;
+
+        const color = getRandomColorDuo();
+        const dueToneData = convertToDueTone(canvasData, pixelCount, color.light, color.dark);
+
+        const imageData = new ImageData(
+          new Uint8ClampedArray(dueToneData),
+          canvas.width,
+          canvas.height,
+        );
+
+        ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
+
+        // circles
+        for (let i = 0; i <= 15; i++) {
+          const mainColor = Math.random() >= 0.5 ? color.light : color.dark;
+          const circleColor = `rgba(${mainColor[0]},${mainColor[1]},${mainColor[2]}, 0.5)`;
+
+          const radius = getRandomNumber(40, 120) / 2;
+          const xPos = Math.floor(Math.random() * canvas.width) - radius;
+          const yPos = Math.floor(Math.random() * canvas.height) - radius;
+
+          ctx.fillStyle = Math.random() >= 0.5 ? circleColor : 'rgba(255,255,255,0.15)';
+          ctx.beginPath();
+          ctx.arc(xPos, yPos, radius, 0, 2 * Math.PI, false);
+          ctx.fill();
+        }
+      };
     }
   };
 

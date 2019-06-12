@@ -10,18 +10,15 @@ import { Actions } from './Home.styled';
 import { RouteComponentProps } from 'react-router';
 
 type TProps = {
-  getPosterMetaStart: () => void;
   createPlaylistStart: () => void;
   getTopArtistsStart: () => void;
   user: IState['user'];
   artists: IState['artists'];
-  posterMeta: IState['posterMeta'];
   createPlaylistState: IState['createPlaylist'];
 } & RouteComponentProps;
 
 class Home extends Component<TProps> {
   componentDidMount = () => {
-    this.props.getPosterMetaStart();
     this.props.getTopArtistsStart();
   };
 
@@ -40,26 +37,22 @@ class Home extends Component<TProps> {
   };
 
   render() {
-    const { user, artists, createPlaylistStart, createPlaylistState, posterMeta } = this.props;
+    const { user, artists, createPlaylistState } = this.props;
     const hasNoArtists = artists.value.length === 0;
 
     return (
       <>
-        <Poster
-          username={idx(user, _ => _.value.display_name)}
-          artists={artists}
-          posterMeta={posterMeta}
-        />
+        <Poster username={idx(user, _ => _.value.display_name)} artists={artists} />
         {createPlaylistState.isLoading && <Overlay text="Creating Playlist..." />}
 
         <Actions>
-          <Button
+          {/* <Button
             onClick={() => createPlaylistStart()}
             disabled={hasNoArtists}
             title="Create a playlist containing recommendations based on your top artists."
           >
             Generate Playlist
-          </Button>
+          </Button> */}
 
           <Button onClick={this.handleSaveImage} disabled={hasNoArtists}>
             Save as image
@@ -76,14 +69,12 @@ class Home extends Component<TProps> {
 }
 
 export default connect(
-  ({ user, artists, createPlaylist: createPlaylistState, posterMeta }: IState) => ({
+  ({ user, artists, createPlaylist: createPlaylistState }: IState) => ({
     user,
     artists,
     createPlaylistState,
-    posterMeta,
   }),
   {
-    getPosterMetaStart: spotifyActions.getPosterMetaStart,
     getTopArtistsStart: spotifyActions.getTopArtistsStart,
     createPlaylistStart: spotifyActions.createPlaylistStart,
   },
