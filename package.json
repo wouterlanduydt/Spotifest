@@ -15,7 +15,7 @@
     "prettier": "prettier 'src/**/*.{ts,tsx}' --write"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "babel-plugin-idx": "^2.4.0",
     "connected-react-router": "^6.4.0",
     "date-fns": "^2.0.0-alpha.27",
