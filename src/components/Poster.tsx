@@ -1,12 +1,12 @@
 import React from 'react';
-import Title from './Title';
+import { Title } from './Title';
 import SpotifyLogo from '../assets/svg/spotify.svg';
-import ArtistItem from './ArtistItem';
+import { ArtistItem } from './ArtistItem';
 import { getSeparatorIndexes, getRandomColorDuo, getRandomNumber } from 'lib';
 import styled from 'styled-components';
 import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
-import Overlay from './Overlay';
+import { Overlay } from './Overlay';
 import { convertToDueTone } from 'styles/utils';
 import idx from 'idx';
 
@@ -107,7 +107,7 @@ const LogoWrap = styled.div`
   }
 `;
 
-class Poster extends React.PureComponent<TProps> {
+export class Poster extends React.PureComponent<TProps> {
   canvasRef: React.RefObject<HTMLCanvasElement>;
 
   constructor(props: TProps) {
@@ -123,7 +123,7 @@ class Poster extends React.PureComponent<TProps> {
     const artistImages: string[] = [];
     let artistImagesLoaded = 0;
 
-    if (artists.value.length !== prevArtists.value.length && (ctx && canvas)) {
+    if (artists.value.length !== prevArtists.value.length && ctx && canvas) {
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -229,5 +229,3 @@ class Poster extends React.PureComponent<TProps> {
     );
   }
 }
-
-export default Poster;

@@ -5,7 +5,7 @@ import { authorizeSpotifyApi } from 'api/spotify.api';
 
 type TProps = {};
 
-class Login extends Component<TProps> {
+export class Login extends Component<TProps> {
   render() {
     return (
       <Wrap>
@@ -16,5 +16,3 @@ class Login extends Component<TProps> {
     );
   }
 }
-
-export default Login;

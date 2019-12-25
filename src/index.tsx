@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Home, Login, Concerts } from './pages';
+import { Home, Login } from './pages';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -21,7 +21,6 @@ ReactDOM.render(
       <Router>
         <Route path="/login" exact component={Login} />
         <Route path="/" exact component={Home} />
-        <Route path="/concerts/" component={Concerts} />
       </Router>
     </Provider>
   </ThemeProvider>,

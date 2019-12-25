@@ -8,9 +8,9 @@ type TProps = {
 };
 
 const getFontSize = (time_range: ETimeRange, isMobile: boolean) => {
-  if (time_range === ETimeRange.long) return isMobile ? '3.2vw' : '20px';
+  if (time_range === ETimeRange.long_term) return isMobile ? '3.2vw' : '20px';
 
-  if (time_range === ETimeRange.medium) return isMobile ? '3vw' : '19px';
+  if (time_range === ETimeRange.medium_term) return isMobile ? '3vw' : '19px';
   return isMobile ? '2.8vw' : '18px';
 };
 
@@ -33,12 +33,10 @@ const Text = styled.a`
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 `;
 
-const ArtistItem = ({ artist: { name, external_urls, time_range }, position }: TProps) => (
+export const ArtistItem = ({ artist: { name, external_urls, time_range }, position }: TProps) => (
   <Wrap position={position} time_range={time_range}>
     <Text href={external_urls.spotify} rel="noopener noreferrer">
       {name}
     </Text>
   </Wrap>
 );
-
-export default React.memo(ArtistItem);

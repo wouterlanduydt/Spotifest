@@ -16,7 +16,7 @@ const Link = styled.a`
   text-decoration: underline;
 `;
 
-const Footer = () => {
+export const Footer = () => {
   const link = (text: string, url: string) => (
     <Link href={url} rel="noopener noreferrer">
       {text}
@@ -29,5 +29,3 @@ const Footer = () => {
     </StyledFooter>
   );
 };
-
-export default React.memo(Footer);

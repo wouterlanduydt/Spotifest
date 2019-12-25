@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from 'react-select';
+import ReactSelect from 'react-select';
 import styled from 'styled-components';
 
 const Wrap = styled.div`
@@ -21,10 +21,10 @@ type TProps = {
   initialIndex?: number;
 };
 
-const SelectComponent = ({ items, onChange, initialIndex = 0, label }: TProps) => (
+export const Select = ({ items, onChange, initialIndex = 0, label }: TProps) => (
   <Wrap className="react-select">
     <Label>{label}</Label>
-    <Select
+    <ReactSelect
       options={items}
       defaultValue={items[initialIndex]}
       // @ts-ignore
@@ -37,5 +37,3 @@ const SelectComponent = ({ items, onChange, initialIndex = 0, label }: TProps) =
     />
   </Wrap>
 );
-
-export default React.memo(SelectComponent);

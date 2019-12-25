@@ -28,7 +28,7 @@ type TProps = {
   to?: string;
 };
 
-const Button = ({
+export const Button = ({
   onClick,
   children,
   buttonStyle = 'normal',
@@ -42,5 +42,3 @@ const Button = ({
     </StyledButton>
   </Link>
 );
-
-export default React.memo(Button);

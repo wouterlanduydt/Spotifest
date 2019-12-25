@@ -27,11 +27,9 @@ type TProps = {
   text?: string;
 };
 
-const Overlay = ({ text }: TProps) => (
+export const Overlay = ({ text }: TProps) => (
   <Wrap>
     <LoadingIndicator />
     {!!text && <Subtitle>{text}</Subtitle>}
   </Wrap>
 );
-
-export default React.memo(Overlay);
