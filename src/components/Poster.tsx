@@ -11,7 +11,8 @@ import { convertToDueTone } from 'styles/utils';
 
 type TProps = {
   username?: string;
-  artists: IState['artists'];
+  artists: IState['artists']['value'];
+  isLoading?: boolean;
 };
 
 const Wrap = styled.div`
@@ -107,7 +108,7 @@ const LogoWrap = styled.div`
 `;
 
 export const Poster = React.memo<TProps>(props => {
-  const { artists, username } = props;
+  const { artists = [], username, isLoading } = props;
 
   const canvasRef = React.createRef<HTMLCanvasElement>();
 
@@ -122,9 +123,7 @@ export const Poster = React.memo<TProps>(props => {
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      artists.value.forEach(
-        artist => artist?.images[0].url && artistImages.push(artist.images[0].url),
-      );
+      artists.forEach(artist => artist.images[0].url && artistImages.push(artist.images[0].url));
 
       const onArtistImageLoad = (e: Event) => {
         const img = e.target as HTMLImageElement;
@@ -187,9 +186,9 @@ export const Poster = React.memo<TProps>(props => {
     }
   }, [artists, canvasRef]);
 
-  const [long, medium] = getSeparatorIndexes(artists.value);
+  const [long, medium] = getSeparatorIndexes(artists);
 
-  if (artists.isLoading) return <Overlay text="Generating Poster..." />;
+  if (isLoading) return <Overlay text="Generating Poster..." />;
 
   return (
     <AnimationWrap className="ignore-save-img">
@@ -197,17 +196,16 @@ export const Poster = React.memo<TProps>(props => {
         <Background width={640} height={900} ref={canvasRef} />
         <Title title="Spotifest" username={username} />
         <ArtistsWrap>
-          {artists.value &&
-            artists.value.map((artist, i) => (
-              <React.Fragment key={artist.id}>
-                {(i === 0 || i === long || i === medium) && (
-                  <Separator>
-                    <span>{i === 0 ? 'long term' : i === long ? 'medium term' : 'short term'}</span>
-                  </Separator>
-                )}
-                <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
-              </React.Fragment>
-            ))}
+          {artists.map((artist, i) => (
+            <React.Fragment key={artist.id}>
+              {(i === 0 || i === long || i === medium) && (
+                <Separator>
+                  <span>{i === 0 ? 'long term' : i === long ? 'medium term' : 'short term'}</span>
+                </Separator>
+              )}
+              <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
+            </React.Fragment>
+          ))}
         </ArtistsWrap>
 
         <LogoWrap>

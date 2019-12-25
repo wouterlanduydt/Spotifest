@@ -35,7 +35,11 @@ export const Home: React.FC = () => {
 
   return (
     <>
-      <Poster username={user.value?.display_name} artists={artists} />
+      <Poster
+        username={user.value?.display_name}
+        artists={artists?.value}
+        isLoading={artists?.isLoading}
+      />
 
       <Actions>
         <Button onClick={handleSaveImage} disabled={hasNoArtists}>
