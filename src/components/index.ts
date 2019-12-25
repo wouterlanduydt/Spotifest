@@ -1,5 +1,4 @@
 export * from './Title';
-export * from './Select';
 export * from './Poster';
 export * from './Overlay';
 export * from './Footer';

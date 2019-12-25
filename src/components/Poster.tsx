@@ -8,7 +8,6 @@ import { IState } from 'redux/reducers';
 import { fadeIn } from 'styles/animations';
 import { Overlay } from './Overlay';
 import { convertToDueTone } from 'styles/utils';
-import idx from 'idx';
 
 type TProps = {
   username: string | undefined | null;
@@ -128,7 +127,7 @@ export class Poster extends React.PureComponent<TProps> {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       artists.value.forEach(
-        artist => idx(artist, _ => _.images[0].url) && artistImages.push(artist.images[0].url),
+        artist => artist?.images[0].url && artistImages.push(artist.images[0].url),
       );
 
       const onArtistImageLoad = (e: Event) => {
