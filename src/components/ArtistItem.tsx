@@ -33,7 +33,10 @@ const Text = styled.a`
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 `;
 
-export const ArtistItem = ({ artist: { name, external_urls, time_range }, position }: TProps) => (
+export const ArtistItem: React.FC<TProps> = ({
+  artist: { name, external_urls, time_range },
+  position,
+}) => (
   <Wrap position={position} time_range={time_range}>
     <Text href={external_urls.spotify} rel="noopener noreferrer">
       {name}

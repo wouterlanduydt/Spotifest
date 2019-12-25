@@ -28,14 +28,14 @@ type TProps = {
   to?: string;
 };
 
-export const Button = ({
+export const Button: React.FC<TProps> = ({
   onClick,
   children,
   buttonStyle = 'normal',
   disabled = false,
   title,
   to,
-}: TProps) => (
+}) => (
   <Link to={to || ''}>
     <StyledButton onClick={onClick} buttonStyle={buttonStyle} disabled={disabled} title={title}>
       {children}

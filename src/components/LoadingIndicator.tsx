@@ -5,7 +5,7 @@ type TProps = {
   style?: React.CSSProperties;
 };
 
-export const LoadingIndicator = ({ style, size = 24 }: TProps) => (
+export const LoadingIndicator: React.FC<TProps> = ({ style, size = 24 }) => (
   <img
     src={require('../assets/svg/loading-indicator.svg')}
     width={size}

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { LoadingIndicator } from 'components';
 
@@ -27,7 +27,7 @@ type TProps = {
   text?: string;
 };
 
-export const Overlay = ({ text }: TProps) => (
+export const Overlay: React.FC<TProps> = ({ text }) => (
   <Wrap>
     <LoadingIndicator />
     {!!text && <Subtitle>{text}</Subtitle>}

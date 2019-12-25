@@ -41,7 +41,7 @@ const StyledTitle = styled.h1`
   }
 `;
 
-export const Title = ({ title, username }: TProps) => (
+export const Title: React.FC<TProps> = ({ title, username }) => (
   <Wrap>
     {username && <SubTitle>{username}'s</SubTitle>}
     <StyledTitle>{title}</StyledTitle>
