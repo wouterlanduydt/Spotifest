@@ -1,18 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Button } from '../../components';
 import { Wrap } from './Login.styled';
 import { authorizeSpotifyApi } from 'api/spotify.api';
 
-type TProps = {};
-
-export class Login extends Component<TProps> {
-  render() {
-    return (
-      <Wrap>
-        <Button onClick={() => authorizeSpotifyApi()} buttonStyle="spotify">
-          Login with Spotify
-        </Button>
-      </Wrap>
-    );
-  }
-}
+export const Login: React.FC = () => (
+  <Wrap>
+    <Button onClick={() => authorizeSpotifyApi()} buttonStyle="spotify">
+      Login with Spotify
+    </Button>
+  </Wrap>
+);
