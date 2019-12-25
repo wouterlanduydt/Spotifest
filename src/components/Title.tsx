@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 type TProps = {
   title: string;
-  username: string | undefined | null;
+  username?: string;
 };
 
 const Wrap = styled.header`

@@ -1,26 +1,21 @@
 import React from 'react';
 import { Button, Poster, Footer } from '../../components';
-import { connect } from 'react-redux';
 import { spotifyActions } from 'redux/actions';
-import { IState } from 'redux/reducers';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import { Actions } from './Home.styled';
-import { RouteComponentProps } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { IState } from 'redux/reducers';
 
-type TProps = {
-  getTopArtistsStart: () => void;
-  user: IState['user'];
-  artists: IState['artists'];
-} & RouteComponentProps;
+export const Home: React.FC = () => {
+  const user = useSelector((state: IState) => state.user);
+  const artists = useSelector((state: IState) => state.artists);
 
-const HomeFC: React.FC<TProps> = props => {
-  const { getTopArtistsStart, user, artists } = props;
-  const hasNoArtists = artists.value.length === 0;
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
-    getTopArtistsStart();
-  }, [getTopArtistsStart]);
+    dispatch(spotifyActions.getTopArtistsStart());
+  }, [dispatch]);
 
   const handleSaveImage = () => {
     let poster = document.getElementById('poster');
@@ -36,6 +31,8 @@ const HomeFC: React.FC<TProps> = props => {
     if (!poster) console.error('no html element with id "poster" found');
   };
 
+  const hasNoArtists = artists.value.length === 0;
+
   return (
     <>
       <Poster username={user.value?.display_name} artists={artists} />
@@ -49,7 +46,3 @@ const HomeFC: React.FC<TProps> = props => {
     </>
   );
 };
-
-export const Home = connect(({ user, artists }: IState) => ({ user, artists }), {
-  getTopArtistsStart: spotifyActions.getTopArtistsStart,
-})(HomeFC);

@@ -4,27 +4,27 @@ import { TExtendedArtist } from 'types/general';
 
 export interface IState {
   user: {
-    value: SpotifyApi.UserObjectPrivate | null;
+    value?: SpotifyApi.UserObjectPrivate;
     isLoading: boolean;
-    error: Error | null;
+    error?: Error;
   };
   artists: {
     value: TExtendedArtist[];
     isLoading: boolean;
-    error: Error | null;
+    error?: Error;
   };
 }
 
 const initialState = {
   user: {
-    value: null,
+    value: undefined,
     isLoading: false,
-    error: null,
+    error: undefined,
   },
   artists: {
     value: [],
     isLoading: false,
-    error: null,
+    error: undefined,
   },
 };
 
@@ -36,9 +36,9 @@ const reducer = createReducer<IState>({}, initialState);
 reducer.on(spotifyActions.getUserDetailsStart, state => ({
   ...state,
   user: {
-    value: null,
+    value: undefined,
     isLoading: true,
-    error: null,
+    error: undefined,
   },
 }));
 
@@ -47,14 +47,14 @@ reducer.on(spotifyActions.getUserDetailsSuccess, (state, value) => ({
   user: {
     value,
     isLoading: false,
-    error: null,
+    error: undefined,
   },
 }));
 
 reducer.on(spotifyActions.getUserDetailsFail, (state, error) => ({
   ...state,
   user: {
-    value: null,
+    value: undefined,
     isLoading: false,
     error,
   },
@@ -68,7 +68,7 @@ reducer.on(spotifyActions.getTopArtistsStart, state => ({
   artists: {
     value: [],
     isLoading: true,
-    error: null,
+    error: undefined,
   },
 }));
 
@@ -77,7 +77,7 @@ reducer.on(spotifyActions.getTopArtistsSuccess, (state, value) => ({
   artists: {
     value,
     isLoading: false,
-    error: null,
+    error: undefined,
   },
 }));
 

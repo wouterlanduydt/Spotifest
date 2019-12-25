@@ -10,7 +10,7 @@ import { Overlay } from './Overlay';
 import { convertToDueTone } from 'styles/utils';
 
 type TProps = {
-  username: string | undefined | null;
+  username?: string;
   artists: IState['artists'];
 };
 
@@ -106,23 +106,19 @@ const LogoWrap = styled.div`
   }
 `;
 
-export class Poster extends React.PureComponent<TProps> {
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+export const Poster = React.memo<TProps>(props => {
+  const { artists, username } = props;
 
-  constructor(props: TProps) {
-    super(props);
-    this.canvasRef = React.createRef<HTMLCanvasElement>();
-  }
+  const canvasRef = React.createRef<HTMLCanvasElement>();
 
-  componentDidUpdate = ({ artists: prevArtists }: TProps) => {
-    const { artists } = this.props;
-    const canvas = this.canvasRef.current;
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
     const ctx = canvas ? canvas.getContext('2d') : undefined;
 
     const artistImages: string[] = [];
     let artistImagesLoaded = 0;
 
-    if (artists.value.length !== prevArtists.value.length && ctx && canvas) {
+    if (ctx && canvas) {
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -189,42 +185,37 @@ export class Poster extends React.PureComponent<TProps> {
         }
       };
     }
-  };
+  }, [artists, canvasRef]);
 
-  render() {
-    const { artists, username } = this.props;
-    const [long, medium] = getSeparatorIndexes(artists.value);
+  const [long, medium] = getSeparatorIndexes(artists.value);
 
-    return artists.isLoading ? (
-      <Overlay text="Generating Poster..." />
-    ) : (
-      <AnimationWrap className="ignore-save-img">
-        <Wrap id="poster">
-          <Background width={640} height={900} ref={this.canvasRef} />
-          <Title title="Spotifest" username={username} />
-          <ArtistsWrap>
-            {artists.value &&
-              artists.value.map((artist, i) => (
-                <React.Fragment key={artist.id}>
-                  {(i === 0 || i === long || i === medium) && (
-                    <Separator>
-                      <span>
-                        {i === 0 ? 'long term' : i === long ? 'medium term' : 'short term'}
-                      </span>
-                    </Separator>
-                  )}
-                  <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
-                </React.Fragment>
-              ))}
-          </ArtistsWrap>
+  if (artists.isLoading) return <Overlay text="Generating Poster..." />;
 
-          <LogoWrap>
-            <a href="https://www.spotify.com" rel="noopener noreferrer">
-              <img src={SpotifyLogo} alt="" />
-            </a>
-          </LogoWrap>
-        </Wrap>
-      </AnimationWrap>
-    );
-  }
-}
+  return (
+    <AnimationWrap className="ignore-save-img">
+      <Wrap id="poster">
+        <Background width={640} height={900} ref={canvasRef} />
+        <Title title="Spotifest" username={username} />
+        <ArtistsWrap>
+          {artists.value &&
+            artists.value.map((artist, i) => (
+              <React.Fragment key={artist.id}>
+                {(i === 0 || i === long || i === medium) && (
+                  <Separator>
+                    <span>{i === 0 ? 'long term' : i === long ? 'medium term' : 'short term'}</span>
+                  </Separator>
+                )}
+                <ArtistItem artist={artist} position={i} key={`${artist.id}-${i}`} />
+              </React.Fragment>
+            ))}
+        </ArtistsWrap>
+
+        <LogoWrap>
+          <a href="https://www.spotify.com" rel="noopener noreferrer">
+            <img src={SpotifyLogo} alt="" />
+          </a>
+        </LogoWrap>
+      </Wrap>
+    </AnimationWrap>
+  );
+});
