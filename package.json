@@ -12,9 +12,12 @@
     "start": "BROWSER=none react-scripts start",
     "build": "REACT_APP_URL=\"$URL\" react-scripts build",
     "eject": "react-scripts eject",
-    "prettier": "prettier 'src/**/*.{ts,tsx}' --write"
+    "prettier": "prettier 'src/**/*.{ts,tsx}' --write",
+    "release": "standard-version"
   },
   "dependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
     "axios": "^0.19.0",
     "connected-react-router": "^6.6.1",
     "date-fns": "^2.8.1",
@@ -52,10 +55,17 @@
     "eslint": "6.8.0",
     "eslint-config-prettier": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^3.1.0",
     "prettier": "^1.19.1",
     "redux-devtools-extension": "^2.13.8",
+    "standard-version": "^7.0.1",
     "typescript": "3.7.4",
     "wait-on": "^3.3.0"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   },
   "browserslist": {
     "production": [
