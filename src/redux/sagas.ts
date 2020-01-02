@@ -1,6 +1,6 @@
 import { call, put, takeLatest, all } from 'redux-saga/effects';
 import { spotifyActions } from './actions';
-import * as spotifyApi from 'api/spotify.api';
+import { spotifyApi, authorizeSpotifyApi } from 'api/spotify.api';
 import queryString from 'query-string';
 import { ETimeRange, TExtendedArtist } from 'types/general';
 import { getUnique } from 'lib';
@@ -12,15 +12,15 @@ export function* appReadyFlow() {
 
     if (accessTokenFromUrl) {
       yield localStorage.setItem('spotify_token', String(accessTokenFromUrl));
-      yield spotifyApi.spotifyApi.setAccessToken(String(accessTokenFromUrl));
+      yield spotifyApi.setAccessToken(String(accessTokenFromUrl));
     } else if (!!tokenFromStorage && tokenFromStorage !== 'undefined') {
-      yield spotifyApi.spotifyApi.setAccessToken(tokenFromStorage);
+      yield spotifyApi.setAccessToken(tokenFromStorage);
     }
-    const userDetails = yield call(spotifyApi.fetchUserDetails);
+    const userDetails = yield call(spotifyApi.getMe);
     yield put(spotifyActions.getUserDetailsSuccess(userDetails));
   } catch (e) {
     localStorage.clear();
-    spotifyApi.authorizeSpotifyApi();
+    authorizeSpotifyApi();
     yield put(spotifyActions.getUserDetailsFail(e));
   }
 }
@@ -33,8 +33,8 @@ function* getTopArtistsFlow() {
       const time_range = range as ETimeRange;
 
       const data: { items: SpotifyApi.ArtistObjectFull[] } = yield call(
-        spotifyApi.fetchTopArtists,
-        { time_range },
+        spotifyApi.getMyTopArtists,
+        { time_range, limit: 50 },
       );
 
       const extendedArtists = data.items.map(artist => ({
