@@ -19,7 +19,7 @@
     "babel-plugin-idx": "^2.4.0",
     "connected-react-router": "^6.4.0",
     "date-fns": "^2.0.0-alpha.27",
-    "express": "^4.15.4",
+    "express": "^4.17.3",
     "file-saver": "^2.0.2",
     "html2canvas": "^1.0.0-rc.3",
     "idx": "^2.5.6",
